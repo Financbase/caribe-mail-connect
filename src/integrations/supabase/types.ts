@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      compliance_audit_log: {
+        Row: {
+          action: string
+          changes: Json | null
+          created_at: string
+          id: string
+          notes: string | null
+          performed_by: string | null
+          performed_by_name: string | null
+          record_id: string
+          table_name: string
+        }
+        Insert: {
+          action: string
+          changes?: Json | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          performed_by?: string | null
+          performed_by_name?: string | null
+          record_id: string
+          table_name: string
+        }
+        Update: {
+          action?: string
+          changes?: Json | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          performed_by?: string | null
+          performed_by_name?: string | null
+          record_id?: string
+          table_name?: string
+        }
+        Relationships: []
+      }
       customer_compliance: {
         Row: {
           compliance_score: number | null

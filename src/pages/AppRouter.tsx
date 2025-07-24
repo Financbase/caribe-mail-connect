@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import Auth from './Auth';
 import ResetPassword from './auth/ResetPassword';
@@ -7,6 +7,19 @@ import PRMCMS from './Index';
 
 export default function AppRouter() {
   const { isAuthenticated, loading } = useAuth();
+  const [currentRoute, setCurrentRoute] = useState('/');
+
+  // Simple hash-based routing to avoid BrowserRouter conflicts
+  useEffect(() => {
+    const handleHashChange = () => {
+      setCurrentRoute(window.location.hash.replace('#', '') || '/');
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    handleHashChange(); // Set initial route
+
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
 
   if (loading) {
     return (
@@ -19,29 +32,21 @@ export default function AppRouter() {
     );
   }
 
-  return (
-    <Router>
-      <Routes>
-        {/* Auth routes - accessible when not authenticated */}
-        <Route 
-          path="/auth" 
-          element={isAuthenticated ? <Navigate to="/" replace /> : <Auth />} 
-        />
-        <Route 
-          path="/auth/reset-password" 
-          element={isAuthenticated ? <Navigate to="/" replace /> : <ResetPassword />} 
-        />
-        <Route 
-          path="/auth/update-password" 
-          element={<UpdatePassword />} 
-        />
-        
-        {/* Protected routes - require authentication */}
-        <Route 
-          path="/*" 
-          element={isAuthenticated ? <PRMCMS /> : <Navigate to="/auth" replace />} 
-        />
-      </Routes>
-    </Router>
-  );
+  // Route logic
+  if (!isAuthenticated) {
+    if (currentRoute === '/auth/reset-password') {
+      return <ResetPassword />;
+    }
+    if (currentRoute === '/auth/update-password') {
+      return <UpdatePassword />;
+    }
+    return <Auth />;
+  }
+
+  // Authenticated user
+  if (currentRoute === '/auth/update-password') {
+    return <UpdatePassword />;
+  }
+
+  return <PRMCMS />;
 }

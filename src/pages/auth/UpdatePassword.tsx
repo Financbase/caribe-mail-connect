@@ -9,21 +9,19 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import { Package } from 'lucide-react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
 
 export default function UpdatePassword() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
   
   const { t } = useLanguage();
 
   useEffect(() => {
     // Check if we have access_token and refresh_token in URL
-    const accessToken = searchParams.get('access_token');
-    const refreshToken = searchParams.get('refresh_token');
+    const urlParams = new URLSearchParams(window.location.search);
+    const accessToken = urlParams.get('access_token');
+    const refreshToken = urlParams.get('refresh_token');
     
     if (accessToken && refreshToken) {
       // Set the session from the tokens
@@ -33,9 +31,9 @@ export default function UpdatePassword() {
       });
     } else {
       // No tokens, redirect to login
-      navigate('/auth');
+      window.location.hash = '#/auth';
     }
-  }, [searchParams, navigate]);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,7 +77,7 @@ export default function UpdatePassword() {
         
         // Sign out and redirect to login
         await supabase.auth.signOut();
-        navigate('/auth');
+        window.location.hash = '#/auth';
       }
     } catch (err) {
       toast({

@@ -9,7 +9,6 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import { Package, ArrowLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 export default function ResetPassword() {
   const [email, setEmail] = useState('');
@@ -24,7 +23,7 @@ export default function ResetPassword() {
 
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/auth/update-password`,
+        redirectTo: `${window.location.origin}#/auth/update-password`,
       });
 
       if (error) {
@@ -91,9 +90,9 @@ export default function ResetPassword() {
                     variant="mobile"
                     size="sm"
                     className="flex-1"
-                    asChild
+                    onClick={() => window.location.hash = '#/auth'}
                   >
-                    <Link to="/auth">Back to Login</Link>
+                    Back to Login
                   </Button>
                 </div>
               </div>
@@ -161,11 +160,14 @@ export default function ResetPassword() {
             </form>
 
             <div className="mt-6 text-center">
-              <Button variant="ghost" size="sm" asChild>
-                <Link to="/auth" className="inline-flex items-center gap-2">
-                  <ArrowLeft className="h-4 w-4" />
-                  Back to Login
-                </Link>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => window.location.hash = '#/auth'}
+                className="inline-flex items-center gap-2"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Back to Login
               </Button>
             </div>
           </CardContent>

@@ -165,7 +165,7 @@ export default function Auth() {
 
                   <div className="text-center">
                     <a 
-                      href="/auth/reset-password"
+                      href="#/auth/reset-password"
                       className="text-sm text-primary hover:underline"
                     >
                       Forgot your password?

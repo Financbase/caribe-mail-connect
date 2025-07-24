@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import Auth from './Auth';
+import { User, Session } from '@supabase/supabase-js';
+import { supabase } from '@/integrations/supabase/client';
+import AuthSelection from './auth/AuthSelection';
+import StaffAuth from './auth/StaffAuth';
+import CustomerAuth from './auth/CustomerAuth';
 import Dashboard from './Dashboard';
 import PackageIntake from './PackageIntake';
 import Customers from './Customers';
@@ -18,8 +21,10 @@ import { MobileLayout } from '@/components/mobile/MobileLayout';
 
 // Main application component with navigation logic
 const PRMCMS = () => {
-  const { isAuthenticated, loading } = useAuth();
-  const [currentPage, setCurrentPage] = useState('dashboard');
+  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState('auth-selection');
 
   // PWA Service Worker Registration (basic setup)
   useEffect(() => {
@@ -27,6 +32,48 @@ const PRMCMS = () => {
       navigator.serviceWorker.register('/sw.js').catch(console.error);
     }
   }, []);
+
+  // Auth state management
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        setLoading(false);
+        
+        // Set appropriate initial page based on auth state
+        if (session?.user) {
+          setCurrentPage('dashboard');
+        } else {
+          setCurrentPage('auth-selection');
+        }
+      }
+    );
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      setLoading(false);
+      
+      // Set appropriate initial page based on auth state
+      if (session?.user) {
+        setCurrentPage('dashboard');
+      } else {
+        setCurrentPage('auth-selection');
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleNavigation = (page: string) => {
+    setCurrentPage(page);
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setCurrentPage('auth-selection');
+  };
 
   // Show loading while checking authentication
   if (loading) {
@@ -40,33 +87,44 @@ const PRMCMS = () => {
     );
   }
 
-  // Main app is now authenticated, so we just handle internal navigation
+  // Show auth pages if not authenticated
+  if (!user) {
+    switch (currentPage) {
+      case 'staff-auth':
+        return <StaffAuth onNavigate={handleNavigation} />;
+      case 'customer-auth':
+        return <CustomerAuth onNavigate={handleNavigation} />;
+      default:
+        return <AuthSelection onNavigate={handleNavigation} />;
+    }
+  }
+
   const renderPage = () => {
     switch (currentPage) {
       case 'intake':
-        return <PackageIntake onNavigate={setCurrentPage} />;
+        return <PackageIntake onNavigate={handleNavigation} />;
       case 'customers':
-        return <Customers onNavigate={setCurrentPage} />;
+        return <Customers onNavigate={handleNavigation} />;
       case 'mailboxes':
-        return <Mailboxes onNavigate={setCurrentPage} />;
+        return <Mailboxes onNavigate={handleNavigation} />;
       case 'analytics':
-        return <Analytics onNavigate={setCurrentPage} />;
-        case 'routes':
-          return <Routes onNavigate={setCurrentPage} />;
-        case 'driver-route':
-          return <DriverRoute onNavigate={setCurrentPage} />;
-        case 'act60-dashboard':
-          return <Act60Dashboard onNavigate={setCurrentPage} />;
-        case 'location-management':
-          return <LocationManagement onNavigate={setCurrentPage} />;
+        return <Analytics onNavigate={handleNavigation} />;
+      case 'routes':
+        return <Routes onNavigate={handleNavigation} />;
+      case 'driver-route':
+        return <DriverRoute onNavigate={handleNavigation} />;
+      case 'act60-dashboard':
+        return <Act60Dashboard onNavigate={handleNavigation} />;
+      case 'location-management':
+        return <LocationManagement onNavigate={handleNavigation} />;
       case 'notifications':
-        return <Notifications onNavigate={setCurrentPage} />;
+        return <Notifications onNavigate={handleNavigation} />;
       case 'billing':
-        return <Billing onNavigate={setCurrentPage} />;
+        return <Billing onNavigate={handleNavigation} />;
       case 'admin':
-        return <Admin onNavigate={setCurrentPage} />;
+        return <Admin onNavigate={handleNavigation} />;
       case 'profile-settings':
-        return <ProfileSettings onNavigate={setCurrentPage} />;
+        return <ProfileSettings onNavigate={handleNavigation} />;
       case 'search':
         // Placeholder for search page
         return (
@@ -75,7 +133,7 @@ const PRMCMS = () => {
               <h1 className="text-2xl font-bold text-foreground mb-4">Search Feature</h1>
               <p className="text-muted-foreground mb-6">Coming soon!</p>
               <button
-                onClick={() => setCurrentPage('dashboard')}
+                onClick={() => handleNavigation('dashboard')}
                 className="text-primary hover:underline"
               >
                 Back to Dashboard
@@ -91,7 +149,7 @@ const PRMCMS = () => {
               <h1 className="text-2xl font-bold text-foreground mb-4">Package Delivery</h1>
               <p className="text-muted-foreground mb-6">Coming soon!</p>
               <button
-                onClick={() => setCurrentPage('dashboard')}
+                onClick={() => handleNavigation('dashboard')}
                 className="text-primary hover:underline"
               >
                 Back to Dashboard
@@ -100,12 +158,12 @@ const PRMCMS = () => {
           </div>
         );
       default:
-        return <Dashboard onNavigate={setCurrentPage} />;
+        return <Dashboard onNavigate={handleNavigation} />;
     }
   };
 
   return (
-    <MobileLayout currentPage={currentPage} onNavigate={setCurrentPage}>
+    <MobileLayout currentPage={currentPage} onNavigate={handleNavigation}>
       {renderPage()}
     </MobileLayout>
   );

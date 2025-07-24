@@ -50,6 +50,8 @@ export function SearchIndexing() {
           count = mailboxCount || 0;
         }
 
+        statuses.push({
+          table: table.name,
           indexed: count > 0, // Simulate index exists if data exists
           lastUpdated: new Date(),
           recordCount: count,

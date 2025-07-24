@@ -8,9 +8,6 @@ import { Badge } from '@/components/ui/badge';
 import { Calendar, DollarSign, Clock, TrendingUp, Settings } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import type { Database } from '@/integrations/supabase/types';
-
-type BillingConfig = Database['public']['Tables']['virtual_mailbox_billing_config']['Row'];
 
 interface UsageStats {
   total_actions: number;
@@ -19,8 +16,28 @@ interface UsageStats {
   overdue_amount: number;
 }
 
+interface LateFeeConfig {
+  id?: string;
+  location_id: string;
+  fee_name: string;
+  fee_type: string;
+  fee_amount: number;
+  applies_after_days: number;
+  grace_period_days: number;
+  max_fee_amount?: number;
+  is_active: boolean;
+}
+
 export function BillingAutomation() {
-  const [config, setConfig] = useState<BillingConfig | null>(null);
+  const [config, setConfig] = useState<LateFeeConfig>({
+    location_id: '',
+    fee_name: 'Late Payment Fee',
+    fee_type: 'fixed',
+    fee_amount: 25.00,
+    applies_after_days: 30,
+    grace_period_days: 7,
+    is_active: true
+  });
   const [usageStats, setUsageStats] = useState<UsageStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -34,7 +51,7 @@ export function BillingAutomation() {
   const fetchBillingConfig = async () => {
     try {
       const { data, error } = await supabase
-        .from('virtual_mailbox_billing_config')
+        .from('late_fee_configurations')
         .select('*')
         .limit(1)
         .maybeSingle();
@@ -43,22 +60,6 @@ export function BillingAutomation() {
       
       if (data) {
         setConfig(data);
-      } else {
-        // Create default config
-        const { data: newConfig, error: createError } = await supabase
-          .from('virtual_mailbox_billing_config')
-          .insert({
-            auto_billing_enabled: false,
-            billing_cycle_days: 30,
-            grace_period_days: 7,
-            late_fee_amount: 25.00,
-            auto_suspend_days: 30
-          })
-          .select()
-          .single();
-
-        if (createError) throw createError;
-        setConfig(newConfig);
       }
     } catch (error) {
       console.error('Error fetching billing config:', error);
@@ -80,7 +81,7 @@ export function BillingAutomation() {
       if (actionsError) throw actionsError;
 
       const totalActions = actions?.length || 0;
-      const totalAmount = actions?.reduce((sum, action) => sum + (Number(action.cost_amount) || 0), 0) || 0;
+      const totalAmount = actions?.reduce((sum, action) => sum + (action.cost_amount || 0), 0) || 0;
 
       const { data: billing, error: billingError } = await supabase
         .from('virtual_mailbox_billing')
@@ -91,7 +92,7 @@ export function BillingAutomation() {
 
       const pendingInvoices = billing?.filter(b => b.status === 'pending').length || 0;
       const overdueAmount = billing?.filter(b => b.status === 'overdue')
-        .reduce((sum, b) => sum + Number(b.total_amount), 0) || 0;
+        .reduce((sum, b) => sum + b.total_amount, 0) || 0;
 
       setUsageStats({
         total_actions: totalActions,
@@ -107,20 +108,11 @@ export function BillingAutomation() {
   };
 
   const saveConfig = async () => {
-    if (!config) return;
-
     setSaving(true);
     try {
       const { error } = await supabase
-        .from('virtual_mailbox_billing_config')
-        .update({
-          auto_billing_enabled: config.auto_billing_enabled,
-          billing_cycle_days: config.billing_cycle_days,
-          grace_period_days: config.grace_period_days,
-          late_fee_amount: config.late_fee_amount,
-          auto_suspend_days: config.auto_suspend_days
-        })
-        .eq('id', config.id);
+        .from('late_fee_configurations')
+        .upsert(config);
 
       if (error) throw error;
 
@@ -224,36 +216,60 @@ export function BillingAutomation() {
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <Settings className="h-5 w-5" />
-            <span>Billing Automation Settings</span>
+            <span>Late Fee Configuration</span>
           </CardTitle>
           <CardDescription>
-            Configure automated billing cycles and payment processing
+            Configure late fees for overdue virtual mailbox payments
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="flex items-center space-x-2">
             <Switch
-              id="auto-billing"
-              checked={config?.auto_billing_enabled || false}
+              id="is-active"
+              checked={config.is_active}
               onCheckedChange={(checked) => 
-                setConfig(prev => prev ? { ...prev, auto_billing_enabled: checked } : null)
+                setConfig(prev => ({ ...prev, is_active: checked }))
               }
             />
-            <Label htmlFor="auto-billing">Enable Automatic Billing</Label>
-            <Badge variant={config?.auto_billing_enabled ? "default" : "secondary"}>
-              {config?.auto_billing_enabled ? "Active" : "Inactive"}
+            <Label htmlFor="is-active">Enable Late Fees</Label>
+            <Badge variant={config.is_active ? "default" : "secondary"}>
+              {config.is_active ? "Active" : "Inactive"}
             </Badge>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="billing-cycle">Billing Cycle (Days)</Label>
+              <Label htmlFor="fee-name">Fee Name</Label>
               <Input
-                id="billing-cycle"
-                type="number"
-                value={config?.billing_cycle_days || 30}
+                id="fee-name"
+                value={config.fee_name}
                 onChange={(e) => 
-                  setConfig(prev => prev ? { ...prev, billing_cycle_days: parseInt(e.target.value) } : null)
+                  setConfig(prev => ({ ...prev, fee_name: e.target.value }))
+                }
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="fee-amount">Fee Amount ($)</Label>
+              <Input
+                id="fee-amount"
+                type="number"
+                step="0.01"
+                value={config.fee_amount}
+                onChange={(e) => 
+                  setConfig(prev => ({ ...prev, fee_amount: parseFloat(e.target.value) }))
+                }
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="applies-after">Applies After (Days)</Label>
+              <Input
+                id="applies-after"
+                type="number"
+                value={config.applies_after_days}
+                onChange={(e) => 
+                  setConfig(prev => ({ ...prev, applies_after_days: parseInt(e.target.value) }))
                 }
               />
             </div>
@@ -263,34 +279,22 @@ export function BillingAutomation() {
               <Input
                 id="grace-period"
                 type="number"
-                value={config?.grace_period_days || 7}
+                value={config.grace_period_days}
                 onChange={(e) => 
-                  setConfig(prev => prev ? { ...prev, grace_period_days: parseInt(e.target.value) } : null)
+                  setConfig(prev => ({ ...prev, grace_period_days: parseInt(e.target.value) }))
                 }
               />
             </div>
 
             <div>
-              <Label htmlFor="late-fee">Late Fee Amount ($)</Label>
+              <Label htmlFor="max-fee">Max Fee Amount ($)</Label>
               <Input
-                id="late-fee"
+                id="max-fee"
                 type="number"
                 step="0.01"
-                value={config?.late_fee_amount || 25.00}
+                value={config.max_fee_amount || ''}
                 onChange={(e) => 
-                  setConfig(prev => prev ? { ...prev, late_fee_amount: parseFloat(e.target.value) } : null)
-                }
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="auto-suspend">Auto Suspend After (Days)</Label>
-              <Input
-                id="auto-suspend"
-                type="number"
-                value={config?.auto_suspend_days || 30}
-                onChange={(e) => 
-                  setConfig(prev => prev ? { ...prev, auto_suspend_days: parseInt(e.target.value) } : null)
+                  setConfig(prev => ({ ...prev, max_fee_amount: e.target.value ? parseFloat(e.target.value) : undefined }))
                 }
               />
             </div>

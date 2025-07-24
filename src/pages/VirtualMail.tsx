@@ -14,7 +14,7 @@ import { CheckDepositCapture } from '@/components/virtual-mail/CheckDepositCaptu
 import { AddMailPieceDialog } from '@/components/virtual-mail/AddMailPieceDialog';
 import { MailActionDialog } from '@/components/virtual-mail/MailActionDialog';
 import { BillingAutomation } from '@/components/virtual-mail/BillingAutomation';
-import { VirtualMailAnalytics } from '@/components/virtual-mail/VirtualMailAnalytics';
+import { VirtualMailReporting } from '@/components/virtual-mail/VirtualMailReporting';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 
 export function VirtualMail() {
@@ -247,7 +247,7 @@ export function VirtualMail() {
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-4">
-          <VirtualMailAnalytics />
+          <VirtualMailReporting />
         </TabsContent>
 
         <TabsContent value="billing" className="space-y-4">

@@ -23,55 +23,200 @@ export function usePackages() {
   const [packages, setPackages] = useState<Package[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [syncQueue, setSyncQueue] = useState<any[]>([]);
   const { user } = useAuth();
+
+  // Cache management
+  const cacheKey = 'prmcms-packages-cache';
+  const queueKey = 'prmcms-sync-queue';
+
+  // Load from cache on mount
+  useEffect(() => {
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {
+      try {
+        const cachedPackages = JSON.parse(cached);
+        setPackages(cachedPackages);
+        console.log('Loaded packages from cache:', cachedPackages.length);
+      } catch (err) {
+        console.error('Error parsing cached packages:', err);
+        localStorage.removeItem(cacheKey);
+      }
+    }
+
+    const queuedOperations = localStorage.getItem(queueKey);
+    if (queuedOperations) {
+      try {
+        setSyncQueue(JSON.parse(queuedOperations));
+      } catch (err) {
+        console.error('Error parsing sync queue:', err);
+        localStorage.removeItem(queueKey);
+      }
+    }
+  }, []);
+
+  // Save to cache whenever packages change
+  useEffect(() => {
+    if (packages.length > 0) {
+      localStorage.setItem(cacheKey, JSON.stringify(packages));
+      console.log('Cached packages:', packages.length);
+    }
+  }, [packages]);
+
+  // Save sync queue to localStorage
+  useEffect(() => {
+    localStorage.setItem(queueKey, JSON.stringify(syncQueue));
+  }, [syncQueue]);
 
   const fetchPackages = async () => {
     if (!user) return;
     
     try {
       setLoading(true);
+      console.log('Fetching packages from database...');
+      
       const { data, error } = await supabase
         .from('packages')
-        .select('*')
+        .select(`
+          *,
+          customers (
+            first_name,
+            last_name,
+            mailbox_number
+          )
+        `)
         .order('received_at', { ascending: false });
 
       if (error) throw error;
 
+      console.log('Fetched packages:', data?.length || 0);
       setPackages(data || []);
       setError(null);
+      
+      // Process sync queue after successful fetch
+      await processSyncQueue();
+      
     } catch (err) {
       console.error('Error fetching packages:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch packages');
+      
+      // If offline, use cached data
+      if (err instanceof Error && err.message.includes('fetch')) {
+        console.log('Using cached packages due to network error');
+      }
     } finally {
       setLoading(false);
     }
   };
 
+  // Process pending sync operations
+  const processSyncQueue = async () => {
+    if (syncQueue.length === 0) return;
+    
+    console.log('Processing sync queue:', syncQueue.length, 'operations');
+    const processed = [];
+    
+    for (const operation of syncQueue) {
+      try {
+        switch (operation.type) {
+          case 'create':
+            await executeCreate(operation.data);
+            break;
+          case 'update':
+            await executeUpdate(operation.packageId, operation.data);
+            break;
+        }
+        processed.push(operation);
+      } catch (err) {
+        console.error('Failed to sync operation:', operation, err);
+        // Keep failed operations in queue for next attempt
+      }
+    }
+    
+    // Remove successfully processed operations
+    setSyncQueue(prev => prev.filter(op => !processed.includes(op)));
+  };
+  // Execute create operation
+  const executeCreate = async (packageData: any) => {
+    const { data, error } = await supabase
+      .from('packages')
+      .insert([packageData])
+      .select(`
+        *,
+        customers (
+          first_name,
+          last_name,
+          mailbox_number
+        )
+      `)
+      .single();
+
+    if (error) throw error;
+    return data;
+  };
+
+  // Execute update operation
+  const executeUpdate = async (packageId: string, updateData: any) => {
+    const { data, error } = await supabase
+      .from('packages')
+      .update(updateData)
+      .eq('id', packageId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  };
+
   const createPackage = async (packageData: PackageFormData): Promise<{ success: boolean; error?: string; data?: Package }> => {
     if (!user) return { success: false, error: 'User not authenticated' };
 
+    const newPackageData = {
+      ...packageData,
+      received_by: user.id,
+      status: 'Received' as const
+    };
+
     try {
-      const { data, error } = await supabase
-        .from('packages')
-        .insert([{
-          ...packageData,
-          received_by: user.id,
-          status: 'Received'
-        }])
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      // Update local state
+      console.log('Creating package:', packageData.tracking_number);
+      const data = await executeCreate(newPackageData);
+      
+      // Update local state immediately
       setPackages(prev => [data, ...prev]);
       
+      console.log('Package created successfully:', data.id);
       return { success: true, data };
+      
     } catch (err) {
       console.error('Error creating package:', err);
+      
+      // Queue for offline sync
+      const operation = {
+        id: Date.now().toString(),
+        type: 'create',
+        data: newPackageData,
+        timestamp: new Date().toISOString()
+      };
+      
+      setSyncQueue(prev => [...prev, operation]);
+      
+      // Create optimistic update with temp ID
+      const optimisticPackage = {
+        id: `temp-${Date.now()}`,
+        ...newPackageData,
+        received_at: new Date().toISOString(),
+        delivered_at: null,
+        delivered_by: null,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      } as Package;
+      
+      setPackages(prev => [optimisticPackage, ...prev]);
+      
       return { 
         success: false, 
-        error: err instanceof Error ? err.message : 'Failed to create package' 
+        error: 'Package queued for sync when online',
+        data: optimisticPackage
       };
     }
   };
@@ -82,22 +227,18 @@ export function usePackages() {
   ): Promise<{ success: boolean; error?: string }> => {
     if (!user) return { success: false, error: 'User not authenticated' };
 
+    const updateData: any = { status };
+    
+    // Add delivered timestamp and user if status is delivered
+    if (status === 'Delivered') {
+      updateData.delivered_at = new Date().toISOString();
+      updateData.delivered_by = user.id;
+    }
+
     try {
-      const updateData: any = { status };
+      console.log('Updating package status:', packageId, status);
+      await executeUpdate(packageId, updateData);
       
-      // Add delivered timestamp and user if status is delivered
-      if (status === 'Delivered') {
-        updateData.delivered_at = new Date().toISOString();
-        updateData.delivered_by = user.id;
-      }
-
-      const { error } = await supabase
-        .from('packages')
-        .update(updateData)
-        .eq('id', packageId);
-
-      if (error) throw error;
-
       // Update local state
       setPackages(prev => prev.map(pkg => 
         pkg.id === packageId 
@@ -105,12 +246,33 @@ export function usePackages() {
           : pkg
       ));
 
+      console.log('Package status updated successfully');
       return { success: true };
+      
     } catch (err) {
       console.error('Error updating package status:', err);
+      
+      // Queue for offline sync
+      const operation = {
+        id: Date.now().toString(),
+        type: 'update',
+        packageId,
+        data: updateData,
+        timestamp: new Date().toISOString()
+      };
+      
+      setSyncQueue(prev => [...prev, operation]);
+      
+      // Optimistic update
+      setPackages(prev => prev.map(pkg => 
+        pkg.id === packageId 
+          ? { ...pkg, ...updateData }
+          : pkg
+      ));
+
       return { 
         success: false, 
-        error: err instanceof Error ? err.message : 'Failed to update package status' 
+        error: 'Update queued for sync when online'
       };
     }
   };

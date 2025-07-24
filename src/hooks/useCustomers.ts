@@ -29,32 +29,84 @@ export function useCustomers() {
   const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
 
+  // Cache management
+  const cacheKey = 'prmcms-customers-cache';
+
+  // Load from cache on mount
+  useEffect(() => {
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {
+      try {
+        const cachedCustomers = JSON.parse(cached);
+        setCustomers(cachedCustomers);
+        console.log('Loaded customers from cache:', cachedCustomers.length);
+      } catch (err) {
+        console.error('Error parsing cached customers:', err);
+        localStorage.removeItem(cacheKey);
+      }
+    }
+  }, []);
+
+  // Save to cache whenever customers change
+  useEffect(() => {
+    if (customers.length > 0) {
+      localStorage.setItem(cacheKey, JSON.stringify(customers));
+      console.log('Cached customers:', customers.length);
+    }
+  }, [customers]);
+
   const fetchCustomers = async () => {
     if (!user) return;
     
     try {
       setLoading(true);
+      console.log('Fetching customers from database...');
+      
+      // Fetch customers with package count
       const { data, error } = await supabase
         .from('customers')
-        .select('*')
+        .select(`
+          *,
+          packages!packages_customer_id_fkey (
+            id,
+            status
+          )
+        `)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
 
-      setCustomers(data || []);
+      // Process customer data to include package counts
+      const customersWithCounts = data?.map(customer => ({
+        ...customer,
+        activePackages: customer.packages?.filter(
+          (pkg: any) => pkg.status === 'Received' || pkg.status === 'Ready'
+        ).length || 0,
+        totalPackages: customer.packages?.length || 0
+      })) || [];
+
+      console.log('Fetched customers:', customersWithCounts.length);
+      setCustomers(customersWithCounts);
       setError(null);
+      
     } catch (err) {
       console.error('Error fetching customers:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch customers');
+      
+      // If offline, use cached data
+      if (err instanceof Error && err.message.includes('fetch')) {
+        console.log('Using cached customers due to network error');
+      }
     } finally {
       setLoading(false);
     }
   };
-
   const createCustomer = async (customerData: CustomerFormData): Promise<{ success: boolean; error?: string; data?: Customer }> => {
     if (!user) return { success: false, error: 'User not authenticated' };
 
     try {
+      console.log('Creating customer:', customerData.email);
+      
       const { data, error } = await supabase
         .from('customers')
         .insert([{
@@ -67,10 +119,18 @@ export function useCustomers() {
 
       if (error) throw error;
 
-      // Update local state
-      setCustomers(prev => [data, ...prev]);
+      // Add to local state with default package counts
+      const customerWithCounts = {
+        ...data,
+        activePackages: 0,
+        totalPackages: 0
+      };
       
-      return { success: true, data };
+      setCustomers(prev => [customerWithCounts, ...prev]);
+      
+      console.log('Customer created successfully:', data.id);
+      return { success: true, data: customerWithCounts };
+      
     } catch (err) {
       console.error('Error creating customer:', err);
       return { 
@@ -135,7 +195,7 @@ export function useCustomers() {
     fetchCustomers();
   }, [user]);
 
-  // Set up real-time updates
+  // Set up real-time updates for customers
   useEffect(() => {
     if (!user) return;
 

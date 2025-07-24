@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { ArrowLeft, Camera, Scan, Upload, X } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,10 +6,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/textarea';
 import { MobileHeader } from '@/components/MobileHeader';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { mockCustomers } from '@/data/mockData';
+import { usePackages, type PackageFormData } from '@/hooks/usePackages';
+import { useCustomers } from '@/hooks/useCustomers';
 import { toast } from '@/hooks/use-toast';
 
 interface PackageIntakeProps {
@@ -18,17 +20,27 @@ interface PackageIntakeProps {
 
 export default function PackageIntake({ onNavigate }: PackageIntakeProps) {
   const { t } = useLanguage();
+  const { createPackage } = usePackages();
+  const { customers, loading: customersLoading } = useCustomers();
+  
   const [isLoading, setIsLoading] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   const [showScanSuccess, setShowScanSuccess] = useState(false);
   const [packagePhoto, setPackagePhoto] = useState<File | null>(null);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [formData, setFormData] = useState({
-    trackingNumber: '',
-    carrier: '',
-    customerId: '',
-    packageSize: '',
-    specialHandling: false,
+  
+  const [formData, setFormData] = useState<PackageFormData>({
+    tracking_number: '',
+    carrier: 'UPS',
+    customer_id: '',
+    customer_name: '',
+    size: 'Medium',
+    special_handling: false,
+    weight: '',
+    dimensions: '',
+    requires_signature: false,
+    notes: ''
   });
 
   const carriers = ['UPS', 'FedEx', 'USPS', 'DHL', 'Other'];
@@ -38,44 +50,109 @@ export default function PackageIntake({ onNavigate }: PackageIntakeProps) {
     { value: 'Large', label: t('intake.large') },
   ];
 
-  const handleInputChange = (field: string, value: string | boolean) => {
+  // Update customer name when customer is selected
+  useEffect(() => {
+    if (formData.customer_id) {
+      const selectedCustomer = customers.find(c => c.id === formData.customer_id);
+      if (selectedCustomer) {
+        setFormData(prev => ({
+          ...prev,
+          customer_name: `${selectedCustomer.first_name} ${selectedCustomer.last_name}`
+        }));
+      }
+    }
+  }, [formData.customer_id, customers]);
+
+  const handleInputChange = (field: keyof PackageFormData, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+    // Clear error when user starts typing
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: '' }));
+    }
+  };
+
+  // Validation function
+  const validateForm = (): boolean => {
+    const newErrors: Record<string, string> = {};
+    
+    if (!formData.tracking_number.trim()) {
+      newErrors.tracking_number = 'Tracking number is required';
+    }
+    
+    if (!formData.customer_id) {
+      newErrors.customer_id = 'Please select a customer';
+    }
+    
+    if (!formData.carrier) {
+      newErrors.carrier = 'Please select a carrier';
+    }
+    
+    if (!formData.size) {
+      newErrors.size = 'Please select a package size';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!validateForm()) {
+      toast({
+        title: t('common.error'),
+        description: 'Please fix the errors in the form',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     setIsLoading(true);
 
-    // Simulate processing
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    try {
+      console.log('Submitting package:', formData);
+      
+      const result = await createPackage(formData);
+      
+      if (result.success) {
+        toast({
+          title: t('common.success'),
+          description: `Package ${formData.tracking_number} received successfully!`,
+        });
 
-    // Save to localStorage (offline persistence)
-    const savedPackages = JSON.parse(localStorage.getItem('prmcms-packages') || '[]');
-    const newPackage = {
-      id: `PKG${Date.now()}`,
-      ...formData,
-      receivedAt: new Date().toISOString(),
-      status: 'Received',
-    };
-    
-    savedPackages.push(newPackage);
-    localStorage.setItem('prmcms-packages', JSON.stringify(savedPackages));
-
-    toast({
-      title: t('common.success'),
-      description: 'Package received and customer notified',
-    });
-
-    // Reset form
-    setFormData({
-      trackingNumber: '',
-      carrier: '',
-      customerId: '',
-      packageSize: '',
-      specialHandling: false,
-    });
-
-    setIsLoading(false);
+        // Reset form
+        setFormData({
+          tracking_number: '',
+          carrier: 'UPS',
+          customer_id: '',
+          customer_name: '',
+          size: 'Medium',
+          special_handling: false,
+          weight: '',
+          dimensions: '',
+          requires_signature: false,
+          notes: ''
+        });
+        setErrors({});
+        setPackagePhoto(null);
+        
+      } else {
+        toast({
+          title: result.error?.includes('queued') ? 'Queued for Sync' : t('common.error'),
+          description: result.error || 'Failed to save package',
+          variant: result.error?.includes('queued') ? 'default' : 'destructive',
+        });
+      }
+    } catch (error) {
+      console.error('Error submitting package:', error);
+      toast({
+        title: t('common.error'),
+        description: 'An unexpected error occurred',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const simulateBarcodeScan = () => {
@@ -90,7 +167,7 @@ export default function PackageIntake({ onNavigate }: PackageIntakeProps) {
         '1234567890123456'
       ];
       const randomTracking = trackingNumbers[Math.floor(Math.random() * trackingNumbers.length)];
-      handleInputChange('trackingNumber', randomTracking);
+      handleInputChange('tracking_number', randomTracking);
       
       setIsScanning(false);
       setShowScanSuccess(true);
@@ -125,7 +202,7 @@ export default function PackageIntake({ onNavigate }: PackageIntakeProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-accent/20">
-      <MobileHeader title={t('intake.title')} showLogout />
+      <MobileHeader title={t('intake.title')} showLogout onNavigate={onNavigate} />
       
       <main className="container mx-auto px-4 py-6">
         <div className="space-y-6">
@@ -229,12 +306,15 @@ export default function PackageIntake({ onNavigate }: PackageIntakeProps) {
                   <Label htmlFor="tracking">{t('intake.trackingNumber')}</Label>
                   <Input
                     id="tracking"
-                    value={formData.trackingNumber}
-                    onChange={(e) => handleInputChange('trackingNumber', e.target.value)}
+                    value={formData.tracking_number}
+                    onChange={(e) => handleInputChange('tracking_number', e.target.value)}
                     placeholder="1Z999AA1234567890"
-                    className="h-12"
+                    className={`h-12 ${errors.tracking_number ? 'border-red-500' : ''}`}
                     required
                   />
+                  {errors.tracking_number && (
+                    <p className="text-sm text-red-500">{errors.tracking_number}</p>
+                  )}
                 </div>
 
                 {/* Carrier */}
@@ -245,7 +325,7 @@ export default function PackageIntake({ onNavigate }: PackageIntakeProps) {
                     onValueChange={(value) => handleInputChange('carrier', value)}
                     required
                   >
-                    <SelectTrigger className="h-12">
+                    <SelectTrigger className={`h-12 ${errors.carrier ? 'border-red-500' : ''}`}>
                       <SelectValue placeholder="Select carrier" />
                     </SelectTrigger>
                     <SelectContent>
@@ -256,38 +336,45 @@ export default function PackageIntake({ onNavigate }: PackageIntakeProps) {
                       ))}
                     </SelectContent>
                   </Select>
+                  {errors.carrier && (
+                    <p className="text-sm text-red-500">{errors.carrier}</p>
+                  )}
                 </div>
 
                 {/* Customer */}
                 <div className="space-y-2">
                   <Label>{t('intake.customer')}</Label>
                   <Select
-                    value={formData.customerId}
-                    onValueChange={(value) => handleInputChange('customerId', value)}
+                    value={formData.customer_id}
+                    onValueChange={(value) => handleInputChange('customer_id', value)}
                     required
+                    disabled={customersLoading}
                   >
-                    <SelectTrigger className="h-12">
-                      <SelectValue placeholder="Select customer" />
+                    <SelectTrigger className={`h-12 ${errors.customer_id ? 'border-red-500' : ''}`}>
+                      <SelectValue placeholder={customersLoading ? "Loading customers..." : "Select customer"} />
                     </SelectTrigger>
                     <SelectContent>
-                      {mockCustomers.map((customer) => (
+                      {customers.map((customer) => (
                         <SelectItem key={customer.id} value={customer.id}>
-                          {customer.name} - {customer.mailboxNumber}
+                          {customer.first_name} {customer.last_name} - {customer.mailbox_number}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
+                  {errors.customer_id && (
+                    <p className="text-sm text-red-500">{errors.customer_id}</p>
+                  )}
                 </div>
 
                 {/* Package Size */}
                 <div className="space-y-2">
                   <Label>{t('intake.packageSize')}</Label>
                   <Select
-                    value={formData.packageSize}
-                    onValueChange={(value) => handleInputChange('packageSize', value)}
+                    value={formData.size}
+                    onValueChange={(value) => handleInputChange('size', value)}
                     required
                   >
-                    <SelectTrigger className="h-12">
+                    <SelectTrigger className={`h-12 ${errors.size ? 'border-red-500' : ''}`}>
                       <SelectValue placeholder="Select size" />
                     </SelectTrigger>
                     <SelectContent>
@@ -298,6 +385,33 @@ export default function PackageIntake({ onNavigate }: PackageIntakeProps) {
                       ))}
                     </SelectContent>
                   </Select>
+                  {errors.size && (
+                    <p className="text-sm text-red-500">{errors.size}</p>
+                  )}
+                </div>
+
+                {/* Weight and Dimensions */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="weight">Weight</Label>
+                    <Input
+                      id="weight"
+                      value={formData.weight}
+                      onChange={(e) => handleInputChange('weight', e.target.value)}
+                      placeholder="2.5 lbs"
+                      className="h-12"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="dimensions">Dimensions</Label>
+                    <Input
+                      id="dimensions"
+                      value={formData.dimensions}
+                      onChange={(e) => handleInputChange('dimensions', e.target.value)}
+                      placeholder="12x8x6 in"
+                      className="h-12"
+                    />
+                  </div>
                 </div>
 
                 {/* Package Photo */}
@@ -364,8 +478,37 @@ export default function PackageIntake({ onNavigate }: PackageIntakeProps) {
                   </div>
                   <Switch
                     id="special-handling"
-                    checked={formData.specialHandling}
-                    onCheckedChange={(checked) => handleInputChange('specialHandling', checked)}
+                    checked={formData.special_handling}
+                    onCheckedChange={(checked) => handleInputChange('special_handling', checked)}
+                  />
+                </div>
+
+                {/* Signature Required */}
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div>
+                    <Label htmlFor="signature-required" className="font-medium">
+                      Signature Required
+                    </Label>
+                    <p className="text-sm text-muted-foreground">
+                      Package requires signature for delivery
+                    </p>
+                  </div>
+                  <Switch
+                    id="signature-required"
+                    checked={formData.requires_signature}
+                    onCheckedChange={(checked) => handleInputChange('requires_signature', checked)}
+                  />
+                </div>
+
+                {/* Notes */}
+                <div className="space-y-2">
+                  <Label htmlFor="notes">Notes</Label>
+                  <Textarea
+                    id="notes"
+                    value={formData.notes}
+                    onChange={(e) => handleInputChange('notes', e.target.value)}
+                    placeholder="Special instructions or notes..."
+                    className="min-h-[80px]"
                   />
                 </div>
 
@@ -375,7 +518,7 @@ export default function PackageIntake({ onNavigate }: PackageIntakeProps) {
                   variant="mobile"
                   size="mobile"
                   className="w-full"
-                  disabled={isLoading}
+                  disabled={isLoading || customersLoading}
                 >
                   {isLoading ? (
                     <LoadingSpinner size="sm" text="Processing..." />

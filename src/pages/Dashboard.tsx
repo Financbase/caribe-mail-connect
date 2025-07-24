@@ -5,6 +5,7 @@ import { MobileHeader } from '@/components/MobileHeader';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { usePackages } from '@/hooks/usePackages';
+import { useNotifications } from '@/hooks/useNotifications';
 
 interface DashboardProps {
   onNavigate: (page: string) => void;
@@ -14,6 +15,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
   const { user } = useAuth();
   const { t } = useLanguage();
   const { packages, getTodayStats } = usePackages();
+  const { notifications } = useNotifications();
   
   const stats = getTodayStats();
   const getGreeting = () => {

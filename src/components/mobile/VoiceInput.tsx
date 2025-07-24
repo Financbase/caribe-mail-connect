@@ -1,9 +1,10 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
-import { Mic, MicOff, Square } from 'lucide-react';
+import { Mic, Square } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useMobile } from '@/hooks/useMobile';
 import { useToast } from '@/hooks/use-toast';
+import { pipeline, env } from '@huggingface/transformers';
 
 interface VoiceInputProps {
   onTranscription: (text: string) => void;
@@ -19,95 +20,112 @@ export function VoiceInput({
   language = 'es-ES'
 }: VoiceInputProps) {
   const [isListening, setIsListening] = useState(false);
-  const [isSupported, setIsSupported] = useState(true);
-  const recognitionRef = useRef<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+  const transcribeRef = useRef<any>(null);
   const { hapticFeedback } = useMobile();
   const { toast } = useToast();
 
-  // Check if speech recognition is supported
-  const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+  // Configure transformers.js
+  env.allowLocalModels = false;
+  env.useBrowserCache = true;
 
-  const startListening = () => {
-    if (!SpeechRecognition) {
-      setIsSupported(false);
-      toast({
-        title: 'No soportado',
-        description: 'Tu navegador no soporta reconocimiento de voz',
-        variant: 'destructive',
-      });
-      return;
+  const initializeTranscriber = useCallback(async () => {
+    if (!transcribeRef.current) {
+      try {
+        const transcriber = await pipeline(
+          'automatic-speech-recognition',
+          'onnx-community/whisper-tiny-multilingual',
+          { device: 'webgpu' }
+        );
+        transcribeRef.current = transcriber;
+      } catch (error) {
+        console.log('WebGPU not available, falling back to CPU');
+        const transcriber = await pipeline(
+          'automatic-speech-recognition',
+          'onnx-community/whisper-tiny-multilingual'
+        );
+        transcribeRef.current = transcriber;
+      }
     }
+    return transcribeRef.current;
+  }, []);
 
-    if (disabled || isListening) return;
+  const startListening = async () => {
+    if (disabled || isListening || isLoading) return;
 
-    const recognition = new SpeechRecognition();
-    recognition.lang = language;
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
-    recognition.continuous = false;
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      
+      audioChunksRef.current = [];
+      mediaRecorderRef.current = new MediaRecorder(stream);
+      
+      mediaRecorderRef.current.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
+      };
 
-    recognition.onstart = () => {
+      mediaRecorderRef.current.onstop = async () => {
+        setIsListening(false);
+        setIsLoading(true);
+        
+        try {
+          const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+          const transcriber = await initializeTranscriber();
+          
+          const result = await transcriber(audioBlob);
+          const transcript = result.text.trim();
+          
+          if (transcript) {
+            onTranscription(transcript);
+            hapticFeedback.success();
+            toast({
+              title: 'Transcripción completa',
+              description: transcript,
+            });
+          } else {
+            toast({
+              title: 'No se detectó voz',
+              description: 'Intenta hablar más claro',
+              variant: 'destructive',
+            });
+          }
+        } catch (error) {
+          console.error('Transcription error:', error);
+          hapticFeedback.error();
+          toast({
+            title: 'Error de transcripción',
+            description: 'No se pudo procesar el audio',
+            variant: 'destructive',
+          });
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
       setIsListening(true);
       hapticFeedback.medium();
-    };
-
-    recognition.onresult = (event) => {
-      const transcript = event.results[0][0].transcript;
-      onTranscription(transcript);
-      hapticFeedback.success();
-      toast({
-        title: 'Transcripción completa',
-        description: transcript,
-      });
-    };
-
-    recognition.onerror = (event) => {
-      console.error('Speech recognition error:', event.error);
-      setIsListening(false);
+      mediaRecorderRef.current.start();
+      
+    } catch (error) {
+      console.error('Microphone access error:', error);
       hapticFeedback.error();
-      
-      let errorMessage = 'Error en el reconocimiento de voz';
-      switch (event.error) {
-        case 'no-speech':
-          errorMessage = 'No se detectó voz. Intenta de nuevo.';
-          break;
-        case 'audio-capture':
-          errorMessage = 'No se pudo acceder al micrófono';
-          break;
-        case 'not-allowed':
-          errorMessage = 'Permiso de micrófono denegado';
-          break;
-        case 'network':
-          errorMessage = 'Error de conexión de red';
-          break;
-      }
-      
       toast({
-        title: 'Error de voz',
-        description: errorMessage,
+        title: 'Error de micrófono',
+        description: 'No se pudo acceder al micrófono',
         variant: 'destructive',
       });
-    };
-
-    recognition.onend = () => {
-      setIsListening(false);
-    };
-
-    recognitionRef.current = recognition;
-    recognition.start();
+    }
   };
 
   const stopListening = () => {
-    if (recognitionRef.current && isListening) {
-      recognitionRef.current.stop();
-      setIsListening(false);
+    if (mediaRecorderRef.current && isListening) {
+      mediaRecorderRef.current.stop();
       hapticFeedback.light();
     }
   };
-
-  if (!isSupported) {
-    return null;
-  }
 
   return (
     <div className="flex items-center space-x-2">
@@ -115,7 +133,7 @@ export function VoiceInput({
         type="button"
         variant={isListening ? "destructive" : "outline"}
         size="sm"
-        disabled={disabled}
+        disabled={disabled || isLoading}
         onMouseDown={startListening}
         onMouseUp={stopListening}
         onMouseLeave={stopListening}
@@ -126,7 +144,12 @@ export function VoiceInput({
           isListening && "animate-pulse"
         )}
       >
-        {isListening ? (
+        {isLoading ? (
+          <>
+            <div className="w-4 h-4 mr-2 animate-spin rounded-full border-2 border-current border-t-transparent" />
+            Procesando...
+          </>
+        ) : isListening ? (
           <>
             <Square className="w-4 h-4 mr-2" />
             Grabando...
@@ -139,10 +162,12 @@ export function VoiceInput({
         )}
       </Button>
       
-      {isListening && (
+      {(isListening || isLoading) && (
         <div className="flex items-center space-x-1">
           <div className="w-2 h-2 bg-destructive rounded-full animate-ping" />
-          <span className="text-sm text-muted-foreground">Escuchando...</span>
+          <span className="text-sm text-muted-foreground">
+            {isLoading ? 'Procesando...' : 'Escuchando...'}
+          </span>
         </div>
       )}
     </div>

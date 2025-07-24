@@ -26,13 +26,7 @@ export interface Package {
   notes?: string;
 }
 
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: 'Admin' | 'Employee';
-  location: string;
-}
+// Removed User interface and mock users - now using Supabase auth
 
 export const mockCustomers: Customer[] = [
   {
@@ -256,43 +250,7 @@ export const mockPackages: Package[] = [
   }
 ];
 
-export const mockUsers: User[] = [
-  {
-    id: 'USR001',
-    name: 'Admin Usuario',
-    email: 'admin@prmcms.com',
-    role: 'Admin',
-    location: 'San Juan Central'
-  },
-  {
-    id: 'USR002',
-    name: 'Empleado Uno',
-    email: 'empleado1@prmcms.com',
-    role: 'Employee',
-    location: 'San Juan Central'
-  },
-  {
-    id: 'USR003',
-    name: 'Empleado Dos',
-    email: 'empleado2@prmcms.com',
-    role: 'Employee',
-    location: 'Bayamón'
-  },
-  {
-    id: 'USR004',
-    name: 'Empleado Tres',
-    email: 'empleado3@prmcms.com',
-    role: 'Employee',
-    location: 'Ponce'
-  },
-  {
-    id: 'USR005',
-    name: 'Empleado Cuatro',
-    email: 'empleado4@prmcms.com',
-    role: 'Employee',
-    location: 'Arecibo'
-  }
-];
+// Mock users removed - using Supabase auth instead
 
 // Helper functions
 export const getCustomerById = (id: string): Customer | undefined => {

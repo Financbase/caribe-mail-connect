@@ -216,6 +216,50 @@ export type Database = {
         }
         Relationships: []
       }
+      customer_appointments: {
+        Row: {
+          appointment_date: string
+          appointment_time: string
+          created_at: string
+          customer_id: string
+          id: string
+          notes: string | null
+          service_type: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          appointment_date: string
+          appointment_time: string
+          created_at?: string
+          customer_id: string
+          id?: string
+          notes?: string | null
+          service_type: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          appointment_date?: string
+          appointment_time?: string
+          created_at?: string
+          customer_id?: string
+          id?: string
+          notes?: string | null
+          service_type?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customer_appointments_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       customer_compliance: {
         Row: {
           compliance_score: number | null
@@ -264,6 +308,115 @@ export type Database = {
             foreignKeyName: "fk_compliance_customer"
             columns: ["customer_id"]
             isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      customer_documents: {
+        Row: {
+          created_at: string
+          customer_id: string
+          description: string | null
+          document_type: string
+          file_size_bytes: number | null
+          file_url: string | null
+          id: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          customer_id: string
+          description?: string | null
+          document_type: string
+          file_size_bytes?: number | null
+          file_url?: string | null
+          id?: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          customer_id?: string
+          description?: string | null
+          document_type?: string
+          file_size_bytes?: number | null
+          file_url?: string | null
+          id?: string
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customer_documents_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      customer_notification_preferences: {
+        Row: {
+          account_updates: boolean
+          created_at: string
+          customer_id: string
+          email_enabled: boolean
+          id: string
+          mail_hold_expiry: boolean
+          package_arrival: boolean
+          package_delivered: boolean
+          package_ready: boolean
+          preferred_time: string | null
+          quiet_hours_end: string | null
+          quiet_hours_start: string | null
+          sms_enabled: boolean
+          updated_at: string
+          whatsapp_enabled: boolean
+        }
+        Insert: {
+          account_updates?: boolean
+          created_at?: string
+          customer_id: string
+          email_enabled?: boolean
+          id?: string
+          mail_hold_expiry?: boolean
+          package_arrival?: boolean
+          package_delivered?: boolean
+          package_ready?: boolean
+          preferred_time?: string | null
+          quiet_hours_end?: string | null
+          quiet_hours_start?: string | null
+          sms_enabled?: boolean
+          updated_at?: string
+          whatsapp_enabled?: boolean
+        }
+        Update: {
+          account_updates?: boolean
+          created_at?: string
+          customer_id?: string
+          email_enabled?: boolean
+          id?: string
+          mail_hold_expiry?: boolean
+          package_arrival?: boolean
+          package_delivered?: boolean
+          package_ready?: boolean
+          preferred_time?: string | null
+          quiet_hours_end?: string | null
+          quiet_hours_start?: string | null
+          sms_enabled?: boolean
+          updated_at?: string
+          whatsapp_enabled?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customer_notification_preferences_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: true
             referencedRelation: "customers"
             referencedColumns: ["id"]
           },
@@ -949,6 +1102,50 @@ export type Database = {
           zip_code?: string
         }
         Relationships: []
+      }
+      mail_hold_requests: {
+        Row: {
+          created_at: string
+          customer_id: string
+          end_date: string
+          forward_address: string | null
+          id: string
+          reason: string | null
+          start_date: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          customer_id: string
+          end_date: string
+          forward_address?: string | null
+          id?: string
+          reason?: string | null
+          start_date: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          customer_id?: string
+          end_date?: string
+          forward_address?: string | null
+          id?: string
+          reason?: string | null
+          start_date?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mail_hold_requests_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       mailbox_payments: {
         Row: {

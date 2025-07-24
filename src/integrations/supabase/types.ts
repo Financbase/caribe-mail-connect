@@ -233,6 +233,78 @@ export type Database = {
           },
         ]
       }
+      check_deposits: {
+        Row: {
+          amount: number
+          back_image_url: string
+          bank_name: string | null
+          check_date: string | null
+          check_number: string | null
+          created_at: string
+          customer_id: string
+          deposit_method: string
+          front_image_url: string
+          id: string
+          processed_at: string | null
+          processed_by: string | null
+          processing_notes: string | null
+          status: string
+          updated_at: string
+          virtual_mailbox_id: string | null
+        }
+        Insert: {
+          amount: number
+          back_image_url: string
+          bank_name?: string | null
+          check_date?: string | null
+          check_number?: string | null
+          created_at?: string
+          customer_id: string
+          deposit_method?: string
+          front_image_url: string
+          id?: string
+          processed_at?: string | null
+          processed_by?: string | null
+          processing_notes?: string | null
+          status?: string
+          updated_at?: string
+          virtual_mailbox_id?: string | null
+        }
+        Update: {
+          amount?: number
+          back_image_url?: string
+          bank_name?: string | null
+          check_date?: string | null
+          check_number?: string | null
+          created_at?: string
+          customer_id?: string
+          deposit_method?: string
+          front_image_url?: string
+          id?: string
+          processed_at?: string | null
+          processed_by?: string | null
+          processing_notes?: string | null
+          status?: string
+          updated_at?: string
+          virtual_mailbox_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_check_deposits_customer"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_check_deposits_mailbox"
+            columns: ["virtual_mailbox_id"]
+            isOneToOne: false
+            referencedRelation: "virtual_mailboxes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       compliance_audit_log: {
         Row: {
           action: string
@@ -2091,6 +2163,75 @@ export type Database = {
         }
         Relationships: []
       }
+      mail_actions: {
+        Row: {
+          action_cost: number | null
+          action_type: string
+          completed_at: string | null
+          created_at: string
+          forwarding_address: Json | null
+          id: string
+          mail_piece_id: string
+          notes: string | null
+          processed_by: string | null
+          requested_at: string
+          scan_document_urls: Json | null
+          scanning_instructions: Json | null
+          status: string
+          tracking_number: string | null
+          virtual_mailbox_id: string
+        }
+        Insert: {
+          action_cost?: number | null
+          action_type: string
+          completed_at?: string | null
+          created_at?: string
+          forwarding_address?: Json | null
+          id?: string
+          mail_piece_id: string
+          notes?: string | null
+          processed_by?: string | null
+          requested_at?: string
+          scan_document_urls?: Json | null
+          scanning_instructions?: Json | null
+          status?: string
+          tracking_number?: string | null
+          virtual_mailbox_id: string
+        }
+        Update: {
+          action_cost?: number | null
+          action_type?: string
+          completed_at?: string | null
+          created_at?: string
+          forwarding_address?: Json | null
+          id?: string
+          mail_piece_id?: string
+          notes?: string | null
+          processed_by?: string | null
+          requested_at?: string
+          scan_document_urls?: Json | null
+          scanning_instructions?: Json | null
+          status?: string
+          tracking_number?: string | null
+          virtual_mailbox_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_mail_actions_mail_piece"
+            columns: ["mail_piece_id"]
+            isOneToOne: false
+            referencedRelation: "mail_pieces"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_mail_actions_mailbox"
+            columns: ["virtual_mailbox_id"]
+            isOneToOne: false
+            referencedRelation: "virtual_mailboxes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       mail_hold_requests: {
         Row: {
           created_at: string
@@ -2131,6 +2272,83 @@ export type Database = {
             columns: ["customer_id"]
             isOneToOne: false
             referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mail_pieces: {
+        Row: {
+          created_at: string
+          customer_action_deadline: string | null
+          customer_notified_at: string | null
+          id: string
+          mail_type: string
+          notes: string | null
+          photo_exterior_url: string | null
+          photo_thumbnail_url: string | null
+          piece_number: string
+          priority_level: number
+          processed_by: string | null
+          received_date: string
+          sender_address: string | null
+          sender_name: string | null
+          size_category: string
+          special_handling_flags: Json | null
+          status: string
+          updated_at: string
+          virtual_mailbox_id: string
+          weight_grams: number | null
+        }
+        Insert: {
+          created_at?: string
+          customer_action_deadline?: string | null
+          customer_notified_at?: string | null
+          id?: string
+          mail_type?: string
+          notes?: string | null
+          photo_exterior_url?: string | null
+          photo_thumbnail_url?: string | null
+          piece_number: string
+          priority_level?: number
+          processed_by?: string | null
+          received_date?: string
+          sender_address?: string | null
+          sender_name?: string | null
+          size_category?: string
+          special_handling_flags?: Json | null
+          status?: string
+          updated_at?: string
+          virtual_mailbox_id: string
+          weight_grams?: number | null
+        }
+        Update: {
+          created_at?: string
+          customer_action_deadline?: string | null
+          customer_notified_at?: string | null
+          id?: string
+          mail_type?: string
+          notes?: string | null
+          photo_exterior_url?: string | null
+          photo_thumbnail_url?: string | null
+          piece_number?: string
+          priority_level?: number
+          processed_by?: string | null
+          received_date?: string
+          sender_address?: string | null
+          sender_name?: string | null
+          size_category?: string
+          special_handling_flags?: Json | null
+          status?: string
+          updated_at?: string
+          virtual_mailbox_id?: string
+          weight_grams?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_mail_pieces_mailbox"
+            columns: ["virtual_mailbox_id"]
+            isOneToOne: false
+            referencedRelation: "virtual_mailboxes"
             referencedColumns: ["id"]
           },
         ]
@@ -3515,6 +3733,78 @@ export type Database = {
         }
         Relationships: []
       }
+      scanning_queue: {
+        Row: {
+          assigned_to: string | null
+          color_mode: string
+          completed_at: string | null
+          created_at: string
+          estimated_completion: string | null
+          id: string
+          mail_action_id: string
+          mail_piece_id: string
+          priority_level: number
+          queue_position: number
+          resolution_dpi: number
+          scan_quality: string
+          scan_type: string
+          special_instructions: string | null
+          started_at: string | null
+          status: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          color_mode?: string
+          completed_at?: string | null
+          created_at?: string
+          estimated_completion?: string | null
+          id?: string
+          mail_action_id: string
+          mail_piece_id: string
+          priority_level?: number
+          queue_position?: number
+          resolution_dpi?: number
+          scan_quality?: string
+          scan_type?: string
+          special_instructions?: string | null
+          started_at?: string | null
+          status?: string
+        }
+        Update: {
+          assigned_to?: string | null
+          color_mode?: string
+          completed_at?: string | null
+          created_at?: string
+          estimated_completion?: string | null
+          id?: string
+          mail_action_id?: string
+          mail_piece_id?: string
+          priority_level?: number
+          queue_position?: number
+          resolution_dpi?: number
+          scan_quality?: string
+          scan_type?: string
+          special_instructions?: string | null
+          started_at?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_scanning_queue_action"
+            columns: ["mail_action_id"]
+            isOneToOne: false
+            referencedRelation: "mail_actions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_scanning_queue_mail_piece"
+            columns: ["mail_piece_id"]
+            isOneToOne: false
+            referencedRelation: "mail_pieces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       staff_members: {
         Row: {
           created_at: string
@@ -3770,6 +4060,199 @@ export type Database = {
           },
         ]
       }
+      virtual_mailbox_billing: {
+        Row: {
+          action_fees: number
+          billing_month: string
+          billing_period_end: string
+          billing_period_start: string
+          created_at: string
+          forwarding_fees: number
+          id: string
+          invoice_id: string | null
+          monthly_service_fee: number
+          processed_at: string | null
+          scanning_fees: number
+          status: string
+          storage_fees: number
+          total_amount: number
+          usage_summary: Json
+          virtual_mailbox_id: string
+        }
+        Insert: {
+          action_fees?: number
+          billing_month: string
+          billing_period_end: string
+          billing_period_start: string
+          created_at?: string
+          forwarding_fees?: number
+          id?: string
+          invoice_id?: string | null
+          monthly_service_fee?: number
+          processed_at?: string | null
+          scanning_fees?: number
+          status?: string
+          storage_fees?: number
+          total_amount?: number
+          usage_summary?: Json
+          virtual_mailbox_id: string
+        }
+        Update: {
+          action_fees?: number
+          billing_month?: string
+          billing_period_end?: string
+          billing_period_start?: string
+          created_at?: string
+          forwarding_fees?: number
+          id?: string
+          invoice_id?: string | null
+          monthly_service_fee?: number
+          processed_at?: string | null
+          scanning_fees?: number
+          status?: string
+          storage_fees?: number
+          total_amount?: number
+          usage_summary?: Json
+          virtual_mailbox_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_vm_billing_mailbox"
+            columns: ["virtual_mailbox_id"]
+            isOneToOne: false
+            referencedRelation: "virtual_mailboxes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      virtual_mailbox_pricing: {
+        Row: {
+          check_deposit_fee: number
+          created_at: string
+          created_by: string | null
+          effective_date: string
+          forward_fee_base: number
+          forward_fee_per_ounce: number
+          id: string
+          is_active: boolean
+          location_id: string | null
+          monthly_base_fee: number
+          rush_processing_fee: number
+          scan_fee_per_page: number
+          service_tier: string
+          shred_fee: number
+          storage_fee_per_month: number
+        }
+        Insert: {
+          check_deposit_fee?: number
+          created_at?: string
+          created_by?: string | null
+          effective_date?: string
+          forward_fee_base?: number
+          forward_fee_per_ounce?: number
+          id?: string
+          is_active?: boolean
+          location_id?: string | null
+          monthly_base_fee?: number
+          rush_processing_fee?: number
+          scan_fee_per_page?: number
+          service_tier: string
+          shred_fee?: number
+          storage_fee_per_month?: number
+        }
+        Update: {
+          check_deposit_fee?: number
+          created_at?: string
+          created_by?: string | null
+          effective_date?: string
+          forward_fee_base?: number
+          forward_fee_per_ounce?: number
+          id?: string
+          is_active?: boolean
+          location_id?: string | null
+          monthly_base_fee?: number
+          rush_processing_fee?: number
+          scan_fee_per_page?: number
+          service_tier?: string
+          shred_fee?: number
+          storage_fee_per_month?: number
+        }
+        Relationships: []
+      }
+      virtual_mailboxes: {
+        Row: {
+          activation_date: string
+          address_line1: string
+          address_line2: string | null
+          billing_cycle_day: number
+          city: string
+          created_at: string
+          created_by: string | null
+          customer_id: string
+          forwarding_address: Json | null
+          id: string
+          location_id: string
+          monthly_fee: number
+          preferences: Json
+          service_tier: string
+          state: string
+          status: string
+          updated_at: string
+          updated_by: string | null
+          zip_code: string
+        }
+        Insert: {
+          activation_date?: string
+          address_line1: string
+          address_line2?: string | null
+          billing_cycle_day?: number
+          city?: string
+          created_at?: string
+          created_by?: string | null
+          customer_id: string
+          forwarding_address?: Json | null
+          id?: string
+          location_id: string
+          monthly_fee?: number
+          preferences?: Json
+          service_tier?: string
+          state?: string
+          status?: string
+          updated_at?: string
+          updated_by?: string | null
+          zip_code: string
+        }
+        Update: {
+          activation_date?: string
+          address_line1?: string
+          address_line2?: string | null
+          billing_cycle_day?: number
+          city?: string
+          created_at?: string
+          created_by?: string | null
+          customer_id?: string
+          forwarding_address?: Json | null
+          id?: string
+          location_id?: string
+          monthly_fee?: number
+          preferences?: Json
+          service_tier?: string
+          state?: string
+          status?: string
+          updated_at?: string
+          updated_by?: string | null
+          zip_code?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_virtual_mailboxes_customer"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       webhook_endpoints: {
         Row: {
           created_at: string
@@ -3892,6 +4375,10 @@ export type Database = {
       }
       generate_invoice_number: {
         Args: { location_code: string }
+        Returns: string
+      }
+      generate_mail_piece_number: {
+        Args: { vm_id: string }
         Returns: string
       }
       generate_po_number: {

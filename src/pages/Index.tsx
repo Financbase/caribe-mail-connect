@@ -23,6 +23,7 @@ import CustomerPortal from './CustomerPortal';
 import Integrations from './Integrations';
 import Inventory from './Inventory';
 import Documents from './Documents';
+import { VirtualMail } from './VirtualMail';
 import { MobileLayout } from '@/components/mobile/MobileLayout';
 
 // Main application component with navigation logic
@@ -141,6 +142,8 @@ const PRMCMS = () => {
         return <Inventory onNavigate={handleNavigation} />;
       case 'documents':
         return <Documents onNavigate={handleNavigation} />;
+      case 'virtual-mail':
+        return <VirtualMail />;
       case 'profile-settings':
         return <ProfileSettings onNavigate={handleNavigation} />;
       case 'customer-portal':

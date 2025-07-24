@@ -1,4 +1,4 @@
-import { Package, Search, CheckCircle, Users, Mail, BarChart3, Truck } from 'lucide-react';
+import { Package, Search, CheckCircle, Users, Mail, BarChart3, Truck, Crown } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ActionCard } from '@/components/ActionCard';
 import { MobileHeader } from '@/components/MobileHeader';
@@ -39,6 +39,11 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
       title: t('actions.customers'),
       icon: Users,
       onClick: () => onNavigate('customers'),
+    },
+    {
+      title: 'Act 60 Dashboard',
+      icon: Crown,
+      onClick: () => onNavigate('act60-dashboard'),
     },
     {
       title: t('Mailboxes'),

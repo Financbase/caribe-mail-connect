@@ -14,6 +14,59 @@ export type Database = {
   }
   public: {
     Tables: {
+      act_60_compliance: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          customer_id: string
+          document_type: string
+          document_url: string | null
+          expiration_date: string | null
+          id: string
+          notes: string | null
+          status: string
+          updated_at: string | null
+          updated_by: string | null
+          upload_date: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          customer_id: string
+          document_type: string
+          document_url?: string | null
+          expiration_date?: string | null
+          id?: string
+          notes?: string | null
+          status?: string
+          updated_at?: string | null
+          updated_by?: string | null
+          upload_date?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          customer_id?: string
+          document_type?: string
+          document_url?: string | null
+          expiration_date?: string | null
+          id?: string
+          notes?: string | null
+          status?: string
+          updated_at?: string | null
+          updated_by?: string | null
+          upload_date?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "act_60_compliance_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       compliance_audit_log: {
         Row: {
           action: string
@@ -105,6 +158,9 @@ export type Database = {
       }
       customers: {
         Row: {
+          act_60_decree_number: string | null
+          act_60_expiration_date: string | null
+          act_60_status: boolean | null
           address_line1: string
           address_line2: string | null
           business_name: string | null
@@ -113,21 +169,29 @@ export type Database = {
           created_at: string
           created_by: string | null
           customer_type: string
+          dedicated_support_contact: string | null
           email: string
+          express_handling: boolean | null
           first_name: string
           id: string
           last_name: string
           mailbox_number: string
           notes: string | null
           phone: string | null
+          priority_notification: boolean | null
+          special_pricing_tier: string | null
           state: string
           status: string
           updated_at: string
           updated_by: string | null
           user_id: string | null
+          vip_handling_preferences: Json | null
           zip_code: string
         }
         Insert: {
+          act_60_decree_number?: string | null
+          act_60_expiration_date?: string | null
+          act_60_status?: boolean | null
           address_line1: string
           address_line2?: string | null
           business_name?: string | null
@@ -136,21 +200,29 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           customer_type?: string
+          dedicated_support_contact?: string | null
           email: string
+          express_handling?: boolean | null
           first_name: string
           id?: string
           last_name: string
           mailbox_number: string
           notes?: string | null
           phone?: string | null
+          priority_notification?: boolean | null
+          special_pricing_tier?: string | null
           state?: string
           status?: string
           updated_at?: string
           updated_by?: string | null
           user_id?: string | null
+          vip_handling_preferences?: Json | null
           zip_code: string
         }
         Update: {
+          act_60_decree_number?: string | null
+          act_60_expiration_date?: string | null
+          act_60_status?: boolean | null
           address_line1?: string
           address_line2?: string | null
           business_name?: string | null
@@ -159,18 +231,23 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           customer_type?: string
+          dedicated_support_contact?: string | null
           email?: string
+          express_handling?: boolean | null
           first_name?: string
           id?: string
           last_name?: string
           mailbox_number?: string
           notes?: string | null
           phone?: string | null
+          priority_notification?: boolean | null
+          special_pricing_tier?: string | null
           state?: string
           status?: string
           updated_at?: string
           updated_by?: string | null
           user_id?: string | null
+          vip_handling_preferences?: Json | null
           zip_code?: string
         }
         Relationships: []
@@ -855,6 +932,68 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      virtual_mailbox: {
+        Row: {
+          action_date: string | null
+          action_taken: string | null
+          created_at: string | null
+          customer_id: string
+          forwarding_address: string | null
+          id: string
+          mail_item_id: string
+          mail_type: string
+          notes: string | null
+          received_date: string | null
+          scan_requested: boolean | null
+          scan_url: string | null
+          sender_address: string | null
+          sender_name: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          action_date?: string | null
+          action_taken?: string | null
+          created_at?: string | null
+          customer_id: string
+          forwarding_address?: string | null
+          id?: string
+          mail_item_id: string
+          mail_type: string
+          notes?: string | null
+          received_date?: string | null
+          scan_requested?: boolean | null
+          scan_url?: string | null
+          sender_address?: string | null
+          sender_name?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          action_date?: string | null
+          action_taken?: string | null
+          created_at?: string | null
+          customer_id?: string
+          forwarding_address?: string | null
+          id?: string
+          mail_item_id?: string
+          mail_type?: string
+          notes?: string | null
+          received_date?: string | null
+          scan_requested?: boolean | null
+          scan_url?: string | null
+          sender_address?: string | null
+          sender_name?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "virtual_mailbox_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

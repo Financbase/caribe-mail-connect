@@ -8,7 +8,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { MobileHeader } from '@/components/MobileHeader';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { toast } from '@/hooks/use-toast';
-import { mockCustomers } from '@/data/mockData';
+import { useCustomers } from '@/hooks/useCustomers';
+import { VipBadge } from '@/components/VipBadge';
 import { NotificationPreferences } from '@/types/notifications';
 import NotificationPreferencesComponent from '@/components/NotificationPreferences';
 
@@ -18,13 +19,15 @@ interface CustomersProps {
 
 export default function Customers({ onNavigate }: CustomersProps) {
   const { language, t } = useLanguage();
+  const { customers } = useCustomers();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCustomer, setSelectedCustomer] = useState<string | null>(null);
 
-  const filteredCustomers = mockCustomers.filter(customer =>
-    customer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    customer.mailboxNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    customer.phone.includes(searchQuery)
+  const filteredCustomers = customers.filter(customer =>
+    `${customer.first_name} ${customer.last_name}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    customer.mailbox_number.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    customer.phone?.includes(searchQuery) ||
+    customer.email.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleUpdateNotificationPreferences = (customerId: string) => (preferences: NotificationPreferences) => {
@@ -87,11 +90,12 @@ export default function Customers({ onNavigate }: CustomersProps) {
                 className={`
                   shadow-elegant hover:shadow-ocean transition-all duration-300 
                   cursor-pointer hover:scale-[1.02] animate-slide-up
+                  ${customer.act_60_status ? 'border-l-4 border-l-yellow-400 bg-gradient-to-r from-yellow-50 to-transparent' : ''}
                 `}
                 style={{ animationDelay: `${index * 50}ms` }}
                 onClick={() => {
                   // In real app, this would show customer details
-                  alert(`Customer details for ${customer.name}`);
+                  alert(`Customer details for ${customer.first_name} ${customer.last_name}`);
                 }}
               >
                 <CardContent className="p-4">
@@ -100,15 +104,18 @@ export default function Customers({ onNavigate }: CustomersProps) {
                       <div className="flex items-center gap-3 mb-2">
                         <div className="w-10 h-10 bg-gradient-ocean rounded-full flex items-center justify-center">
                           <span className="text-white font-semibold text-sm">
-                            {customer.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                            {customer.first_name[0]}{customer.last_name[0]}
                           </span>
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-semibold text-foreground truncate">
-                            {customer.name}
-                          </h3>
+                          <div className="flex items-center gap-2">
+                            <h3 className="font-semibold text-foreground truncate">
+                              {customer.first_name} {customer.last_name}
+                            </h3>
+                            <VipBadge isAct60={customer.act_60_status} size="sm" />
+                          </div>
                           <p className="text-sm text-muted-foreground">
-                            {customer.mailboxNumber}
+                            {customer.mailbox_number}
                           </p>
                         </div>
                       </div>
@@ -116,23 +123,33 @@ export default function Customers({ onNavigate }: CustomersProps) {
                       <div className="flex items-center gap-4 text-sm text-muted-foreground">
                         <div className="flex items-center gap-1">
                           <Phone className="h-3 w-3" />
-                          <span>{customer.phone}</span>
+                          <span>{customer.phone || 'N/A'}</span>
                         </div>
                         
-                        {customer.activePackages > 0 && (
+                        {customer.business_name && (
                           <div className="flex items-center gap-1">
                             <Package className="h-3 w-3" />
-                            <span>{customer.activePackages} packages</span>
+                            <span className="truncate">{customer.business_name}</span>
                           </div>
                         )}
                       </div>
                     </div>
 
-                     {/* Active Packages Badge and Settings */}
+                     {/* Badges and Settings */}
                     <div className="flex items-center gap-2">
-                      <Badge variant={customer.activePackages > 0 ? 'default' : 'secondary'}>
-                        {customer.mailboxNumber}
+                      <Badge 
+                        variant={customer.status === 'active' ? 'default' : 'secondary'}
+                        className={customer.act_60_status ? 'bg-yellow-100 text-yellow-800' : ''}
+                      >
+                        {customer.mailbox_number}
                       </Badge>
+                      
+                      {customer.express_handling && (
+                        <Badge variant="outline" className="border-green-500 text-green-700 text-xs">
+                          Express
+                        </Badge>
+                      )}
+                      
                       <Dialog open={selectedCustomer === customer.id} onOpenChange={(open) => setSelectedCustomer(open ? customer.id : null)}>
                         <DialogTrigger asChild>
                           <Button variant="ghost" size="sm" onClick={(e) => e.stopPropagation()}>
@@ -142,20 +159,14 @@ export default function Customers({ onNavigate }: CustomersProps) {
                         <DialogContent className="max-w-lg">
                           <DialogHeader>
                             <DialogTitle>
-                              {language === 'en' ? 'Notification Settings' : 'Configuración de Notificaciones'} - {customer.name}
+                              {language === 'en' ? 'Notification Settings' : 'Configuración de Notificaciones'} - {customer.first_name} {customer.last_name}
                             </DialogTitle>
                           </DialogHeader>
-                          <NotificationPreferencesComponent
-                            preferences={customer.notificationPreferences}
-                            onSave={handleUpdateNotificationPreferences(customer.id)}
-                          />
+                          <div className="text-center py-8 text-muted-foreground">
+                            <p>Notification preferences coming soon</p>
+                          </div>
                         </DialogContent>
                       </Dialog>
-                      {customer.activePackages > 0 && (
-                        <span className="inline-flex items-center justify-center w-8 h-8 text-xs font-bold text-white bg-gradient-sunrise rounded-full">
-                          {customer.activePackages}
-                        </span>
-                      )}
                     </div>
                   </div>
                 </CardContent>

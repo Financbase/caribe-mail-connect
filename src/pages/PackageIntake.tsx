@@ -12,6 +12,7 @@ import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { usePackages, type PackageFormData } from '@/hooks/usePackages';
 import { useCustomers } from '@/hooks/useCustomers';
+import { VipBadge } from '@/components/VipBadge';
 import { toast } from '@/hooks/use-toast';
 
 interface PackageIntakeProps {
@@ -356,7 +357,10 @@ export default function PackageIntake({ onNavigate }: PackageIntakeProps) {
                     <SelectContent>
                       {customers.map((customer) => (
                         <SelectItem key={customer.id} value={customer.id}>
-                          {customer.first_name} {customer.last_name} - {customer.mailbox_number}
+                          <div className="flex items-center justify-between w-full">
+                            <span>{customer.first_name} {customer.last_name} - {customer.mailbox_number}</span>
+                            <VipBadge isAct60={customer.act_60_status} size="sm" variant="icon" />
+                          </div>
                         </SelectItem>
                       ))}
                     </SelectContent>

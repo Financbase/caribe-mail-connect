@@ -7,6 +7,8 @@ import Customers from './Customers';
 import Notifications from './Notifications';
 import Mailboxes from './Mailboxes';
 import Analytics from './Analytics';
+import Routes from './Routes';
+import DriverRoute from './DriverRoute';
 import ProfileSettings from './profile/Settings';
 
 // Main application component with navigation logic
@@ -44,6 +46,10 @@ const PRMCMS = () => {
         return <Mailboxes onNavigate={setCurrentPage} />;
       case 'analytics':
         return <Analytics onNavigate={setCurrentPage} />;
+      case 'routes':
+        return <Routes onNavigate={setCurrentPage} />;
+      case 'driver-route':
+        return <DriverRoute onNavigate={setCurrentPage} />;
       case 'notifications':
         return <Notifications onNavigate={setCurrentPage} />;
       case 'profile-settings':

@@ -175,6 +175,243 @@ export type Database = {
         }
         Relationships: []
       }
+      deliveries: {
+        Row: {
+          actual_delivery_time: string | null
+          address_line1: string
+          address_line2: string | null
+          attempt_count: number | null
+          city: string
+          coordinates: unknown | null
+          created_at: string
+          created_by: string | null
+          customer_id: string
+          delivery_notes: string | null
+          delivery_proof: Json | null
+          delivery_window_end: string | null
+          delivery_window_start: string | null
+          estimated_delivery_time: string | null
+          id: string
+          package_id: string
+          priority: number | null
+          route_id: string | null
+          special_instructions: string | null
+          state: string
+          status: string
+          updated_at: string
+          updated_by: string | null
+          zip_code: string
+          zone: string | null
+        }
+        Insert: {
+          actual_delivery_time?: string | null
+          address_line1: string
+          address_line2?: string | null
+          attempt_count?: number | null
+          city: string
+          coordinates?: unknown | null
+          created_at?: string
+          created_by?: string | null
+          customer_id: string
+          delivery_notes?: string | null
+          delivery_proof?: Json | null
+          delivery_window_end?: string | null
+          delivery_window_start?: string | null
+          estimated_delivery_time?: string | null
+          id?: string
+          package_id: string
+          priority?: number | null
+          route_id?: string | null
+          special_instructions?: string | null
+          state?: string
+          status?: string
+          updated_at?: string
+          updated_by?: string | null
+          zip_code: string
+          zone?: string | null
+        }
+        Update: {
+          actual_delivery_time?: string | null
+          address_line1?: string
+          address_line2?: string | null
+          attempt_count?: number | null
+          city?: string
+          coordinates?: unknown | null
+          created_at?: string
+          created_by?: string | null
+          customer_id?: string
+          delivery_notes?: string | null
+          delivery_proof?: Json | null
+          delivery_window_end?: string | null
+          delivery_window_start?: string | null
+          estimated_delivery_time?: string | null
+          id?: string
+          package_id?: string
+          priority?: number | null
+          route_id?: string | null
+          special_instructions?: string | null
+          state?: string
+          status?: string
+          updated_at?: string
+          updated_by?: string | null
+          zip_code?: string
+          zone?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deliveries_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deliveries_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "packages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deliveries_route_id_fkey"
+            columns: ["route_id"]
+            isOneToOne: false
+            referencedRelation: "delivery_routes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      delivery_attempts: {
+        Row: {
+          attempt_number: number
+          attempted_at: string
+          created_at: string
+          delivery_id: string
+          driver_id: string | null
+          failure_reason: string | null
+          id: string
+          notes: string | null
+          status: string
+        }
+        Insert: {
+          attempt_number: number
+          attempted_at?: string
+          created_at?: string
+          delivery_id: string
+          driver_id?: string | null
+          failure_reason?: string | null
+          id?: string
+          notes?: string | null
+          status: string
+        }
+        Update: {
+          attempt_number?: number
+          attempted_at?: string
+          created_at?: string
+          delivery_id?: string
+          driver_id?: string | null
+          failure_reason?: string | null
+          id?: string
+          notes?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "delivery_attempts_delivery_id_fkey"
+            columns: ["delivery_id"]
+            isOneToOne: false
+            referencedRelation: "deliveries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      delivery_routes: {
+        Row: {
+          actual_duration: number | null
+          completed_stops: number | null
+          created_at: string
+          created_by: string | null
+          date: string
+          driver_id: string | null
+          estimated_duration: number | null
+          id: string
+          name: string
+          route_order: Json | null
+          status: string
+          total_stops: number | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          actual_duration?: number | null
+          completed_stops?: number | null
+          created_at?: string
+          created_by?: string | null
+          date: string
+          driver_id?: string | null
+          estimated_duration?: number | null
+          id?: string
+          name: string
+          route_order?: Json | null
+          status?: string
+          total_stops?: number | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          actual_duration?: number | null
+          completed_stops?: number | null
+          created_at?: string
+          created_by?: string | null
+          date?: string
+          driver_id?: string | null
+          estimated_duration?: number | null
+          id?: string
+          name?: string
+          route_order?: Json | null
+          status?: string
+          total_stops?: number | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
+      driver_assignments: {
+        Row: {
+          created_at: string
+          id: string
+          license_number: string | null
+          phone: string | null
+          status: string
+          updated_at: string
+          user_id: string
+          vehicle_type: string | null
+          zone_assignments: string[] | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          license_number?: string | null
+          phone?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+          vehicle_type?: string | null
+          zone_assignments?: string[] | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          license_number?: string | null
+          phone?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+          vehicle_type?: string | null
+          zone_assignments?: string[] | null
+        }
+        Relationships: []
+      }
       mailbox_payments: {
         Row: {
           amount: number

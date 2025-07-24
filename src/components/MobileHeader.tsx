@@ -42,3 +42,5 @@ export function MobileHeader({ title, showLogout = false }: MobileHeaderProps) {
     </header>
   );
 }
+
+export default MobileHeader;

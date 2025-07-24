@@ -1,4 +1,4 @@
-import { Package, Search, CheckCircle, Users, Mail } from 'lucide-react';
+import { Package, Search, CheckCircle, Users, Mail, BarChart3 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ActionCard } from '@/components/ActionCard';
 import { MobileHeader } from '@/components/MobileHeader';
@@ -46,9 +46,9 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
       onClick: () => onNavigate('mailboxes'),
     },
     {
-      title: t('actions.search'),
-      icon: Search,
-      onClick: () => onNavigate('search'),
+      title: t('Analytics'),
+      icon: BarChart3,
+      onClick: () => onNavigate('analytics'),
     },
   ];
 

@@ -101,13 +101,6 @@ export type Database = {
             referencedRelation: "customers"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "fk_compliance_customer"
-            columns: ["customer_id"]
-            isOneToOne: false
-            referencedRelation: "customers_pending_compliance"
-            referencedColumns: ["id"]
-          },
         ]
       }
       customers: {
@@ -240,13 +233,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "notifications_customer_id_fkey"
-            columns: ["customer_id"]
-            isOneToOne: false
-            referencedRelation: "customers_pending_compliance"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "notifications_package_id_fkey"
             columns: ["package_id"]
             isOneToOne: false
@@ -322,13 +308,6 @@ export type Database = {
             columns: ["customer_id"]
             isOneToOne: false
             referencedRelation: "customers"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "packages_customer_id_fkey"
-            columns: ["customer_id"]
-            isOneToOne: false
-            referencedRelation: "customers_pending_compliance"
             referencedColumns: ["id"]
           },
         ]
@@ -442,23 +421,24 @@ export type Database = {
       }
     }
     Views: {
-      customers_pending_compliance: {
-        Row: {
-          compliance_score: number | null
-          email: string | null
-          first_name: string | null
-          id: string | null
-          id_verification_status: string | null
-          last_name: string | null
-          ps_form_1583_status: string | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       get_current_user_role: {
         Args: Record<PropertyKey, never>
         Returns: string
+      }
+      get_customers_pending_compliance: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          first_name: string
+          last_name: string
+          email: string
+          ps_form_1583_status: string
+          id_verification_status: string
+          compliance_score: number
+        }[]
       }
       has_role: {
         Args: { _user_id: string; _role: string }

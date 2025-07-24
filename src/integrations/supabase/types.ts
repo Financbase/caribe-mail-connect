@@ -1345,6 +1345,428 @@ export type Database = {
           },
         ]
       }
+      notification_analytics: {
+        Row: {
+          avg_response_time_minutes: number | null
+          channel: string
+          click_rate: number | null
+          cost_per_message_cents: number | null
+          created_at: string
+          date: string
+          delivery_rate: number | null
+          id: string
+          location_id: string | null
+          open_rate: number | null
+          rule_id: string | null
+          template_id: string | null
+          total_clicked: number | null
+          total_cost_cents: number | null
+          total_delivered: number | null
+          total_failed: number | null
+          total_opened: number | null
+          total_sent: number | null
+          updated_at: string
+        }
+        Insert: {
+          avg_response_time_minutes?: number | null
+          channel: string
+          click_rate?: number | null
+          cost_per_message_cents?: number | null
+          created_at?: string
+          date?: string
+          delivery_rate?: number | null
+          id?: string
+          location_id?: string | null
+          open_rate?: number | null
+          rule_id?: string | null
+          template_id?: string | null
+          total_clicked?: number | null
+          total_cost_cents?: number | null
+          total_delivered?: number | null
+          total_failed?: number | null
+          total_opened?: number | null
+          total_sent?: number | null
+          updated_at?: string
+        }
+        Update: {
+          avg_response_time_minutes?: number | null
+          channel?: string
+          click_rate?: number | null
+          cost_per_message_cents?: number | null
+          created_at?: string
+          date?: string
+          delivery_rate?: number | null
+          id?: string
+          location_id?: string | null
+          open_rate?: number | null
+          rule_id?: string | null
+          template_id?: string | null
+          total_clicked?: number | null
+          total_cost_cents?: number | null
+          total_delivered?: number | null
+          total_failed?: number | null
+          total_opened?: number | null
+          total_sent?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_analytics_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notification_analytics_rule_id_fkey"
+            columns: ["rule_id"]
+            isOneToOne: false
+            referencedRelation: "notification_rules"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notification_analytics_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "notification_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notification_opt_outs: {
+        Row: {
+          channel: string
+          consent_method: string | null
+          created_at: string
+          customer_id: string
+          expires_at: string | null
+          id: string
+          ip_address: string | null
+          opted_out_at: string
+          reason: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          channel: string
+          consent_method?: string | null
+          created_at?: string
+          customer_id: string
+          expires_at?: string | null
+          id?: string
+          ip_address?: string | null
+          opted_out_at?: string
+          reason?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          channel?: string
+          consent_method?: string | null
+          created_at?: string
+          customer_id?: string
+          expires_at?: string | null
+          id?: string
+          ip_address?: string | null
+          opted_out_at?: string
+          reason?: string | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_opt_outs_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notification_queue: {
+        Row: {
+          channel: string
+          clicked_at: string | null
+          content: string
+          cost_cents: number | null
+          created_at: string
+          customer_id: string
+          delivery_status: string | null
+          error_message: string | null
+          external_id: string | null
+          id: string
+          opened_at: string | null
+          provider: string | null
+          recipient: string
+          rule_id: string | null
+          scheduled_for: string | null
+          sent_at: string | null
+          status: string
+          subject: string | null
+          template_id: string | null
+          updated_at: string
+          workflow_id: string | null
+        }
+        Insert: {
+          channel: string
+          clicked_at?: string | null
+          content: string
+          cost_cents?: number | null
+          created_at?: string
+          customer_id: string
+          delivery_status?: string | null
+          error_message?: string | null
+          external_id?: string | null
+          id?: string
+          opened_at?: string | null
+          provider?: string | null
+          recipient: string
+          rule_id?: string | null
+          scheduled_for?: string | null
+          sent_at?: string | null
+          status?: string
+          subject?: string | null
+          template_id?: string | null
+          updated_at?: string
+          workflow_id?: string | null
+        }
+        Update: {
+          channel?: string
+          clicked_at?: string | null
+          content?: string
+          cost_cents?: number | null
+          created_at?: string
+          customer_id?: string
+          delivery_status?: string | null
+          error_message?: string | null
+          external_id?: string | null
+          id?: string
+          opened_at?: string | null
+          provider?: string | null
+          recipient?: string
+          rule_id?: string | null
+          scheduled_for?: string | null
+          sent_at?: string | null
+          status?: string
+          subject?: string | null
+          template_id?: string | null
+          updated_at?: string
+          workflow_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_queue_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notification_queue_rule_id_fkey"
+            columns: ["rule_id"]
+            isOneToOne: false
+            referencedRelation: "notification_rules"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notification_queue_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "notification_templates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notification_queue_workflow_id_fkey"
+            columns: ["workflow_id"]
+            isOneToOne: false
+            referencedRelation: "notification_workflows"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notification_rules: {
+        Row: {
+          channels: Json
+          conditions: Json
+          created_at: string
+          created_by: string | null
+          delay_minutes: number | null
+          description: string | null
+          id: string
+          is_active: boolean
+          location_id: string | null
+          name: string
+          quiet_hours_end: string | null
+          quiet_hours_start: string | null
+          schedule_config: Json | null
+          template_id: string | null
+          trigger_type: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          channels?: Json
+          conditions?: Json
+          created_at?: string
+          created_by?: string | null
+          delay_minutes?: number | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          location_id?: string | null
+          name: string
+          quiet_hours_end?: string | null
+          quiet_hours_start?: string | null
+          schedule_config?: Json | null
+          template_id?: string | null
+          trigger_type: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          channels?: Json
+          conditions?: Json
+          created_at?: string
+          created_by?: string | null
+          delay_minutes?: number | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          location_id?: string | null
+          name?: string
+          quiet_hours_end?: string | null
+          quiet_hours_start?: string | null
+          schedule_config?: Json | null
+          template_id?: string | null
+          trigger_type?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_rules_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notification_templates: {
+        Row: {
+          category: string | null
+          content: string
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          is_default: boolean | null
+          language: string
+          name: string
+          parent_template_id: string | null
+          subject: string | null
+          test_percentage: number | null
+          type: string
+          updated_at: string
+          updated_by: string | null
+          variables: Json | null
+          variant_name: string | null
+        }
+        Insert: {
+          category?: string | null
+          content: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_default?: boolean | null
+          language?: string
+          name: string
+          parent_template_id?: string | null
+          subject?: string | null
+          test_percentage?: number | null
+          type: string
+          updated_at?: string
+          updated_by?: string | null
+          variables?: Json | null
+          variant_name?: string | null
+        }
+        Update: {
+          category?: string | null
+          content?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_default?: boolean | null
+          language?: string
+          name?: string
+          parent_template_id?: string | null
+          subject?: string | null
+          test_percentage?: number | null
+          type?: string
+          updated_at?: string
+          updated_by?: string | null
+          variables?: Json | null
+          variant_name?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_templates_parent_template_id_fkey"
+            columns: ["parent_template_id"]
+            isOneToOne: false
+            referencedRelation: "notification_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notification_workflows: {
+        Row: {
+          category: string
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          is_system: boolean | null
+          location_id: string | null
+          name: string
+          steps: Json
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_system?: boolean | null
+          location_id?: string | null
+          name: string
+          steps: Json
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_system?: boolean | null
+          location_id?: string | null
+          name?: string
+          steps?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_workflows_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notifications: {
         Row: {
           channels: Json
@@ -1937,6 +2359,63 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      whatsapp_templates: {
+        Row: {
+          body_content: string
+          body_variables: Json | null
+          buttons: Json | null
+          category: string
+          created_at: string
+          created_by: string | null
+          footer_content: string | null
+          header_content: string | null
+          header_type: string | null
+          header_variables: Json | null
+          id: string
+          language: string
+          name: string
+          status: string
+          updated_at: string
+          whatsapp_template_id: string
+        }
+        Insert: {
+          body_content: string
+          body_variables?: Json | null
+          buttons?: Json | null
+          category: string
+          created_at?: string
+          created_by?: string | null
+          footer_content?: string | null
+          header_content?: string | null
+          header_type?: string | null
+          header_variables?: Json | null
+          id?: string
+          language?: string
+          name: string
+          status?: string
+          updated_at?: string
+          whatsapp_template_id: string
+        }
+        Update: {
+          body_content?: string
+          body_variables?: Json | null
+          buttons?: Json | null
+          category?: string
+          created_at?: string
+          created_by?: string | null
+          footer_content?: string | null
+          header_content?: string | null
+          header_type?: string | null
+          header_variables?: Json | null
+          id?: string
+          language?: string
+          name?: string
+          status?: string
+          updated_at?: string
+          whatsapp_template_id?: string
+        }
+        Relationships: []
       }
     }
     Views: {

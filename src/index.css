@@ -8,35 +8,56 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
+    /* Caribbean-inspired color system */
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 210 50% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 210 50% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 210 50% 15%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Ocean blue primary */
+    --primary: 210 79% 31%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 210 79% 45%;
+    --primary-dark: 210 79% 25%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Sunrise orange secondary */
+    --secondary: 12 100% 60%;
+    --secondary-foreground: 0 0% 100%;
+    --secondary-light: 12 100% 75%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Caribbean sky accent */
+    --accent: 195 100% 85%;
+    --accent-foreground: 210 50% 15%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 210 25% 45%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 210 20% 90%;
+    --input: 210 20% 95%;
+    --ring: 210 79% 31%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
+
+    /* Caribbean gradients */
+    --gradient-ocean: linear-gradient(135deg, hsl(210 79% 31%), hsl(210 79% 45%));
+    --gradient-sunrise: linear-gradient(135deg, hsl(12 100% 60%), hsl(25 100% 65%));
+    --gradient-tropical: linear-gradient(135deg, hsl(195 100% 85%), hsl(210 79% 45%));
+    
+    /* Shadows with Caribbean colors */
+    --shadow-ocean: 0 10px 30px -10px hsl(210 79% 31% / 0.3);
+    --shadow-sunrise: 0 10px 30px -10px hsl(12 100% 60% / 0.3);
+    --shadow-elegant: 0 4px 20px -2px hsl(210 79% 31% / 0.1);
+
+    /* Animation transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
     --sidebar-background: 0 0% 98%;
 
@@ -100,6 +121,31 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
+  }
+}
+
+@layer utilities {
+  /* Animation delay utilities */
+  .animation-delay-0 { animation-delay: 0ms; }
+  .animation-delay-100 { animation-delay: 100ms; }
+  .animation-delay-200 { animation-delay: 200ms; }
+  .animation-delay-300 { animation-delay: 300ms; }
+  
+  /* Touch target minimum size for accessibility */
+  .touch-target {
+    min-height: 48px;
+    min-width: 48px;
+  }
+  
+  /* High contrast focus indicators */
+  .focus\:outline-2:focus {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+  
+  /* Smooth scrolling */
+  .scroll-smooth {
+    scroll-behavior: smooth;
   }
 }

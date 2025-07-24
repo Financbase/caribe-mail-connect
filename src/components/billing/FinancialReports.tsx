@@ -140,9 +140,8 @@ export function FinancialReports() {
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
               <DateRangeSelector
-                startDate={dateRange.from}
-                endDate={dateRange.to}
-                onDateChange={(start, end) => setDateRange({ from: start, to: end })}
+                dateRange={dateRange}
+                onDateRangeChange={setDateRange}
               />
             </div>
             <Select value={reportType} onValueChange={setReportType}>

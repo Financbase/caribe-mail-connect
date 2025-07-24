@@ -57,27 +57,22 @@ export function UserManagement() {
     try {
       setLoading(true);
       
-      // Fetch users with profile information
-      const { data: profiles, error } = await supabase
-        .from('profiles')
-        .select(`
-          *,
-          user_roles!inner(role)
-        `)
-        .order('created_at', { ascending: false });
+      // Use the get_user_profile function to get users with email and role
+      const { data: usersData, error } = await supabase
+        .rpc('get_user_profile');
 
       if (error) throw error;
 
       // Transform data to match User interface
-      const transformedUsers = profiles?.map(profile => ({
-        id: profile.user_id,
-        email: profile.email || '',
-        first_name: profile.first_name || '',
-        last_name: profile.last_name || '',
-        role: profile.user_roles[0]?.role || 'staff',
+      const transformedUsers = usersData?.map((userData: any) => ({
+        id: userData.user_id,
+        email: userData.email || '',
+        first_name: userData.first_name || '',
+        last_name: userData.last_name || '',
+        role: userData.role || 'staff',
         status: 'active',
-        last_sign_in: profile.updated_at,
-        created_at: profile.created_at,
+        last_sign_in: userData.updated_at || new Date().toISOString(),
+        created_at: userData.created_at || new Date().toISOString(),
       })) || [];
 
       setUsers(transformedUsers);

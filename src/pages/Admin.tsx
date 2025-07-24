@@ -55,10 +55,21 @@ export default function Admin({ onNavigate }: AdminProps) {
 
   const checkAdminAccess = async () => {
     try {
-      const { data: profile } = await supabase
+      const { data: profileData } = await supabase
         .rpc('get_user_profile', { _user_id: user?.id });
 
-      if (!profile || (profile.role !== 'admin' && profile.role !== 'manager')) {
+      if (!profileData || !Array.isArray(profileData) || profileData.length === 0) {
+        toast({
+          title: 'Acceso Denegado',
+          description: 'No tienes permisos para acceder al panel de administración',
+          variant: 'destructive',
+        });
+        onNavigate('dashboard');
+        return;
+      }
+
+      const profile = profileData[0];
+      if (profile.role !== 'admin' && profile.role !== 'manager') {
         toast({
           title: 'Acceso Denegado',
           description: 'No tienes permisos para acceder al panel de administración',

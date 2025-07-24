@@ -23,7 +23,11 @@ import { PurchaseOrders } from '@/components/inventory/PurchaseOrders';
 import { InventoryAnalytics } from '@/components/inventory/InventoryAnalytics';
 import { VendorManagement } from '@/components/inventory/VendorManagement';
 
-function Inventory() {
+interface InventoryProps {
+  onNavigate: (page: string) => void;
+}
+
+function Inventory({ onNavigate }: InventoryProps) {
   const { language } = useLanguage();
   const { lowStockItems, lowStockLoading } = useInventory();
   const [activeTab, setActiveTab] = useState('dashboard');

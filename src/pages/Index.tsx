@@ -8,6 +8,7 @@ import Dashboard from './Dashboard';
 import PackageIntake from './PackageIntake';
 import Customers from './Customers';
 import Notifications from './Notifications';
+import { NotificationSettings } from './NotificationSettings';
 import Mailboxes from './Mailboxes';
 import Analytics from './Analytics';
 import Routes from './Routes';
@@ -122,6 +123,8 @@ const PRMCMS = () => {
         return <LocationManagement onNavigate={handleNavigation} />;
       case 'notifications':
         return <Notifications onNavigate={handleNavigation} />;
+      case 'notification-settings':
+        return <NotificationSettings />;
       case 'billing':
         return <Billing onNavigate={handleNavigation} />;
       case 'admin':

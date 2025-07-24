@@ -17,6 +17,7 @@ import LocationManagement from './LocationManagement';
 import ProfileSettings from './profile/Settings';
 import Billing from './Billing';
 import Admin from './Admin';
+import CustomerPortal from './CustomerPortal';
 import { MobileLayout } from '@/components/mobile/MobileLayout';
 
 // Main application component with navigation logic
@@ -94,6 +95,8 @@ const PRMCMS = () => {
         return <StaffAuth onNavigate={handleNavigation} />;
       case 'customer-auth':
         return <CustomerAuth onNavigate={handleNavigation} />;
+      case 'customer-portal':
+        return <CustomerPortal onNavigate={handleNavigation} />;
       default:
         return <AuthSelection onNavigate={handleNavigation} />;
     }
@@ -125,6 +128,8 @@ const PRMCMS = () => {
         return <Admin onNavigate={handleNavigation} />;
       case 'profile-settings':
         return <ProfileSettings onNavigate={handleNavigation} />;
+      case 'customer-portal':
+        return <CustomerPortal onNavigate={handleNavigation} />;
       case 'search':
         // Placeholder for search page
         return (

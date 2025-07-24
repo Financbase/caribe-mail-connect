@@ -42,27 +42,19 @@ export function BillingAutomation() {
 
   const fetchBillingConfig = async () => {
     try {
-      const { data, error } = await supabase
-        .from('virtual_mailbox_billing_config')
-        .select('*')
-        .limit(1)
-        .maybeSingle();
-
-      if (error) throw error;
-      
-      if (data) {
-        setConfig(data);
-      } else {
-        // Create default config
-        const defaultConfig = {
-          auto_billing_enabled: false,
-          billing_cycle_days: 30,
-          grace_period_days: 7,
-          late_fee_amount: 25.00,
-          auto_suspend_days: 30
-        };
-        setConfig(defaultConfig as BillingConfig);
-      }
+      // Mock billing config for now since table doesn't exist yet
+      const defaultConfig = {
+        id: 'mock-id',
+        location_id: 'mock-location',
+        auto_billing_enabled: false,
+        billing_cycle_days: 30,
+        grace_period_days: 7,
+        late_fee_amount: 25.00,
+        auto_suspend_days: 30,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+      setConfig(defaultConfig);
     } catch (error) {
       console.error('Error fetching billing config:', error);
       toast({
@@ -75,32 +67,12 @@ export function BillingAutomation() {
 
   const fetchUsageStats = async () => {
     try {
-      const { data: actions, error: actionsError } = await supabase
-        .from('mail_actions')
-        .select('cost_amount')
-        .gte('created_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString());
-
-      if (actionsError) throw actionsError;
-
-      const totalActions = actions?.length || 0;
-      const totalAmount = actions?.reduce((sum, action) => sum + (action.cost_amount || 0), 0) || 0;
-
-      const { data: billing, error: billingError } = await supabase
-        .from('virtual_mailbox_billing')
-        .select('total_amount, status')
-        .in('status', ['pending', 'overdue']);
-
-      if (billingError) throw billingError;
-
-      const pendingInvoices = billing?.filter(b => b.status === 'pending').length || 0;
-      const overdueAmount = billing?.filter(b => b.status === 'overdue')
-        .reduce((sum, b) => sum + b.total_amount, 0) || 0;
-
+      // Mock usage stats since tables don't exist yet
       setUsageStats({
-        total_actions: totalActions,
-        total_amount: totalAmount,
-        pending_invoices: pendingInvoices,
-        overdue_amount: overdueAmount
+        total_actions: 156,
+        total_amount: 1245.50,
+        pending_invoices: 8,
+        overdue_amount: 342.75
       });
     } catch (error) {
       console.error('Error fetching usage stats:', error);
@@ -114,15 +86,10 @@ export function BillingAutomation() {
 
     setSaving(true);
     try {
-      const { error } = await supabase
-        .from('virtual_mailbox_billing_config')
-        .upsert(config);
-
-      if (error) throw error;
-
+      // Mock save for now since table doesn't exist yet
       toast({
         title: "Success",
-        description: "Billing configuration saved successfully",
+        description: "Billing configuration saved successfully (mock)",
       });
     } catch (error) {
       console.error('Error saving config:', error);

@@ -14,6 +14,60 @@ export type Database = {
   }
   public: {
     Tables: {
+      account_balances: {
+        Row: {
+          auto_billing_enabled: boolean | null
+          credit_limit: number | null
+          current_balance: number
+          customer_id: string
+          id: string
+          last_payment_amount: number | null
+          last_payment_date: string | null
+          location_id: string
+          payment_method_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          auto_billing_enabled?: boolean | null
+          credit_limit?: number | null
+          current_balance?: number
+          customer_id: string
+          id?: string
+          last_payment_amount?: number | null
+          last_payment_date?: string | null
+          location_id: string
+          payment_method_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          auto_billing_enabled?: boolean | null
+          credit_limit?: number | null
+          current_balance?: number
+          customer_id?: string
+          id?: string
+          last_payment_amount?: number | null
+          last_payment_date?: string | null
+          location_id?: string
+          payment_method_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "account_balances_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "account_balances_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       act_60_compliance: {
         Row: {
           created_at: string | null
@@ -63,6 +117,65 @@ export type Database = {
             columns: ["customer_id"]
             isOneToOne: false
             referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      billing_runs: {
+        Row: {
+          billing_period_end: string
+          billing_period_start: string
+          completed_at: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          location_id: string
+          notes: string | null
+          run_date: string
+          status: string
+          total_amount: number | null
+          total_customers: number | null
+          total_invoices: number | null
+          updated_at: string
+        }
+        Insert: {
+          billing_period_end: string
+          billing_period_start: string
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          location_id: string
+          notes?: string | null
+          run_date?: string
+          status?: string
+          total_amount?: number | null
+          total_customers?: number | null
+          total_invoices?: number | null
+          updated_at?: string
+        }
+        Update: {
+          billing_period_end?: string
+          billing_period_start?: string
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          location_id?: string
+          notes?: string | null
+          run_date?: string
+          status?: string
+          total_amount?: number | null
+          total_customers?: number | null
+          total_invoices?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "billing_runs_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
             referencedColumns: ["id"]
           },
         ]
@@ -510,6 +623,213 @@ export type Database = {
           zone_assignments?: string[] | null
         }
         Relationships: []
+      }
+      invoice_items: {
+        Row: {
+          billing_period_end: string | null
+          billing_period_start: string | null
+          created_at: string
+          description: string
+          id: string
+          invoice_id: string
+          item_type: string
+          line_total: number
+          mailbox_id: string | null
+          package_id: string | null
+          quantity: number
+          unit_price: number
+        }
+        Insert: {
+          billing_period_end?: string | null
+          billing_period_start?: string | null
+          created_at?: string
+          description: string
+          id?: string
+          invoice_id: string
+          item_type: string
+          line_total: number
+          mailbox_id?: string | null
+          package_id?: string | null
+          quantity?: number
+          unit_price: number
+        }
+        Update: {
+          billing_period_end?: string | null
+          billing_period_start?: string | null
+          created_at?: string
+          description?: string
+          id?: string
+          invoice_id?: string
+          item_type?: string
+          line_total?: number
+          mailbox_id?: string | null
+          package_id?: string | null
+          quantity?: number
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoice_items_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invoice_items_mailbox_id_fkey"
+            columns: ["mailbox_id"]
+            isOneToOne: false
+            referencedRelation: "mailboxes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invoice_items_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "packages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      invoices: {
+        Row: {
+          amount_due: number
+          amount_paid: number
+          billing_period_end: string
+          billing_period_start: string
+          created_at: string
+          created_by: string | null
+          customer_id: string
+          discount_amount: number
+          due_date: string
+          id: string
+          invoice_number: string
+          issue_date: string
+          late_fee_applied: number | null
+          location_id: string
+          notes: string | null
+          payment_terms: number | null
+          status: string
+          subtotal: number
+          tax_amount: number
+          total_amount: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          amount_due?: number
+          amount_paid?: number
+          billing_period_end: string
+          billing_period_start: string
+          created_at?: string
+          created_by?: string | null
+          customer_id: string
+          discount_amount?: number
+          due_date: string
+          id?: string
+          invoice_number: string
+          issue_date?: string
+          late_fee_applied?: number | null
+          location_id: string
+          notes?: string | null
+          payment_terms?: number | null
+          status?: string
+          subtotal?: number
+          tax_amount?: number
+          total_amount?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          amount_due?: number
+          amount_paid?: number
+          billing_period_end?: string
+          billing_period_start?: string
+          created_at?: string
+          created_by?: string | null
+          customer_id?: string
+          discount_amount?: number
+          due_date?: string
+          id?: string
+          invoice_number?: string
+          issue_date?: string
+          late_fee_applied?: number | null
+          location_id?: string
+          notes?: string | null
+          payment_terms?: number | null
+          status?: string
+          subtotal?: number
+          tax_amount?: number
+          total_amount?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoices_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invoices_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      late_fee_configurations: {
+        Row: {
+          applies_after_days: number
+          created_at: string
+          fee_amount: number
+          fee_name: string
+          fee_type: string
+          grace_period_days: number | null
+          id: string
+          is_active: boolean | null
+          location_id: string
+          max_fee_amount: number | null
+          updated_at: string
+        }
+        Insert: {
+          applies_after_days?: number
+          created_at?: string
+          fee_amount: number
+          fee_name: string
+          fee_type: string
+          grace_period_days?: number | null
+          id?: string
+          is_active?: boolean | null
+          location_id: string
+          max_fee_amount?: number | null
+          updated_at?: string
+        }
+        Update: {
+          applies_after_days?: number
+          created_at?: string
+          fee_amount?: number
+          fee_name?: string
+          fee_type?: string
+          grace_period_days?: number | null
+          id?: string
+          is_active?: boolean | null
+          location_id?: string
+          max_fee_amount?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "late_fee_configurations_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       location_staff: {
         Row: {
@@ -1048,6 +1368,151 @@ export type Database = {
           },
         ]
       }
+      payment_plans: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          customer_id: string
+          end_date: string
+          id: string
+          location_id: string
+          monthly_payment: number
+          next_payment_date: string
+          notes: string | null
+          original_amount: number
+          remaining_amount: number
+          start_date: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          customer_id: string
+          end_date: string
+          id?: string
+          location_id: string
+          monthly_payment: number
+          next_payment_date: string
+          notes?: string | null
+          original_amount: number
+          remaining_amount: number
+          start_date: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          customer_id?: string
+          end_date?: string
+          id?: string
+          location_id?: string
+          monthly_payment?: number
+          next_payment_date?: string
+          notes?: string | null
+          original_amount?: number
+          remaining_amount?: number
+          start_date?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_plans_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_plans_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payments: {
+        Row: {
+          amount: number
+          ath_movil_transaction_id: string | null
+          created_at: string
+          customer_id: string
+          id: string
+          invoice_id: string | null
+          location_id: string
+          notes: string | null
+          payment_date: string
+          payment_method: string
+          payment_number: string
+          processed_by: string | null
+          reference_number: string | null
+          status: string
+          stripe_payment_intent_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          ath_movil_transaction_id?: string | null
+          created_at?: string
+          customer_id: string
+          id?: string
+          invoice_id?: string | null
+          location_id: string
+          notes?: string | null
+          payment_date?: string
+          payment_method: string
+          payment_number: string
+          processed_by?: string | null
+          reference_number?: string | null
+          status?: string
+          stripe_payment_intent_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          ath_movil_transaction_id?: string | null
+          created_at?: string
+          customer_id?: string
+          id?: string
+          invoice_id?: string | null
+          location_id?: string
+          notes?: string | null
+          payment_date?: string
+          payment_method?: string
+          payment_number?: string
+          processed_by?: string | null
+          reference_number?: string | null
+          status?: string
+          stripe_payment_intent_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -1143,6 +1608,53 @@ export type Database = {
           },
         ]
       }
+      tax_configurations: {
+        Row: {
+          applies_to: string[] | null
+          created_at: string
+          effective_date: string
+          id: string
+          is_active: boolean | null
+          location_id: string
+          tax_name: string
+          tax_rate: number
+          tax_type: string
+          updated_at: string
+        }
+        Insert: {
+          applies_to?: string[] | null
+          created_at?: string
+          effective_date?: string
+          id?: string
+          is_active?: boolean | null
+          location_id: string
+          tax_name: string
+          tax_rate: number
+          tax_type: string
+          updated_at?: string
+        }
+        Update: {
+          applies_to?: string[] | null
+          created_at?: string
+          effective_date?: string
+          id?: string
+          is_active?: boolean | null
+          location_id?: string
+          tax_name?: string
+          tax_rate?: number
+          tax_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tax_configurations_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           granted_at: string
@@ -1234,6 +1746,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      generate_invoice_number: {
+        Args: { location_code: string }
+        Returns: string
+      }
       get_current_user_role: {
         Args: Record<PropertyKey, never>
         Returns: string

@@ -4,7 +4,7 @@ import { ActionCard } from '@/components/ActionCard';
 import { MobileHeader } from '@/components/MobileHeader';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { getTodayStats, mockPackages } from '@/data/mockData';
+import { usePackages } from '@/hooks/usePackages';
 
 interface DashboardProps {
   onNavigate: (page: string) => void;
@@ -13,6 +13,7 @@ interface DashboardProps {
 export default function Dashboard({ onNavigate }: DashboardProps) {
   const { user } = useAuth();
   const { t } = useLanguage();
+  const { packages, getTodayStats } = usePackages();
   
   const stats = getTodayStats();
   const getGreeting = () => {
@@ -22,8 +23,8 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
     return t('dashboard.goodEvening');
   };
 
-  const recentActivity = mockPackages
-    .sort((a, b) => new Date(b.receivedAt).getTime() - new Date(a.receivedAt).getTime())
+  const recentActivity = packages
+    .sort((a, b) => new Date(b.received_at).getTime() - new Date(a.received_at).getTime())
     .slice(0, 5);
 
   const actionCards = [
@@ -110,10 +111,10 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
                 >
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium truncate">
-                      {pkg.customerName}
+                      {pkg.customer_name}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      {pkg.trackingNumber}
+                      {pkg.tracking_number}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">

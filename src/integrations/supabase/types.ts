@@ -182,6 +182,157 @@ export type Database = {
         }
         Relationships: []
       }
+      notifications: {
+        Row: {
+          channels: Json
+          created_at: string
+          created_by: string | null
+          customer_id: string
+          delivered_at: string | null
+          id: string
+          message: string
+          package_id: string | null
+          read_at: string | null
+          sent_at: string | null
+          status: string
+          title: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          channels?: Json
+          created_at?: string
+          created_by?: string | null
+          customer_id: string
+          delivered_at?: string | null
+          id?: string
+          message: string
+          package_id?: string | null
+          read_at?: string | null
+          sent_at?: string | null
+          status?: string
+          title: string
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          channels?: Json
+          created_at?: string
+          created_by?: string | null
+          customer_id?: string
+          delivered_at?: string | null
+          id?: string
+          message?: string
+          package_id?: string | null
+          read_at?: string | null
+          sent_at?: string | null
+          status?: string
+          title?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers_pending_compliance"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "packages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      packages: {
+        Row: {
+          carrier: string
+          created_at: string
+          customer_id: string
+          customer_name: string
+          delivered_at: string | null
+          delivered_by: string | null
+          dimensions: string | null
+          id: string
+          notes: string | null
+          received_at: string
+          received_by: string | null
+          requires_signature: boolean
+          size: string
+          special_handling: boolean
+          status: string
+          tracking_number: string
+          updated_at: string
+          weight: string | null
+        }
+        Insert: {
+          carrier: string
+          created_at?: string
+          customer_id: string
+          customer_name: string
+          delivered_at?: string | null
+          delivered_by?: string | null
+          dimensions?: string | null
+          id?: string
+          notes?: string | null
+          received_at?: string
+          received_by?: string | null
+          requires_signature?: boolean
+          size: string
+          special_handling?: boolean
+          status?: string
+          tracking_number: string
+          updated_at?: string
+          weight?: string | null
+        }
+        Update: {
+          carrier?: string
+          created_at?: string
+          customer_id?: string
+          customer_name?: string
+          delivered_at?: string | null
+          delivered_by?: string | null
+          dimensions?: string | null
+          id?: string
+          notes?: string | null
+          received_at?: string
+          received_by?: string | null
+          requires_signature?: boolean
+          size?: string
+          special_handling?: boolean
+          status?: string
+          tracking_number?: string
+          updated_at?: string
+          weight?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "packages_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "packages_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers_pending_compliance"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string

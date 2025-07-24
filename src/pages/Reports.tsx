@@ -12,7 +12,8 @@ import { ReportSchedulesList } from '@/components/reports/ReportSchedulesList';
 import { ReportExecutionsHistory } from '@/components/reports/ReportExecutionsHistory';
 import { CustomReportBuilder } from '@/components/reports/CustomReportBuilder';
 import { ReportScheduleDialog } from '@/components/reports/ReportScheduleDialog';
-import { FileText, Calendar, History, Settings, Plus, TrendingUp, DollarSign, Shield } from 'lucide-react';
+import { FileText, Calendar, History, Settings, Plus, TrendingUp, DollarSign, Shield, AlertTriangle } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface ReportsProps {
   onNavigate?: (page: string) => void;
@@ -63,6 +64,16 @@ export default function Reports({ onNavigate }: ReportsProps) {
 
   return (
     <div className="container mx-auto px-4 py-6 space-y-6">
+      {/* API Configuration Alert */}
+      <Alert className="border-orange-200 bg-orange-50">
+        <AlertTriangle className="h-4 w-4 text-orange-600" />
+        <AlertDescription className="text-orange-800">
+          {language === 'en' 
+            ? 'Email delivery for scheduled reports requires Resend API configuration. Please contact your administrator to set up the RESEND_API_KEY in the system settings.'
+            : 'La entrega de email para informes programados requiere configuración de API de Resend. Por favor contacte a su administrador para configurar RESEND_API_KEY en la configuración del sistema.'}
+        </AlertDescription>
+      </Alert>
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>

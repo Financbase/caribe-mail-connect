@@ -18,6 +18,7 @@ import LocationManagement from './LocationManagement';
 import ProfileSettings from './profile/Settings';
 import Billing from './Billing';
 import Admin from './Admin';
+import Reports from './Reports';
 import CustomerPortal from './CustomerPortal';
 import { MobileLayout } from '@/components/mobile/MobileLayout';
 
@@ -127,6 +128,8 @@ const PRMCMS = () => {
         return <NotificationSettings />;
       case 'billing':
         return <Billing onNavigate={handleNavigation} />;
+      case 'reports':
+        return <Reports onNavigate={handleNavigation} />;
       case 'admin':
         return <Admin onNavigate={handleNavigation} />;
       case 'profile-settings':

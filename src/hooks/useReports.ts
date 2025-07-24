@@ -284,6 +284,47 @@ export function useReports() {
     },
   });
 
+  // Export report mutation
+  const exportReportMutation = useMutation({
+    mutationFn: async ({ executionId, format }: { executionId: string; format: 'csv' | 'excel' | 'pdf' }) => {
+      const { data, error } = await supabase.functions.invoke('export-report', {
+        body: { executionId, format },
+      });
+
+      if (error) throw error;
+      
+      // Create download
+      const blob = new Blob([data], { 
+        type: format === 'csv' ? 'text/csv' : 
+              format === 'excel' ? 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' : 
+              'application/pdf' 
+      });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `report_${new Date().toISOString().split('T')[0]}.${format}`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      
+      return data;
+    },
+    onSuccess: () => {
+      toast({
+        title: 'Export completed',
+        description: 'The report has been downloaded successfully.',
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Export failed',
+        description: error.message,
+        variant: 'destructive',
+      });
+    },
+  });
+
   return {
     // Data
     reportTemplates: reportTemplates || [],
@@ -309,6 +350,7 @@ export function useReports() {
     deleteReport: deleteReportMutation.mutate,
     createSchedule: createScheduleMutation.mutate,
     executeReport: executeReportMutation.mutate,
+    exportReport: exportReportMutation.mutate,
 
     // Pending states
     isCreatingReport: createReportMutation.isPending,
@@ -316,5 +358,6 @@ export function useReports() {
     isDeletingReport: deleteReportMutation.isPending,
     isCreatingSchedule: createScheduleMutation.isPending,
     isExecutingReport: executeReportMutation.isPending,
+    isExportingReport: exportReportMutation.isPending,
   };
 }

@@ -2168,6 +2168,7 @@ export type Database = {
           action_cost: number | null
           action_type: string
           completed_at: string | null
+          cost_amount: number | null
           created_at: string
           forwarding_address: Json | null
           id: string
@@ -2185,6 +2186,7 @@ export type Database = {
           action_cost?: number | null
           action_type: string
           completed_at?: string | null
+          cost_amount?: number | null
           created_at?: string
           forwarding_address?: Json | null
           id?: string
@@ -2202,6 +2204,7 @@ export type Database = {
           action_cost?: number | null
           action_type?: string
           completed_at?: string | null
+          cost_amount?: number | null
           created_at?: string
           forwarding_address?: Json | null
           id?: string
@@ -4125,6 +4128,50 @@ export type Database = {
           },
         ]
       }
+      virtual_mailbox_billing_config: {
+        Row: {
+          auto_billing_enabled: boolean
+          auto_suspend_days: number
+          billing_cycle_days: number
+          created_at: string
+          grace_period_days: number
+          id: string
+          late_fee_amount: number
+          location_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          auto_billing_enabled?: boolean
+          auto_suspend_days?: number
+          billing_cycle_days?: number
+          created_at?: string
+          grace_period_days?: number
+          id?: string
+          late_fee_amount?: number
+          location_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          auto_billing_enabled?: boolean
+          auto_suspend_days?: number
+          billing_cycle_days?: number
+          created_at?: string
+          grace_period_days?: number
+          id?: string
+          late_fee_amount?: number
+          location_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "virtual_mailbox_billing_config_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       virtual_mailbox_pricing: {
         Row: {
           check_deposit_fee: number
@@ -4365,6 +4412,20 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      calculate_virtual_mailbox_usage: {
+        Args: {
+          p_customer_id: string
+          p_start_date: string
+          p_end_date: string
+        }
+        Returns: {
+          total_actions: number
+          total_cost: number
+          scan_actions: number
+          forward_actions: number
+          shred_actions: number
+        }[]
+      }
       generate_adjustment_number: {
         Args: { location_code: string }
         Returns: string

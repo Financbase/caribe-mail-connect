@@ -13,6 +13,8 @@ import { ScanningQueue } from '@/components/virtual-mail/ScanningQueue';
 import { CheckDepositCapture } from '@/components/virtual-mail/CheckDepositCapture';
 import { AddMailPieceDialog } from '@/components/virtual-mail/AddMailPieceDialog';
 import { MailActionDialog } from '@/components/virtual-mail/MailActionDialog';
+import { BillingAutomation } from '@/components/virtual-mail/BillingAutomation';
+import { VirtualMailAnalytics } from '@/components/virtual-mail/VirtualMailAnalytics';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 
 export function VirtualMail() {
@@ -193,7 +195,7 @@ export function VirtualMail() {
 
       {/* Main Content */}
       <Tabs defaultValue="mail-pieces" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="mail-pieces">
             {isSpanish ? 'Correo' : 'Mail Pieces'}
           </TabsTrigger>
@@ -205,6 +207,12 @@ export function VirtualMail() {
           </TabsTrigger>
           <TabsTrigger value="dashboard">
             {isSpanish ? 'Panel' : 'Dashboard'}
+          </TabsTrigger>
+          <TabsTrigger value="analytics">
+            {isSpanish ? 'Analítica' : 'Analytics'}
+          </TabsTrigger>
+          <TabsTrigger value="billing">
+            {isSpanish ? 'Facturación' : 'Billing'}
           </TabsTrigger>
         </TabsList>
 
@@ -236,6 +244,14 @@ export function VirtualMail() {
             mailPieces={mailPieces}
             loading={loading}
           />
+        </TabsContent>
+
+        <TabsContent value="analytics" className="space-y-4">
+          <VirtualMailAnalytics />
+        </TabsContent>
+
+        <TabsContent value="billing" className="space-y-4">
+          <BillingAutomation />
         </TabsContent>
       </Tabs>
 

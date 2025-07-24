@@ -8,18 +8,9 @@ import { Badge } from '@/components/ui/badge';
 import { Calendar, DollarSign, Clock, TrendingUp, Settings } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import type { Database } from '@/integrations/supabase/types';
 
-interface BillingConfig {
-  id: string;
-  location_id: string;
-  auto_billing_enabled: boolean;
-  billing_cycle_days: number;
-  grace_period_days: number;
-  late_fee_amount: number;
-  auto_suspend_days: number;
-  created_at: string;
-  updated_at: string;
-}
+type BillingConfig = Database['public']['Tables']['virtual_mailbox_billing_config']['Row'];
 
 interface UsageStats {
   total_actions: number;
@@ -42,19 +33,33 @@ export function BillingAutomation() {
 
   const fetchBillingConfig = async () => {
     try {
-      // Mock billing config for now since table doesn't exist yet
-      const defaultConfig = {
-        id: 'mock-id',
-        location_id: 'mock-location',
-        auto_billing_enabled: false,
-        billing_cycle_days: 30,
-        grace_period_days: 7,
-        late_fee_amount: 25.00,
-        auto_suspend_days: 30,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      };
-      setConfig(defaultConfig);
+      const { data, error } = await supabase
+        .from('virtual_mailbox_billing_config')
+        .select('*')
+        .limit(1)
+        .maybeSingle();
+
+      if (error) throw error;
+      
+      if (data) {
+        setConfig(data);
+      } else {
+        // Create default config
+        const { data: newConfig, error: createError } = await supabase
+          .from('virtual_mailbox_billing_config')
+          .insert({
+            auto_billing_enabled: false,
+            billing_cycle_days: 30,
+            grace_period_days: 7,
+            late_fee_amount: 25.00,
+            auto_suspend_days: 30
+          })
+          .select()
+          .single();
+
+        if (createError) throw createError;
+        setConfig(newConfig);
+      }
     } catch (error) {
       console.error('Error fetching billing config:', error);
       toast({
@@ -67,12 +72,32 @@ export function BillingAutomation() {
 
   const fetchUsageStats = async () => {
     try {
-      // Mock usage stats since tables don't exist yet
+      const { data: actions, error: actionsError } = await supabase
+        .from('mail_actions')
+        .select('cost_amount')
+        .gte('created_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString());
+
+      if (actionsError) throw actionsError;
+
+      const totalActions = actions?.length || 0;
+      const totalAmount = actions?.reduce((sum, action) => sum + (Number(action.cost_amount) || 0), 0) || 0;
+
+      const { data: billing, error: billingError } = await supabase
+        .from('virtual_mailbox_billing')
+        .select('total_amount, status')
+        .in('status', ['pending', 'overdue']);
+
+      if (billingError) throw billingError;
+
+      const pendingInvoices = billing?.filter(b => b.status === 'pending').length || 0;
+      const overdueAmount = billing?.filter(b => b.status === 'overdue')
+        .reduce((sum, b) => sum + Number(b.total_amount), 0) || 0;
+
       setUsageStats({
-        total_actions: 156,
-        total_amount: 1245.50,
-        pending_invoices: 8,
-        overdue_amount: 342.75
+        total_actions: totalActions,
+        total_amount: totalAmount,
+        pending_invoices: pendingInvoices,
+        overdue_amount: overdueAmount
       });
     } catch (error) {
       console.error('Error fetching usage stats:', error);
@@ -86,10 +111,22 @@ export function BillingAutomation() {
 
     setSaving(true);
     try {
-      // Mock save for now since table doesn't exist yet
+      const { error } = await supabase
+        .from('virtual_mailbox_billing_config')
+        .update({
+          auto_billing_enabled: config.auto_billing_enabled,
+          billing_cycle_days: config.billing_cycle_days,
+          grace_period_days: config.grace_period_days,
+          late_fee_amount: config.late_fee_amount,
+          auto_suspend_days: config.auto_suspend_days
+        })
+        .eq('id', config.id);
+
+      if (error) throw error;
+
       toast({
         title: "Success",
-        description: "Billing configuration saved successfully (mock)",
+        description: "Billing configuration saved successfully",
       });
     } catch (error) {
       console.error('Error saving config:', error);

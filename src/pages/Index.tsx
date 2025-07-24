@@ -20,6 +20,7 @@ import Billing from './Billing';
 import Admin from './Admin';
 import Reports from './Reports';
 import CustomerPortal from './CustomerPortal';
+import Integrations from './Integrations';
 import { MobileLayout } from '@/components/mobile/MobileLayout';
 
 // Main application component with navigation logic
@@ -132,6 +133,8 @@ const PRMCMS = () => {
         return <Reports onNavigate={handleNavigation} />;
       case 'admin':
         return <Admin onNavigate={handleNavigation} />;
+      case 'integrations':
+        return <Integrations onNavigate={handleNavigation} />;
       case 'profile-settings':
         return <ProfileSettings onNavigate={handleNavigation} />;
       case 'customer-portal':

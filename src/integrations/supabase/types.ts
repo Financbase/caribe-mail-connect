@@ -121,6 +121,59 @@ export type Database = {
           },
         ]
       }
+      api_keys: {
+        Row: {
+          api_key: string
+          api_secret: string | null
+          created_at: string
+          created_by: string | null
+          expires_at: string | null
+          id: string
+          is_active: boolean
+          key_name: string
+          last_used_at: string | null
+          location_id: string | null
+          permissions: Json
+          rate_limit_per_minute: number | null
+        }
+        Insert: {
+          api_key: string
+          api_secret?: string | null
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          key_name: string
+          last_used_at?: string | null
+          location_id?: string | null
+          permissions?: Json
+          rate_limit_per_minute?: number | null
+        }
+        Update: {
+          api_key?: string
+          api_secret?: string | null
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          key_name?: string
+          last_used_at?: string | null
+          location_id?: string | null
+          permissions?: Json
+          rate_limit_per_minute?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "api_keys_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       billing_runs: {
         Row: {
           billing_period_end: string
@@ -776,6 +829,168 @@ export type Database = {
           zone_assignments?: string[] | null
         }
         Relationships: []
+      }
+      integration_logs: {
+        Row: {
+          created_at: string
+          endpoint: string | null
+          error_message: string | null
+          execution_time_ms: number | null
+          id: string
+          integration_id: string
+          method: string | null
+          request_data: Json | null
+          request_type: string
+          response_data: Json | null
+          status_code: number | null
+        }
+        Insert: {
+          created_at?: string
+          endpoint?: string | null
+          error_message?: string | null
+          execution_time_ms?: number | null
+          id?: string
+          integration_id: string
+          method?: string | null
+          request_data?: Json | null
+          request_type: string
+          response_data?: Json | null
+          status_code?: number | null
+        }
+        Update: {
+          created_at?: string
+          endpoint?: string | null
+          error_message?: string | null
+          execution_time_ms?: number | null
+          id?: string
+          integration_id?: string
+          method?: string | null
+          request_data?: Json | null
+          request_type?: string
+          response_data?: Json | null
+          status_code?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "integration_logs_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "integrations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      integration_sync_schedules: {
+        Row: {
+          created_at: string
+          id: string
+          integration_id: string
+          is_active: boolean
+          last_run_at: string | null
+          next_run_at: string | null
+          schedule_config: Json
+          schedule_type: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          integration_id: string
+          is_active?: boolean
+          last_run_at?: string | null
+          next_run_at?: string | null
+          schedule_config?: Json
+          schedule_type?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          integration_id?: string
+          is_active?: boolean
+          last_run_at?: string | null
+          next_run_at?: string | null
+          schedule_config?: Json
+          schedule_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "integration_sync_schedules_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "integrations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      integrations: {
+        Row: {
+          configuration: Json
+          created_at: string
+          created_by: string | null
+          credentials: Json
+          display_name: string
+          id: string
+          is_active: boolean
+          is_connected: boolean
+          last_error: string | null
+          last_sync_at: string | null
+          location_id: string | null
+          rate_limit_per_minute: number | null
+          service_name: string
+          service_type: string
+          updated_at: string
+          updated_by: string | null
+          webhook_secret: string | null
+          webhook_url: string | null
+        }
+        Insert: {
+          configuration?: Json
+          created_at?: string
+          created_by?: string | null
+          credentials?: Json
+          display_name: string
+          id?: string
+          is_active?: boolean
+          is_connected?: boolean
+          last_error?: string | null
+          last_sync_at?: string | null
+          location_id?: string | null
+          rate_limit_per_minute?: number | null
+          service_name: string
+          service_type: string
+          updated_at?: string
+          updated_by?: string | null
+          webhook_secret?: string | null
+          webhook_url?: string | null
+        }
+        Update: {
+          configuration?: Json
+          created_at?: string
+          created_by?: string | null
+          credentials?: Json
+          display_name?: string
+          id?: string
+          is_active?: boolean
+          is_connected?: boolean
+          last_error?: string | null
+          last_sync_at?: string | null
+          location_id?: string | null
+          rate_limit_per_minute?: number | null
+          service_name?: string
+          service_type?: string
+          updated_at?: string
+          updated_by?: string | null
+          webhook_secret?: string | null
+          webhook_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "integrations_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       invoice_items: {
         Row: {
@@ -2584,6 +2799,56 @@ export type Database = {
           },
         ]
       }
+      webhook_endpoints: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          delivery_attempts: number | null
+          endpoint_name: string
+          events: Json
+          id: string
+          is_active: boolean
+          last_delivery_at: string | null
+          location_id: string | null
+          secret: string
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          delivery_attempts?: number | null
+          endpoint_name: string
+          events?: Json
+          id?: string
+          is_active?: boolean
+          last_delivery_at?: string | null
+          location_id?: string | null
+          secret: string
+          url: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          delivery_attempts?: number | null
+          endpoint_name?: string
+          events?: Json
+          id?: string
+          is_active?: boolean
+          last_delivery_at?: string | null
+          location_id?: string | null
+          secret?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "webhook_endpoints_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       whatsapp_templates: {
         Row: {
           body_content: string
@@ -2646,6 +2911,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      generate_api_key: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       generate_invoice_number: {
         Args: { location_code: string }
         Returns: string
@@ -2684,6 +2953,15 @@ export type Database = {
       has_role: {
         Args: { _user_id: string; _role: string }
         Returns: boolean
+      }
+      validate_api_key: {
+        Args: { key: string }
+        Returns: {
+          is_valid: boolean
+          location_id: string
+          permissions: Json
+          rate_limit_per_minute: number
+        }[]
       }
     }
     Enums: {

@@ -14,10 +14,152 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      customer_compliance: {
+        Row: {
+          compliance_score: number | null
+          created_at: string
+          created_by: string | null
+          customer_id: string
+          id: string
+          id_verification_status: string
+          last_reviewed_at: string | null
+          next_review_due: string | null
+          notes: string | null
+          ps_form_1583_status: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          compliance_score?: number | null
+          created_at?: string
+          created_by?: string | null
+          customer_id: string
+          id?: string
+          id_verification_status?: string
+          last_reviewed_at?: string | null
+          next_review_due?: string | null
+          notes?: string | null
+          ps_form_1583_status?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          compliance_score?: number | null
+          created_at?: string
+          created_by?: string | null
+          customer_id?: string
+          id?: string
+          id_verification_status?: string
+          last_reviewed_at?: string | null
+          next_review_due?: string | null
+          notes?: string | null
+          ps_form_1583_status?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_compliance_customer"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_compliance_customer"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers_pending_compliance"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      customers: {
+        Row: {
+          address_line1: string
+          address_line2: string | null
+          business_name: string | null
+          city: string
+          country: string
+          created_at: string
+          created_by: string | null
+          customer_type: string
+          email: string
+          first_name: string
+          id: string
+          last_name: string
+          mailbox_number: string
+          notes: string | null
+          phone: string | null
+          state: string
+          status: string
+          updated_at: string
+          updated_by: string | null
+          user_id: string | null
+          zip_code: string
+        }
+        Insert: {
+          address_line1: string
+          address_line2?: string | null
+          business_name?: string | null
+          city: string
+          country?: string
+          created_at?: string
+          created_by?: string | null
+          customer_type?: string
+          email: string
+          first_name: string
+          id?: string
+          last_name: string
+          mailbox_number: string
+          notes?: string | null
+          phone?: string | null
+          state?: string
+          status?: string
+          updated_at?: string
+          updated_by?: string | null
+          user_id?: string | null
+          zip_code: string
+        }
+        Update: {
+          address_line1?: string
+          address_line2?: string | null
+          business_name?: string | null
+          city?: string
+          country?: string
+          created_at?: string
+          created_by?: string | null
+          customer_type?: string
+          email?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          mailbox_number?: string
+          notes?: string | null
+          phone?: string | null
+          state?: string
+          status?: string
+          updated_at?: string
+          updated_by?: string | null
+          user_id?: string | null
+          zip_code?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
-      [_ in never]: never
+      customers_pending_compliance: {
+        Row: {
+          compliance_score: number | null
+          email: string | null
+          first_name: string | null
+          id: string | null
+          id_verification_status: string | null
+          last_name: string | null
+          ps_form_1583_status: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never

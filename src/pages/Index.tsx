@@ -4,6 +4,7 @@ import Login from './Login';
 import Dashboard from './Dashboard';
 import PackageIntake from './PackageIntake';
 import Customers from './Customers';
+import Notifications from './Notifications';
 
 // Main application component with navigation logic
 const PRMCMS = () => {
@@ -29,6 +30,8 @@ const PRMCMS = () => {
         return <PackageIntake onNavigate={setCurrentPage} />;
       case 'customers':
         return <Customers onNavigate={setCurrentPage} />;
+      case 'notifications':
+        return <Notifications onNavigate={setCurrentPage} />;
       case 'search':
         // Placeholder for search page
         return (

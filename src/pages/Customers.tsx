@@ -1,25 +1,42 @@
 import { useState } from 'react';
-import { ArrowLeft, Search, Plus, Phone, Package } from 'lucide-react';
+import { ArrowLeft, Search, Plus, Phone, Package, Settings } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { MobileHeader } from '@/components/MobileHeader';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { toast } from '@/hooks/use-toast';
 import { mockCustomers } from '@/data/mockData';
+import { NotificationPreferences } from '@/types/notifications';
+import NotificationPreferencesComponent from '@/components/NotificationPreferences';
 
 interface CustomersProps {
   onNavigate: (page: string) => void;
 }
 
 export default function Customers({ onNavigate }: CustomersProps) {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCustomer, setSelectedCustomer] = useState<string | null>(null);
 
   const filteredCustomers = mockCustomers.filter(customer =>
     customer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     customer.mailboxNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
     customer.phone.includes(searchQuery)
   );
+
+  const handleUpdateNotificationPreferences = (customerId: string) => (preferences: NotificationPreferences) => {
+    // In a real app, this would update the customer in the database
+    toast({
+      title: language === 'en' ? 'Preferences updated' : 'Preferencias actualizadas',
+      description: language === 'en' 
+        ? 'Customer notification preferences have been saved'
+        : 'Las preferencias de notificación del cliente han sido guardadas'
+    });
+    setSelectedCustomer(null);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-accent/20">
@@ -111,14 +128,35 @@ export default function Customers({ onNavigate }: CustomersProps) {
                       </div>
                     </div>
 
-                    {/* Active Packages Badge */}
-                    {customer.activePackages > 0 && (
-                      <div className="ml-3">
+                     {/* Active Packages Badge and Settings */}
+                    <div className="flex items-center gap-2">
+                      <Badge variant={customer.activePackages > 0 ? 'default' : 'secondary'}>
+                        {customer.mailboxNumber}
+                      </Badge>
+                      <Dialog open={selectedCustomer === customer.id} onOpenChange={(open) => setSelectedCustomer(open ? customer.id : null)}>
+                        <DialogTrigger asChild>
+                          <Button variant="ghost" size="sm" onClick={(e) => e.stopPropagation()}>
+                            <Settings className="h-4 w-4" />
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-lg">
+                          <DialogHeader>
+                            <DialogTitle>
+                              {language === 'en' ? 'Notification Settings' : 'Configuración de Notificaciones'} - {customer.name}
+                            </DialogTitle>
+                          </DialogHeader>
+                          <NotificationPreferencesComponent
+                            preferences={customer.notificationPreferences}
+                            onSave={handleUpdateNotificationPreferences(customer.id)}
+                          />
+                        </DialogContent>
+                      </Dialog>
+                      {customer.activePackages > 0 && (
                         <span className="inline-flex items-center justify-center w-8 h-8 text-xs font-bold text-white bg-gradient-sunrise rounded-full">
                           {customer.activePackages}
                         </span>
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </div>
                 </CardContent>
               </Card>

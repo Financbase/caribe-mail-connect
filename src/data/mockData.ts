@@ -1,3 +1,5 @@
+import { NotificationPreferences } from '@/types/notifications';
+
 export interface Customer {
   id: string;
   name: string;
@@ -7,6 +9,7 @@ export interface Customer {
   activePackages: number;
   address: string;
   createdAt: string;
+  notificationPreferences: NotificationPreferences;
 }
 
 export interface Package {
@@ -40,7 +43,13 @@ export const mockCustomers: Customer[] = [
     mailboxNumber: 'MB001',
     activePackages: 3,
     address: 'Calle Luna 123, San Juan, PR 00901',
-    createdAt: '2024-01-15'
+    createdAt: '2024-01-15',
+    notificationPreferences: {
+      sms: true,
+      email: true,
+      whatsapp: false,
+      language: 'es'
+    }
   },
   {
     id: '2',
@@ -50,7 +59,13 @@ export const mockCustomers: Customer[] = [
     mailboxNumber: 'MB002',
     activePackages: 1,
     address: 'Ave. Ponce de León 456, Santurce, PR 00907',
-    createdAt: '2024-01-20'
+    createdAt: '2024-01-20',
+    notificationPreferences: {
+      sms: false,
+      email: true,
+      whatsapp: true,
+      language: 'en'
+    }
   },
   {
     id: '3',
@@ -60,7 +75,13 @@ export const mockCustomers: Customer[] = [
     mailboxNumber: 'MB003',
     activePackages: 2,
     address: 'Calle Fortaleza 789, Old San Juan, PR 00901',
-    createdAt: '2024-02-01'
+    createdAt: '2024-02-01',
+    notificationPreferences: {
+      sms: true,
+      email: false,
+      whatsapp: true,
+      language: 'es'
+    }
   },
   {
     id: '4',
@@ -70,7 +91,13 @@ export const mockCustomers: Customer[] = [
     mailboxNumber: 'MB004',
     activePackages: 0,
     address: 'Ave. Ashford 321, Condado, PR 00907',
-    createdAt: '2024-02-10'
+    createdAt: '2024-02-10',
+    notificationPreferences: {
+      sms: true,
+      email: true,
+      whatsapp: false,
+      language: 'en'
+    }
   },
   {
     id: '5',
@@ -80,7 +107,13 @@ export const mockCustomers: Customer[] = [
     mailboxNumber: 'MB005',
     activePackages: 4,
     address: 'Calle Loíza 654, Santurce, PR 00911',
-    createdAt: '2024-02-15'
+    createdAt: '2024-02-15',
+    notificationPreferences: {
+      sms: false,
+      email: true,
+      whatsapp: true,
+      language: 'es'
+    }
   },
   {
     id: '6',
@@ -90,7 +123,13 @@ export const mockCustomers: Customer[] = [
     mailboxNumber: 'MB006',
     activePackages: 1,
     address: 'Ave. José de Diego 147, Río Piedras, PR 00925',
-    createdAt: '2024-02-20'
+    createdAt: '2024-02-20',
+    notificationPreferences: {
+      sms: true,
+      email: false,
+      whatsapp: false,
+      language: 'en'
+    }
   },
   {
     id: '7',
@@ -100,7 +139,13 @@ export const mockCustomers: Customer[] = [
     mailboxNumber: 'MB007',
     activePackages: 2,
     address: 'Calle César González 258, Hato Rey, PR 00917',
-    createdAt: '2024-03-01'
+    createdAt: '2024-03-01',
+    notificationPreferences: {
+      sms: true,
+      email: true,
+      whatsapp: true,
+      language: 'es'
+    }
   },
   {
     id: '8',
@@ -110,7 +155,13 @@ export const mockCustomers: Customer[] = [
     mailboxNumber: 'MB008',
     activePackages: 0,
     address: 'Ave. Muñoz Rivera 369, Puerta de Tierra, PR 00901',
-    createdAt: '2024-03-05'
+    createdAt: '2024-03-05',
+    notificationPreferences: {
+      sms: false,
+      email: true,
+      whatsapp: false,
+      language: 'en'
+    }
   },
   {
     id: '9',
@@ -120,7 +171,13 @@ export const mockCustomers: Customer[] = [
     mailboxNumber: 'MB009',
     activePackages: 3,
     address: 'Calle San Francisco 741, Old San Juan, PR 00901',
-    createdAt: '2024-03-10'
+    createdAt: '2024-03-10',
+    notificationPreferences: {
+      sms: true,
+      email: false,
+      whatsapp: true,
+      language: 'es'
+    }
   },
   {
     id: '10',
@@ -130,7 +187,13 @@ export const mockCustomers: Customer[] = [
     mailboxNumber: 'MB010',
     activePackages: 1,
     address: 'Ave. Roosevelt 852, Hato Rey, PR 00918',
-    createdAt: '2024-03-15'
+    createdAt: '2024-03-15',
+    notificationPreferences: {
+      sms: false,
+      email: true,
+      whatsapp: true,
+      language: 'en'
+    }
   }
 ];
 

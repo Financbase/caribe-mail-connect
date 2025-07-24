@@ -2174,6 +2174,230 @@ export type Database = {
         }
         Relationships: []
       }
+      report_executions: {
+        Row: {
+          completed_at: string | null
+          error_message: string | null
+          executed_at: string
+          executed_by: string | null
+          execution_time_ms: number | null
+          file_url: string | null
+          id: string
+          parameters: Json
+          report_id: string
+          result_data: Json | null
+          row_count: number | null
+          schedule_id: string | null
+          status: string
+        }
+        Insert: {
+          completed_at?: string | null
+          error_message?: string | null
+          executed_at?: string
+          executed_by?: string | null
+          execution_time_ms?: number | null
+          file_url?: string | null
+          id?: string
+          parameters?: Json
+          report_id: string
+          result_data?: Json | null
+          row_count?: number | null
+          schedule_id?: string | null
+          status?: string
+        }
+        Update: {
+          completed_at?: string | null
+          error_message?: string | null
+          executed_at?: string
+          executed_by?: string | null
+          execution_time_ms?: number | null
+          file_url?: string | null
+          id?: string
+          parameters?: Json
+          report_id?: string
+          result_data?: Json | null
+          row_count?: number | null
+          schedule_id?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "report_executions_report_id_fkey"
+            columns: ["report_id"]
+            isOneToOne: false
+            referencedRelation: "reports"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "report_executions_schedule_id_fkey"
+            columns: ["schedule_id"]
+            isOneToOne: false
+            referencedRelation: "report_schedules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      report_schedules: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          format: string
+          id: string
+          is_active: boolean
+          last_run_at: string | null
+          location_id: string | null
+          name: string
+          next_run_at: string | null
+          recipients: Json
+          report_id: string
+          schedule_config: Json
+          schedule_type: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          format?: string
+          id?: string
+          is_active?: boolean
+          last_run_at?: string | null
+          location_id?: string | null
+          name: string
+          next_run_at?: string | null
+          recipients?: Json
+          report_id: string
+          schedule_config?: Json
+          schedule_type: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          format?: string
+          id?: string
+          is_active?: boolean
+          last_run_at?: string | null
+          location_id?: string | null
+          name?: string
+          next_run_at?: string | null
+          recipients?: Json
+          report_id?: string
+          schedule_config?: Json
+          schedule_type?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "report_schedules_report_id_fkey"
+            columns: ["report_id"]
+            isOneToOne: false
+            referencedRelation: "reports"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      report_templates: {
+        Row: {
+          category: string
+          created_at: string
+          default_parameters: Json
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string
+          required_roles: Json
+          template_config: Json
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          default_parameters?: Json
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          required_roles?: Json
+          template_config?: Json
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          default_parameters?: Json
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          required_roles?: Json
+          template_config?: Json
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      reports: {
+        Row: {
+          category: string
+          created_at: string
+          created_by: string | null
+          description: string | null
+          filters: Json
+          id: string
+          is_public: boolean
+          is_system: boolean
+          location_id: string | null
+          name: string
+          parameters: Json
+          query_config: Json
+          type: string
+          updated_at: string
+          updated_by: string | null
+          visualization_config: Json
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          filters?: Json
+          id?: string
+          is_public?: boolean
+          is_system?: boolean
+          location_id?: string | null
+          name: string
+          parameters?: Json
+          query_config?: Json
+          type: string
+          updated_at?: string
+          updated_by?: string | null
+          visualization_config?: Json
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          filters?: Json
+          id?: string
+          is_public?: boolean
+          is_system?: boolean
+          location_id?: string | null
+          name?: string
+          parameters?: Json
+          query_config?: Json
+          type?: string
+          updated_at?: string
+          updated_by?: string | null
+          visualization_config?: Json
+        }
+        Relationships: []
+      }
       staff_members: {
         Row: {
           created_at: string

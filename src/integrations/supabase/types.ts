@@ -175,6 +175,7 @@ export type Database = {
           first_name: string
           id: string
           last_name: string
+          location_id: string | null
           mailbox_number: string
           notes: string | null
           phone: string | null
@@ -206,6 +207,7 @@ export type Database = {
           first_name: string
           id?: string
           last_name: string
+          location_id?: string | null
           mailbox_number: string
           notes?: string | null
           phone?: string | null
@@ -237,6 +239,7 @@ export type Database = {
           first_name?: string
           id?: string
           last_name?: string
+          location_id?: string | null
           mailbox_number?: string
           notes?: string | null
           phone?: string | null
@@ -250,7 +253,15 @@ export type Database = {
           vip_handling_preferences?: Json | null
           zip_code?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "customers_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       deliveries: {
         Row: {
@@ -412,6 +423,7 @@ export type Database = {
           driver_id: string | null
           estimated_duration: number | null
           id: string
+          location_id: string | null
           name: string
           route_order: Json | null
           status: string
@@ -428,6 +440,7 @@ export type Database = {
           driver_id?: string | null
           estimated_duration?: number | null
           id?: string
+          location_id?: string | null
           name: string
           route_order?: Json | null
           status?: string
@@ -444,6 +457,7 @@ export type Database = {
           driver_id?: string | null
           estimated_duration?: number | null
           id?: string
+          location_id?: string | null
           name?: string
           route_order?: Json | null
           status?: string
@@ -451,7 +465,15 @@ export type Database = {
           updated_at?: string
           updated_by?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "delivery_routes_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       driver_assignments: {
         Row: {
@@ -486,6 +508,125 @@ export type Database = {
           user_id?: string
           vehicle_type?: string | null
           zone_assignments?: string[] | null
+        }
+        Relationships: []
+      }
+      location_staff: {
+        Row: {
+          assigned_at: string | null
+          assigned_by: string | null
+          id: string
+          is_primary: boolean | null
+          location_id: string
+          role: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          assigned_at?: string | null
+          assigned_by?: string | null
+          id?: string
+          is_primary?: boolean | null
+          location_id: string
+          role?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          assigned_at?: string | null
+          assigned_by?: string | null
+          id?: string
+          is_primary?: boolean | null
+          location_id?: string
+          role?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "location_staff_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      locations: {
+        Row: {
+          address_line1: string
+          address_line2: string | null
+          city: string
+          code: string
+          coordinates: unknown | null
+          country: string
+          created_at: string
+          created_by: string | null
+          email: string | null
+          id: string
+          is_primary: boolean | null
+          name: string
+          notes: string | null
+          operating_hours: Json | null
+          phone: string | null
+          pricing_tier: string | null
+          services_offered: string[] | null
+          state: string
+          status: string
+          timezone: string | null
+          updated_at: string
+          updated_by: string | null
+          zip_code: string
+        }
+        Insert: {
+          address_line1: string
+          address_line2?: string | null
+          city: string
+          code: string
+          coordinates?: unknown | null
+          country?: string
+          created_at?: string
+          created_by?: string | null
+          email?: string | null
+          id?: string
+          is_primary?: boolean | null
+          name: string
+          notes?: string | null
+          operating_hours?: Json | null
+          phone?: string | null
+          pricing_tier?: string | null
+          services_offered?: string[] | null
+          state?: string
+          status?: string
+          timezone?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          zip_code: string
+        }
+        Update: {
+          address_line1?: string
+          address_line2?: string | null
+          city?: string
+          code?: string
+          coordinates?: unknown | null
+          country?: string
+          created_at?: string
+          created_by?: string | null
+          email?: string | null
+          id?: string
+          is_primary?: boolean | null
+          name?: string
+          notes?: string | null
+          operating_hours?: Json | null
+          phone?: string | null
+          pricing_tier?: string | null
+          services_offered?: string[] | null
+          state?: string
+          status?: string
+          timezone?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          zip_code?: string
         }
         Relationships: []
       }
@@ -619,6 +760,7 @@ export type Database = {
           created_by: string | null
           current_customer_id: string | null
           id: string
+          location_id: string | null
           monthly_rate: number
           next_payment_due: string | null
           notes: string | null
@@ -637,6 +779,7 @@ export type Database = {
           created_by?: string | null
           current_customer_id?: string | null
           id?: string
+          location_id?: string | null
           monthly_rate: number
           next_payment_due?: string | null
           notes?: string | null
@@ -655,6 +798,7 @@ export type Database = {
           created_by?: string | null
           current_customer_id?: string | null
           id?: string
+          location_id?: string | null
           monthly_rate?: number
           next_payment_due?: string | null
           notes?: string | null
@@ -673,6 +817,13 @@ export type Database = {
             columns: ["current_customer_id"]
             isOneToOne: false
             referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mailboxes_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
             referencedColumns: ["id"]
           },
         ]
@@ -743,6 +894,79 @@ export type Database = {
           },
         ]
       }
+      package_transfers: {
+        Row: {
+          completed_at: string | null
+          completed_by: string | null
+          created_at: string | null
+          from_location_id: string
+          id: string
+          initiated_at: string | null
+          initiated_by: string | null
+          notes: string | null
+          package_id: string
+          status: string
+          to_location_id: string
+          tracking_number: string | null
+          transfer_reason: string
+          updated_at: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          completed_by?: string | null
+          created_at?: string | null
+          from_location_id: string
+          id?: string
+          initiated_at?: string | null
+          initiated_by?: string | null
+          notes?: string | null
+          package_id: string
+          status?: string
+          to_location_id: string
+          tracking_number?: string | null
+          transfer_reason: string
+          updated_at?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          completed_by?: string | null
+          created_at?: string | null
+          from_location_id?: string
+          id?: string
+          initiated_at?: string | null
+          initiated_by?: string | null
+          notes?: string | null
+          package_id?: string
+          status?: string
+          to_location_id?: string
+          tracking_number?: string | null
+          transfer_reason?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "package_transfers_from_location_id_fkey"
+            columns: ["from_location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "package_transfers_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "packages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "package_transfers_to_location_id_fkey"
+            columns: ["to_location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       packages: {
         Row: {
           carrier: string
@@ -753,6 +977,7 @@ export type Database = {
           delivered_by: string | null
           dimensions: string | null
           id: string
+          location_id: string | null
           notes: string | null
           received_at: string
           received_by: string | null
@@ -773,6 +998,7 @@ export type Database = {
           delivered_by?: string | null
           dimensions?: string | null
           id?: string
+          location_id?: string | null
           notes?: string | null
           received_at?: string
           received_by?: string | null
@@ -793,6 +1019,7 @@ export type Database = {
           delivered_by?: string | null
           dimensions?: string | null
           id?: string
+          location_id?: string | null
           notes?: string | null
           received_at?: string
           received_by?: string | null
@@ -810,6 +1037,13 @@ export type Database = {
             columns: ["customer_id"]
             isOneToOne: false
             referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "packages_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
             referencedColumns: ["id"]
           },
         ]

@@ -1,8 +1,9 @@
-import { LogOut, User, Settings } from 'lucide-react';
+import { LogOut, User, Settings, Building } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { LanguageToggle } from './LanguageToggle';
+import { LocationSelector } from './LocationSelector';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useState, useEffect } from 'react';
@@ -61,12 +62,29 @@ export function MobileHeader({ title, showLogout = false, onNavigate }: MobileHe
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 items-center justify-between px-4">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           <h1 className="text-lg font-bold text-primary">{title}</h1>
+          {onNavigate && <LocationSelector compact className="hidden sm:flex" />}
         </div>
         
         <div className="flex items-center gap-2">
+          {onNavigate && <LocationSelector compact className="sm:hidden" />}
           <LanguageToggle />
+          {onNavigate && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                  <Building className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => onNavigate('location-management')}>
+                  <Settings className="mr-2 h-4 w-4" />
+                  Manage Locations
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
           {showLogout && profile && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

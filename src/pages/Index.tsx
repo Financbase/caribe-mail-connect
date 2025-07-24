@@ -10,6 +10,7 @@ import Analytics from './Analytics';
 import Routes from './Routes';
 import DriverRoute from './DriverRoute';
 import Act60Dashboard from './Act60Dashboard';
+import LocationManagement from './LocationManagement';
 import ProfileSettings from './profile/Settings';
 
 // Main application component with navigation logic
@@ -53,6 +54,8 @@ const PRMCMS = () => {
           return <DriverRoute onNavigate={setCurrentPage} />;
         case 'act60-dashboard':
           return <Act60Dashboard onNavigate={setCurrentPage} />;
+        case 'location-management':
+          return <LocationManagement onNavigate={setCurrentPage} />;
       case 'notifications':
         return <Notifications onNavigate={setCurrentPage} />;
       case 'profile-settings':

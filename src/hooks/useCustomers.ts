@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLocations } from '@/hooks/useLocations';
 import type { Tables, TablesInsert } from '@/integrations/supabase/types';
 
 export type Customer = Tables<'customers'>;
@@ -21,6 +22,7 @@ export interface CustomerFormData {
   country: string;
   customer_type: Customer['customer_type'];
   notes?: string;
+  location_id?: string;
 }
 
 export function useCustomers() {
@@ -28,6 +30,7 @@ export function useCustomers() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
+  const { currentLocation } = useLocations();
 
   // Cache management
   const cacheKey = 'prmcms-customers-cache';
@@ -62,8 +65,7 @@ export function useCustomers() {
       setLoading(true);
       console.log('Fetching customers from database...');
       
-      // Fetch customers with package count
-      const { data, error } = await supabase
+      let query = supabase
         .from('customers')
         .select(`
           *,
@@ -71,8 +73,14 @@ export function useCustomers() {
             id,
             status
           )
-        `)
-        .order('created_at', { ascending: false });
+        `);
+
+      // Filter by current location if available
+      if (currentLocation?.id) {
+        query = query.eq('location_id', currentLocation.id);
+      }
+
+      const { data, error } = await query.order('created_at', { ascending: false });
 
       if (error) throw error;
 
@@ -85,7 +93,7 @@ export function useCustomers() {
         totalPackages: customer.packages?.length || 0
       })) || [];
 
-      console.log('Fetched customers:', customersWithCounts.length);
+      console.log('Fetched customers for location:', currentLocation?.name, customersWithCounts.length);
       setCustomers(customersWithCounts);
       setError(null);
       
@@ -101,6 +109,7 @@ export function useCustomers() {
       setLoading(false);
     }
   };
+
   const createCustomer = async (customerData: CustomerFormData): Promise<{ success: boolean; error?: string; data?: Customer }> => {
     if (!user) return { success: false, error: 'User not authenticated' };
 
@@ -111,6 +120,7 @@ export function useCustomers() {
         .from('customers')
         .insert([{
           ...customerData,
+          location_id: customerData.location_id || currentLocation?.id,
           created_by: user.id,
           status: 'active'
         }])
@@ -191,9 +201,34 @@ export function useCustomers() {
     );
   };
 
+  const searchAcrossAllLocations = async (searchTerm: string): Promise<Customer[]> => {
+    if (!user || !searchTerm.trim()) return [];
+
+    try {
+      const term = searchTerm.toLowerCase();
+      const { data, error } = await supabase
+        .from('customers')
+        .select(`
+          *,
+          location:locations(name, code)
+        `)
+        .or(`first_name.ilike.%${term}%,last_name.ilike.%${term}%,email.ilike.%${term}%,mailbox_number.ilike.%${term}%`)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      return data || [];
+    } catch (err) {
+      console.error('Error searching across locations:', err);
+      return [];
+    }
+  };
+
+  // Fetch customers when user or current location changes
   useEffect(() => {
-    fetchCustomers();
-  }, [user]);
+    if (user && currentLocation) {
+      fetchCustomers();
+    }
+  }, [user, currentLocation]);
 
   // Set up real-time updates for customers
   useEffect(() => {
@@ -229,6 +264,7 @@ export function useCustomers() {
     updateCustomer,
     getCustomerById,
     searchCustomers,
+    searchAcrossAllLocations,
     refetch: fetchCustomers
   };
 }

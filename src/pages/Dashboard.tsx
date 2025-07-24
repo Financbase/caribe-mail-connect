@@ -1,11 +1,13 @@
-import { Package, Search, CheckCircle, Users, Mail, BarChart3, Truck, Crown } from 'lucide-react';
+import { Package, Search, CheckCircle, Users, Mail, BarChart3, Truck, Crown, Building } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ActionCard } from '@/components/ActionCard';
 import { MobileHeader } from '@/components/MobileHeader';
+import { MultiLocationDashboard } from '@/components/MultiLocationDashboard';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { usePackages } from '@/hooks/usePackages';
 import { useNotifications } from '@/hooks/useNotifications';
+import { useLocations } from '@/hooks/useLocations';
 
 interface DashboardProps {
   onNavigate: (page: string) => void;
@@ -16,6 +18,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
   const { t } = useLanguage();
   const { packages, getTodayStats } = usePackages();
   const { notifications } = useNotifications();
+  const { locations } = useLocations();
   
   const stats = getTodayStats();
   const getGreeting = () => {
@@ -113,6 +116,11 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             />
           ))}
         </div>
+
+        {/* Multi-Location Dashboard */}
+        {locations.length > 1 && (
+          <MultiLocationDashboard onNavigate={onNavigate} />
+        )}
 
         {/* Recent Activity */}
         <Card className="shadow-elegant animate-slide-up">

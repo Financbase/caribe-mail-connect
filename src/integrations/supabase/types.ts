@@ -314,28 +314,40 @@ export type Database = {
       }
       profiles: {
         Row: {
+          avatar_url: string | null
           created_at: string
           first_name: string | null
+          full_name: string | null
           id: string
           last_name: string | null
+          phone: string | null
+          preferred_language: string | null
           role: string
           updated_at: string
           user_id: string
         }
         Insert: {
+          avatar_url?: string | null
           created_at?: string
           first_name?: string | null
+          full_name?: string | null
           id?: string
           last_name?: string | null
+          phone?: string | null
+          preferred_language?: string | null
           role?: string
           updated_at?: string
           user_id: string
         }
         Update: {
+          avatar_url?: string | null
           created_at?: string
           first_name?: string | null
+          full_name?: string | null
           id?: string
           last_name?: string | null
+          phone?: string | null
+          preferred_language?: string | null
           role?: string
           updated_at?: string
           user_id?: string
@@ -438,6 +450,21 @@ export type Database = {
           ps_form_1583_status: string
           id_verification_status: string
           compliance_score: number
+        }[]
+      }
+      get_user_profile: {
+        Args: { _user_id?: string }
+        Returns: {
+          id: string
+          user_id: string
+          first_name: string
+          last_name: string
+          full_name: string
+          role: string
+          preferred_language: string
+          phone: string
+          avatar_url: string
+          email: string
         }[]
       }
       has_role: {

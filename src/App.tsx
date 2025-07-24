@@ -4,7 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { AuthProvider } from "@/contexts/AuthContext";
-import PRMCMS from "./pages/Index";
+import AppRouter from "./pages/AppRouter";
 
 const queryClient = new QueryClient();
 
@@ -15,7 +15,7 @@ const App = () => (
         <TooltipProvider>
           <Toaster />
           <Sonner />
-          <PRMCMS />
+          <AppRouter />
         </TooltipProvider>
       </AuthProvider>
     </LanguageProvider>

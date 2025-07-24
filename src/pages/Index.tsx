@@ -5,6 +5,7 @@ import Dashboard from './Dashboard';
 import PackageIntake from './PackageIntake';
 import Customers from './Customers';
 import Notifications from './Notifications';
+import ProfileSettings from './profile/Settings';
 
 // Main application component with navigation logic
 const PRMCMS = () => {
@@ -30,12 +31,7 @@ const PRMCMS = () => {
     );
   }
 
-  // If not authenticated, show auth page
-  if (!isAuthenticated) {
-    return <Auth />;
-  }
-
-  // Main app navigation
+  // Main app is now authenticated, so we just handle internal navigation
   const renderPage = () => {
     switch (currentPage) {
       case 'intake':
@@ -44,6 +40,8 @@ const PRMCMS = () => {
         return <Customers onNavigate={setCurrentPage} />;
       case 'notifications':
         return <Notifications onNavigate={setCurrentPage} />;
+      case 'profile-settings':
+        return <ProfileSettings onNavigate={setCurrentPage} />;
       case 'search':
         // Placeholder for search page
         return (
@@ -76,7 +74,6 @@ const PRMCMS = () => {
             </div>
           </div>
         );
-      case 'dashboard':
       default:
         return <Dashboard onNavigate={setCurrentPage} />;
     }

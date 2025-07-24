@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import Login from './Login';
+import Auth from './Auth';
 import Dashboard from './Dashboard';
 import PackageIntake from './PackageIntake';
 import Customers from './Customers';
@@ -8,7 +8,7 @@ import Notifications from './Notifications';
 
 // Main application component with navigation logic
 const PRMCMS = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
   const [currentPage, setCurrentPage] = useState('dashboard');
 
   // PWA Service Worker Registration (basic setup)
@@ -18,9 +18,21 @@ const PRMCMS = () => {
     }
   }, []);
 
-  // If not authenticated, show login
+  // Show loading while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p>Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // If not authenticated, show auth page
   if (!isAuthenticated) {
-    return <Login />;
+    return <Auth />;
   }
 
   // Main app navigation

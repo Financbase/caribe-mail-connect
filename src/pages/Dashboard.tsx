@@ -57,10 +57,10 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
         {/* Welcome Section */}
         <div className="space-y-2 animate-fade-in">
           <h2 className="text-2xl font-bold text-foreground">
-            {getGreeting()}, {user?.name?.split(' ')[0]}
+            {getGreeting()}, {user?.user_metadata?.first_name || user?.email?.split('@')[0]}
           </h2>
           <p className="text-muted-foreground">
-            {user?.location}
+            PRMCMS Staff Member
           </p>
         </div>
 

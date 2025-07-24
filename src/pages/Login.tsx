@@ -27,18 +27,18 @@ export default function Login() {
     // Simulate network delay
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    const success = login(email, password, rememberMe);
+    const { error } = await login(email, password);
     
-    if (success) {
+    if (error) {
       toast({
-        title: t('common.success'),
-        description: `${t('auth.welcome')}!`,
+        title: t('common.error'),
+        description: error,
+        variant: 'destructive',
       });
     } else {
       toast({
-        title: t('common.error'),
-        description: 'Invalid credentials. Try: admin@prmcms.com',
-        variant: 'destructive',
+        title: t('common.success'),
+        description: `${t('auth.welcome')}!`,
       });
     }
     

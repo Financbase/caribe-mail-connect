@@ -1,62 +1,104 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { mockUsers, User } from '../data/mockData';
+import { supabase } from '@/integrations/supabase/client';
+import { User, Session } from '@supabase/supabase-js';
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string, rememberMe?: boolean) => boolean;
-  logout: () => void;
+  session: Session | null;
+  login: (email: string, password: string) => Promise<{ error?: string }>;
+  signUp: (email: string, password: string, firstName: string, lastName: string) => Promise<{ error?: string }>;
+  logout: () => Promise<void>;
   isAuthenticated: boolean;
+  loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is remembered in localStorage
-    const rememberedUser = localStorage.getItem('prmcms-user');
-    if (rememberedUser) {
-      try {
-        const userData = JSON.parse(rememberedUser);
-        setUser(userData);
-      } catch (error) {
-        localStorage.removeItem('prmcms-user');
+    // Set up auth state listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        setLoading(false);
       }
-    }
+    );
+
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
-  const login = (email: string, password: string, rememberMe = false): boolean => {
-    // Simple mock authentication - in real app, this would validate against backend
-    const foundUser = mockUsers.find(u => u.email === email);
-    
-    if (foundUser && password.length > 0) {
-      setUser(foundUser);
+  const login = async (email: string, password: string): Promise<{ error?: string }> => {
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
       
-      if (rememberMe) {
-        localStorage.setItem('prmcms-user', JSON.stringify(foundUser));
-      } else {
-        sessionStorage.setItem('prmcms-session', JSON.stringify(foundUser));
+      if (error) {
+        return { error: error.message };
       }
       
-      return true;
+      return {};
+    } catch (error) {
+      return { error: 'An unexpected error occurred' };
     }
-    
-    return false;
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('prmcms-user');
-    sessionStorage.removeItem('prmcms-session');
+  const signUp = async (email: string, password: string, firstName: string, lastName: string): Promise<{ error?: string }> => {
+    try {
+      const redirectUrl = `${window.location.origin}/`;
+      
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: redirectUrl,
+          data: {
+            first_name: firstName,
+            last_name: lastName,
+          }
+        }
+      });
+      
+      if (error) {
+        return { error: error.message };
+      }
+      
+      return {};
+    } catch (error) {
+      return { error: 'An unexpected error occurred' };
+    }
+  };
+
+  const logout = async (): Promise<void> => {
+    try {
+      await supabase.auth.signOut();
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
   };
 
   return (
     <AuthContext.Provider value={{
       user,
+      session,
       login,
+      signUp,
       logout,
-      isAuthenticated: user !== null
+      isAuthenticated: user !== null,
+      loading
     }}>
       {children}
     </AuthContext.Provider>

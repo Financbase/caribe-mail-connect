@@ -5,6 +5,7 @@ import Dashboard from './Dashboard';
 import PackageIntake from './PackageIntake';
 import Customers from './Customers';
 import Notifications from './Notifications';
+import Mailboxes from './Mailboxes';
 import ProfileSettings from './profile/Settings';
 
 // Main application component with navigation logic
@@ -38,6 +39,8 @@ const PRMCMS = () => {
         return <PackageIntake onNavigate={setCurrentPage} />;
       case 'customers':
         return <Customers onNavigate={setCurrentPage} />;
+      case 'mailboxes':
+        return <Mailboxes onNavigate={setCurrentPage} />;
       case 'notifications':
         return <Notifications onNavigate={setCurrentPage} />;
       case 'profile-settings':

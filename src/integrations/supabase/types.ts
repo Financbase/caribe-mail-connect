@@ -175,6 +175,194 @@ export type Database = {
         }
         Relationships: []
       }
+      mailbox_payments: {
+        Row: {
+          amount: number
+          created_at: string
+          created_by: string | null
+          customer_id: string
+          id: string
+          mailbox_id: string
+          notes: string | null
+          payment_date: string
+          payment_method: string | null
+          period_end: string
+          period_start: string
+          reference_number: string | null
+          status: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          created_by?: string | null
+          customer_id: string
+          id?: string
+          mailbox_id: string
+          notes?: string | null
+          payment_date: string
+          payment_method?: string | null
+          period_end: string
+          period_start: string
+          reference_number?: string | null
+          status?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          created_by?: string | null
+          customer_id?: string
+          id?: string
+          mailbox_id?: string
+          notes?: string | null
+          payment_date?: string
+          payment_method?: string | null
+          period_end?: string
+          period_start?: string
+          reference_number?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mailbox_payments_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mailbox_payments_mailbox_id_fkey"
+            columns: ["mailbox_id"]
+            isOneToOne: false
+            referencedRelation: "mailboxes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mailbox_rental_history: {
+        Row: {
+          annual_rate: number
+          created_at: string
+          created_by: string | null
+          customer_id: string
+          end_date: string | null
+          id: string
+          mailbox_id: string
+          monthly_rate: number
+          notes: string | null
+          payment_frequency: string
+          start_date: string
+          termination_reason: string | null
+        }
+        Insert: {
+          annual_rate: number
+          created_at?: string
+          created_by?: string | null
+          customer_id: string
+          end_date?: string | null
+          id?: string
+          mailbox_id: string
+          monthly_rate: number
+          notes?: string | null
+          payment_frequency: string
+          start_date: string
+          termination_reason?: string | null
+        }
+        Update: {
+          annual_rate?: number
+          created_at?: string
+          created_by?: string | null
+          customer_id?: string
+          end_date?: string | null
+          id?: string
+          mailbox_id?: string
+          monthly_rate?: number
+          notes?: string | null
+          payment_frequency?: string
+          start_date?: string
+          termination_reason?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mailbox_rental_history_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mailbox_rental_history_mailbox_id_fkey"
+            columns: ["mailbox_id"]
+            isOneToOne: false
+            referencedRelation: "mailboxes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mailboxes: {
+        Row: {
+          annual_rate: number
+          created_at: string
+          created_by: string | null
+          current_customer_id: string | null
+          id: string
+          monthly_rate: number
+          next_payment_due: string | null
+          notes: string | null
+          number: string
+          payment_status: string | null
+          rental_end_date: string | null
+          rental_start_date: string | null
+          size: string
+          status: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          annual_rate: number
+          created_at?: string
+          created_by?: string | null
+          current_customer_id?: string | null
+          id?: string
+          monthly_rate: number
+          next_payment_due?: string | null
+          notes?: string | null
+          number: string
+          payment_status?: string | null
+          rental_end_date?: string | null
+          rental_start_date?: string | null
+          size: string
+          status?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          annual_rate?: number
+          created_at?: string
+          created_by?: string | null
+          current_customer_id?: string | null
+          id?: string
+          monthly_rate?: number
+          next_payment_due?: string | null
+          notes?: string | null
+          number?: string
+          payment_status?: string | null
+          rental_end_date?: string | null
+          rental_start_date?: string | null
+          size?: string
+          status?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mailboxes_current_customer_id_fkey"
+            columns: ["current_customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notifications: {
         Row: {
           channels: Json

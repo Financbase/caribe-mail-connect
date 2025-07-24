@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense, lazy } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import Auth from './Auth';
 import ResetPassword from './auth/ResetPassword';
@@ -43,9 +43,17 @@ export default function AppRouter() {
     return <Auth />;
   }
 
-  // Authenticated user
+  // Authenticated user routes
   if (currentRoute === '/auth/update-password') {
     return <UpdatePassword />;
+  }
+  if (currentRoute === '/search/advanced') {
+    const AdvancedSearch = lazy(() => import('./AdvancedSearch'));
+    return (
+      <Suspense fallback={<div className="p-4">Loading...</div>}>
+        <AdvancedSearch />
+      </Suspense>
+    );
   }
 
   return <PRMCMS />;

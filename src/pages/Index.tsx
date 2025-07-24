@@ -13,6 +13,7 @@ import Act60Dashboard from './Act60Dashboard';
 import LocationManagement from './LocationManagement';
 import ProfileSettings from './profile/Settings';
 import Billing from './Billing';
+import Admin from './Admin';
 import { MobileLayout } from '@/components/mobile/MobileLayout';
 
 // Main application component with navigation logic
@@ -62,6 +63,8 @@ const PRMCMS = () => {
         return <Notifications onNavigate={setCurrentPage} />;
       case 'billing':
         return <Billing onNavigate={setCurrentPage} />;
+      case 'admin':
+        return <Admin onNavigate={setCurrentPage} />;
       case 'profile-settings':
         return <ProfileSettings onNavigate={setCurrentPage} />;
       case 'search':

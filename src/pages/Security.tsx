@@ -25,6 +25,9 @@ import { TwoFactorAuthManager } from '@/components/security/TwoFactorAuthManager
 import { GDPRCompliance } from '@/components/security/GDPRCompliance';
 import { IPAccessControl } from '@/components/security/IPAccessControl';
 import { SecurityTraining } from '@/components/security/SecurityTraining';
+import { PasswordPolicyManager } from '@/components/security/PasswordPolicyManager';
+import { AccountLockoutManager } from '@/components/security/AccountLockoutManager';
+import { BiometricAuthManager } from '@/components/security/BiometricAuthManager';
 import { useSecurity } from '@/hooks/useSecurity';
 
 export default function Security() {
@@ -77,38 +80,50 @@ export default function Security() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-8">
-            <TabsTrigger value="dashboard" className="flex items-center space-x-2">
+          <TabsList className="grid w-full grid-cols-6 lg:grid-cols-11">
+            <TabsTrigger value="dashboard" className="flex items-center space-x-1">
               <Shield className="h-4 w-4" />
-              <span>Dashboard</span>
+              <span className="hidden sm:inline">Dashboard</span>
             </TabsTrigger>
-            <TabsTrigger value="login-attempts" className="flex items-center space-x-2">
+            <TabsTrigger value="login-attempts" className="flex items-center space-x-1">
               <Activity className="h-4 w-4" />
-              <span>Intentos</span>
+              <span className="hidden sm:inline">Intentos</span>
             </TabsTrigger>
-            <TabsTrigger value="sessions" className="flex items-center space-x-2">
+            <TabsTrigger value="sessions" className="flex items-center space-x-1">
               <Users className="h-4 w-4" />
-              <span>Sesiones</span>
+              <span className="hidden sm:inline">Sesiones</span>
             </TabsTrigger>
-            <TabsTrigger value="alerts" className="flex items-center space-x-2">
+            <TabsTrigger value="alerts" className="flex items-center space-x-1">
               <AlertTriangle className="h-4 w-4" />
-              <span>Alertas</span>
+              <span className="hidden sm:inline">Alertas</span>
             </TabsTrigger>
-            <TabsTrigger value="2fa" className="flex items-center space-x-2">
+            <TabsTrigger value="2fa" className="flex items-center space-x-1">
               <Lock className="h-4 w-4" />
-              <span>2FA</span>
+              <span className="hidden sm:inline">2FA</span>
             </TabsTrigger>
-            <TabsTrigger value="gdpr" className="flex items-center space-x-2">
+            <TabsTrigger value="biometric" className="flex items-center space-x-1">
+              <CheckCircle className="h-4 w-4" />
+              <span className="hidden sm:inline">Biométrico</span>
+            </TabsTrigger>
+            <TabsTrigger value="password-policy" className="flex items-center space-x-1">
+              <Shield className="h-4 w-4" />
+              <span className="hidden sm:inline">Contraseñas</span>
+            </TabsTrigger>
+            <TabsTrigger value="lockout" className="flex items-center space-x-1">
+              <UserX className="h-4 w-4" />
+              <span className="hidden sm:inline">Bloqueos</span>
+            </TabsTrigger>
+            <TabsTrigger value="gdpr" className="flex items-center space-x-1">
               <FileText className="h-4 w-4" />
-              <span>GDPR</span>
+              <span className="hidden sm:inline">GDPR</span>
             </TabsTrigger>
-            <TabsTrigger value="ip-control" className="flex items-center space-x-2">
+            <TabsTrigger value="ip-control" className="flex items-center space-x-1">
               <Globe className="h-4 w-4" />
-              <span>Control IP</span>
+              <span className="hidden sm:inline">Control IP</span>
             </TabsTrigger>
-            <TabsTrigger value="training" className="flex items-center space-x-2">
+            <TabsTrigger value="training" className="flex items-center space-x-1">
               <Eye className="h-4 w-4" />
-              <span>Entrenamiento</span>
+              <span className="hidden sm:inline">Entrenamiento</span>
             </TabsTrigger>
           </TabsList>
 
@@ -138,6 +153,18 @@ export default function Security() {
 
           <TabsContent value="ip-control" className="space-y-6">
             <IPAccessControl />
+          </TabsContent>
+
+          <TabsContent value="biometric" className="space-y-6">
+            <BiometricAuthManager />
+          </TabsContent>
+
+          <TabsContent value="password-policy" className="space-y-6">
+            <PasswordPolicyManager />
+          </TabsContent>
+
+          <TabsContent value="lockout" className="space-y-6">
+            <AccountLockoutManager />
           </TabsContent>
 
           <TabsContent value="training" className="space-y-6">

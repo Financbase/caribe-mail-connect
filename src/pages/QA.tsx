@@ -2,6 +2,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { QADashboardOverview } from '@/components/qa/QADashboardOverview';
 import { FailedProcessesTracker } from '@/components/qa/FailedProcessesTracker';
 import { ErrorReportsManager } from '@/components/qa/ErrorReportsManager';
+import { TestCaseManagement } from '@/components/qa/TestCaseManagement';
+import { UserFeedbackManager } from '@/components/qa/UserFeedbackSystem';
+import { PerformanceMonitoringDashboard } from '@/components/qa/PerformanceMonitoringDashboard';
 
 const QA = () => {
   return (
@@ -36,21 +39,15 @@ const QA = () => {
         </TabsContent>
 
         <TabsContent value="testing">
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">Testing management coming soon</p>
-          </div>
+          <TestCaseManagement />
         </TabsContent>
 
         <TabsContent value="feedback">
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">User feedback system coming soon</p>
-          </div>
+          <UserFeedbackManager />
         </TabsContent>
 
         <TabsContent value="performance">
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">Performance monitoring coming soon</p>
-          </div>
+          <PerformanceMonitoringDashboard />
         </TabsContent>
       </Tabs>
     </div>

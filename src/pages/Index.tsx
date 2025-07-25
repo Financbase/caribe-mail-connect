@@ -25,6 +25,7 @@ import Inventory from './Inventory';
 import Documents from './Documents';
 import { VirtualMail } from './VirtualMail';
 import { MobileLayout } from '@/components/mobile/MobileLayout';
+import { UserFeedbackWidget } from '@/components/qa/UserFeedbackSystem';
 
 // Main application component with navigation logic
 const PRMCMS = () => {
@@ -144,6 +145,10 @@ const PRMCMS = () => {
         return <Documents onNavigate={handleNavigation} />;
       case 'virtual-mail':
         return <VirtualMail />;
+      case 'qa':
+        // QA page needs to be lazy loaded due to AppRouter setup
+        window.location.hash = '#/qa';
+        return null;
       case 'profile-settings':
         return <ProfileSettings onNavigate={handleNavigation} />;
       case 'customer-portal':
@@ -188,6 +193,7 @@ const PRMCMS = () => {
   return (
     <MobileLayout currentPage={currentPage} onNavigate={handleNavigation}>
       {renderPage()}
+      {user && <UserFeedbackWidget />}
     </MobileLayout>
   );
 };

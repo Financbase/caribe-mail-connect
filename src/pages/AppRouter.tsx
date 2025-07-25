@@ -63,6 +63,14 @@ export default function AppRouter() {
       </Suspense>
     );
   }
+  if (currentRoute === '/qa') {
+    const QA = lazy(() => import('./QA'));
+    return (
+      <Suspense fallback={<div className="p-4">Loading...</div>}>
+        <QA />
+      </Suspense>
+    );
+  }
 
   return <PRMCMS />;
 }

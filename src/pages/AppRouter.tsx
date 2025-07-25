@@ -71,6 +71,14 @@ export default function AppRouter() {
       </Suspense>
     );
   }
+  if (currentRoute === '/security') {
+    const Security = lazy(() => import('./Security'));
+    return (
+      <Suspense fallback={<div className="p-4">Loading...</div>}>
+        <Security />
+      </Suspense>
+    );
+  }
 
   return <PRMCMS />;
 }

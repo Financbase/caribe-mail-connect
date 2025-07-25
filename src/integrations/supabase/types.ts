@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      access_control_lists: {
+        Row: {
+          expires_at: string | null
+          granted_at: string
+          granted_by: string
+          id: string
+          is_active: boolean
+          permissions: Json
+          resource_id: string
+          resource_type: string
+          role_name: string | null
+          user_id: string | null
+        }
+        Insert: {
+          expires_at?: string | null
+          granted_at?: string
+          granted_by: string
+          id?: string
+          is_active?: boolean
+          permissions?: Json
+          resource_id: string
+          resource_type: string
+          role_name?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          expires_at?: string | null
+          granted_at?: string
+          granted_by?: string
+          id?: string
+          is_active?: boolean
+          permissions?: Json
+          resource_id?: string
+          resource_type?: string
+          role_name?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       account_balances: {
         Row: {
           auto_billing_enabled: boolean | null

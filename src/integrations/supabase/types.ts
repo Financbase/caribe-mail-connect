@@ -174,6 +174,65 @@ export type Database = {
           },
         ]
       }
+      automated_test_runs: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          execution_time_ms: number | null
+          failed_tests: number
+          id: string
+          location_id: string | null
+          passed_tests: number
+          skipped_tests: number
+          started_at: string
+          status: string
+          test_results: Json | null
+          test_suite_name: string
+          test_type: string
+          total_tests: number
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          execution_time_ms?: number | null
+          failed_tests?: number
+          id?: string
+          location_id?: string | null
+          passed_tests?: number
+          skipped_tests?: number
+          started_at?: string
+          status?: string
+          test_results?: Json | null
+          test_suite_name: string
+          test_type: string
+          total_tests?: number
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          execution_time_ms?: number | null
+          failed_tests?: number
+          id?: string
+          location_id?: string | null
+          passed_tests?: number
+          skipped_tests?: number
+          started_at?: string
+          status?: string
+          test_results?: Json | null
+          test_suite_name?: string
+          test_type?: string
+          total_tests?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automated_test_runs_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       billing_runs: {
         Row: {
           billing_period_end: string
@@ -647,6 +706,71 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "customers_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      daily_health_reports: {
+        Row: {
+          anomalies_detected: Json | null
+          created_at: string
+          critical_issues_count: number | null
+          error_count: number | null
+          generated_at: string
+          id: string
+          location_id: string | null
+          overall_health_score: number
+          performance_score: number | null
+          recommendations: Json | null
+          report_data: Json | null
+          report_date: string
+          system_uptime_percentage: number | null
+          tests_passed_percentage: number | null
+          user_satisfaction_score: number | null
+          warnings_count: number | null
+        }
+        Insert: {
+          anomalies_detected?: Json | null
+          created_at?: string
+          critical_issues_count?: number | null
+          error_count?: number | null
+          generated_at?: string
+          id?: string
+          location_id?: string | null
+          overall_health_score?: number
+          performance_score?: number | null
+          recommendations?: Json | null
+          report_data?: Json | null
+          report_date?: string
+          system_uptime_percentage?: number | null
+          tests_passed_percentage?: number | null
+          user_satisfaction_score?: number | null
+          warnings_count?: number | null
+        }
+        Update: {
+          anomalies_detected?: Json | null
+          created_at?: string
+          critical_issues_count?: number | null
+          error_count?: number | null
+          generated_at?: string
+          id?: string
+          location_id?: string | null
+          overall_health_score?: number
+          performance_score?: number | null
+          recommendations?: Json | null
+          report_data?: Json | null
+          report_date?: string
+          system_uptime_percentage?: number | null
+          tests_passed_percentage?: number | null
+          user_satisfaction_score?: number | null
+          warnings_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "daily_health_reports_location_id_fkey"
             columns: ["location_id"]
             isOneToOne: false
             referencedRelation: "locations"
@@ -1373,6 +1497,65 @@ export type Database = {
           zone_assignments?: string[] | null
         }
         Relationships: []
+      }
+      failed_processes: {
+        Row: {
+          created_at: string
+          error_details: Json | null
+          error_message: string | null
+          failed_at: string
+          id: string
+          location_id: string | null
+          process_name: string
+          process_type: string
+          resolution_notes: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          severity: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          error_details?: Json | null
+          error_message?: string | null
+          failed_at?: string
+          id?: string
+          location_id?: string | null
+          process_name: string
+          process_type: string
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          severity?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          error_details?: Json | null
+          error_message?: string | null
+          failed_at?: string
+          id?: string
+          location_id?: string | null
+          process_name?: string
+          process_type?: string
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          severity?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "failed_processes_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       integration_logs: {
         Row: {
@@ -3341,6 +3524,53 @@ export type Database = {
           },
         ]
       }
+      performance_metrics: {
+        Row: {
+          created_at: string
+          endpoint_or_page: string | null
+          error_rate: number | null
+          id: string
+          location_id: string | null
+          memory_usage_mb: number | null
+          metric_type: string
+          recorded_at: string
+          response_time_ms: number | null
+          throughput_per_second: number | null
+        }
+        Insert: {
+          created_at?: string
+          endpoint_or_page?: string | null
+          error_rate?: number | null
+          id?: string
+          location_id?: string | null
+          memory_usage_mb?: number | null
+          metric_type: string
+          recorded_at?: string
+          response_time_ms?: number | null
+          throughput_per_second?: number | null
+        }
+        Update: {
+          created_at?: string
+          endpoint_or_page?: string | null
+          error_rate?: number | null
+          id?: string
+          location_id?: string | null
+          memory_usage_mb?: number | null
+          metric_type?: string
+          recorded_at?: string
+          response_time_ms?: number | null
+          throughput_per_second?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "performance_metrics_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -3508,6 +3738,100 @@ export type Database = {
             columns: ["vendor_id"]
             isOneToOne: false
             referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      qa_checklist_executions: {
+        Row: {
+          checklist_id: string
+          completed_at: string | null
+          completion_percentage: number | null
+          created_at: string
+          executed_by: string | null
+          execution_notes: string | null
+          id: string
+          started_at: string
+          status: string
+        }
+        Insert: {
+          checklist_id: string
+          completed_at?: string | null
+          completion_percentage?: number | null
+          created_at?: string
+          executed_by?: string | null
+          execution_notes?: string | null
+          id?: string
+          started_at?: string
+          status?: string
+        }
+        Update: {
+          checklist_id?: string
+          completed_at?: string | null
+          completion_percentage?: number | null
+          created_at?: string
+          executed_by?: string | null
+          execution_notes?: string | null
+          id?: string
+          started_at?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "qa_checklist_executions_checklist_id_fkey"
+            columns: ["checklist_id"]
+            isOneToOne: false
+            referencedRelation: "qa_checklists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      qa_checklists: {
+        Row: {
+          checklist_items: Json
+          checklist_type: string
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          is_template: boolean
+          location_id: string | null
+          name: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          checklist_items?: Json
+          checklist_type: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_template?: boolean
+          location_id?: string | null
+          name: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          checklist_items?: Json
+          checklist_type?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_template?: boolean
+          location_id?: string | null
+          name?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "qa_checklists_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
             referencedColumns: ["id"]
           },
         ]
@@ -3861,6 +4185,50 @@ export type Database = {
           },
         ]
       }
+      system_health_metrics: {
+        Row: {
+          created_at: string
+          id: string
+          location_id: string | null
+          metric_type: string
+          metric_value: number
+          recorded_at: string
+          status: string
+          threshold_critical: number | null
+          threshold_warning: number | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          location_id?: string | null
+          metric_type: string
+          metric_value: number
+          recorded_at?: string
+          status?: string
+          threshold_critical?: number | null
+          threshold_warning?: number | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          location_id?: string | null
+          metric_type?: string
+          metric_value?: number
+          recorded_at?: string
+          status?: string
+          threshold_critical?: number | null
+          threshold_warning?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "system_health_metrics_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tax_configurations: {
         Row: {
           applies_to: string[] | null
@@ -3901,6 +4269,285 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "tax_configurations_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      test_cases: {
+        Row: {
+          automation_script: string | null
+          category: string
+          created_at: string
+          created_by: string | null
+          description: string | null
+          expected_results: string | null
+          id: string
+          location_id: string | null
+          preconditions: string | null
+          priority: string
+          status: string
+          tags: string[] | null
+          test_steps: Json | null
+          test_type: string
+          title: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          automation_script?: string | null
+          category: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          expected_results?: string | null
+          id?: string
+          location_id?: string | null
+          preconditions?: string | null
+          priority?: string
+          status?: string
+          tags?: string[] | null
+          test_steps?: Json | null
+          test_type: string
+          title: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          automation_script?: string | null
+          category?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          expected_results?: string | null
+          id?: string
+          location_id?: string | null
+          preconditions?: string | null
+          priority?: string
+          status?: string
+          tags?: string[] | null
+          test_steps?: Json | null
+          test_type?: string
+          title?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "test_cases_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      test_executions: {
+        Row: {
+          actual_results: string | null
+          created_at: string
+          executed_at: string
+          executed_by: string | null
+          execution_time_ms: number | null
+          execution_type: string
+          failure_reason: string | null
+          id: string
+          screenshots: string[] | null
+          status: string
+          test_case_id: string
+          test_run_id: string | null
+        }
+        Insert: {
+          actual_results?: string | null
+          created_at?: string
+          executed_at?: string
+          executed_by?: string | null
+          execution_time_ms?: number | null
+          execution_type: string
+          failure_reason?: string | null
+          id?: string
+          screenshots?: string[] | null
+          status: string
+          test_case_id: string
+          test_run_id?: string | null
+        }
+        Update: {
+          actual_results?: string | null
+          created_at?: string
+          executed_at?: string
+          executed_by?: string | null
+          execution_time_ms?: number | null
+          execution_type?: string
+          failure_reason?: string | null
+          id?: string
+          screenshots?: string[] | null
+          status?: string
+          test_case_id?: string
+          test_run_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "test_executions_test_case_id_fkey"
+            columns: ["test_case_id"]
+            isOneToOne: false
+            referencedRelation: "test_cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "test_executions_test_run_id_fkey"
+            columns: ["test_run_id"]
+            isOneToOne: false
+            referencedRelation: "automated_test_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_error_reports: {
+        Row: {
+          actual_behavior: string | null
+          assigned_to: string | null
+          browser_info: Json | null
+          created_at: string
+          description: string
+          error_type: string
+          expected_behavior: string | null
+          id: string
+          location_id: string | null
+          priority: string
+          reported_at: string
+          resolution_notes: string | null
+          resolved_at: string | null
+          screenshot_urls: string[] | null
+          status: string
+          steps_to_reproduce: string | null
+          title: string
+          updated_at: string
+          user_id: string | null
+          video_url: string | null
+        }
+        Insert: {
+          actual_behavior?: string | null
+          assigned_to?: string | null
+          browser_info?: Json | null
+          created_at?: string
+          description: string
+          error_type: string
+          expected_behavior?: string | null
+          id?: string
+          location_id?: string | null
+          priority?: string
+          reported_at?: string
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          screenshot_urls?: string[] | null
+          status?: string
+          steps_to_reproduce?: string | null
+          title: string
+          updated_at?: string
+          user_id?: string | null
+          video_url?: string | null
+        }
+        Update: {
+          actual_behavior?: string | null
+          assigned_to?: string | null
+          browser_info?: Json | null
+          created_at?: string
+          description?: string
+          error_type?: string
+          expected_behavior?: string | null
+          id?: string
+          location_id?: string | null
+          priority?: string
+          reported_at?: string
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          screenshot_urls?: string[] | null
+          status?: string
+          steps_to_reproduce?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string | null
+          video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_error_reports_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_feedback: {
+        Row: {
+          assigned_to: string | null
+          browser_info: Json | null
+          category: string | null
+          created_at: string
+          description: string
+          feedback_type: string
+          id: string
+          location_id: string | null
+          page_url: string | null
+          priority_score: number | null
+          responded_at: string | null
+          response: string | null
+          satisfaction_rating: number | null
+          screenshot_urls: string[] | null
+          severity: string | null
+          status: string
+          title: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          assigned_to?: string | null
+          browser_info?: Json | null
+          category?: string | null
+          created_at?: string
+          description: string
+          feedback_type: string
+          id?: string
+          location_id?: string | null
+          page_url?: string | null
+          priority_score?: number | null
+          responded_at?: string | null
+          response?: string | null
+          satisfaction_rating?: number | null
+          screenshot_urls?: string[] | null
+          severity?: string | null
+          status?: string
+          title: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          assigned_to?: string | null
+          browser_info?: Json | null
+          category?: string | null
+          created_at?: string
+          description?: string
+          feedback_type?: string
+          id?: string
+          location_id?: string | null
+          page_url?: string | null
+          priority_score?: number | null
+          responded_at?: string | null
+          response?: string | null
+          satisfaction_rating?: number | null
+          screenshot_urls?: string[] | null
+          severity?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_feedback_location_id_fkey"
             columns: ["location_id"]
             isOneToOne: false
             referencedRelation: "locations"

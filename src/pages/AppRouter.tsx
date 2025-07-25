@@ -79,6 +79,46 @@ export default function AppRouter() {
       </Suspense>
     );
   }
+  if (currentRoute === '/performance') {
+    const PerformancePage = lazy(() => import('./Performance'));
+    return (
+      <Suspense fallback={<div className="p-4">Loading...</div>}>
+        <PerformancePage />
+      </Suspense>
+    );
+  }
+  if (currentRoute === '/analytics') {
+    const Analytics = lazy(() => import('./Analytics'));
+    return (
+      <Suspense fallback={<div className="p-4">Loading...</div>}>
+        <Analytics onNavigate={() => {}} />
+      </Suspense>
+    );
+  }
+  if (currentRoute === '/customers') {
+    const Customers = lazy(() => import('./Customers'));
+    return (
+      <Suspense fallback={<div className="p-4">Loading...</div>}>
+        <Customers onNavigate={() => {}} />
+      </Suspense>
+    );
+  }
+  if (currentRoute === '/mailboxes') {
+    const Mailboxes = lazy(() => import('./Mailboxes'));
+    return (
+      <Suspense fallback={<div className="p-4">Loading...</div>}>
+        <Mailboxes onNavigate={() => {}} />
+      </Suspense>
+    );
+  }
+  if (currentRoute === '/integrations') {
+    const Integrations = lazy(() => import('./Integrations'));
+    return (
+      <Suspense fallback={<div className="p-4">Loading...</div>}>
+        <Integrations />
+      </Suspense>
+    );
+  }
 
   return <PRMCMS />;
 }

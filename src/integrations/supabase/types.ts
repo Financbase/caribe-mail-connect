@@ -272,6 +272,162 @@ export type Database = {
           },
         ]
       }
+      backup_audit_logs: {
+        Row: {
+          action: string
+          action_type: string
+          backup_job_id: string | null
+          compliance_metadata: Json | null
+          created_at: string
+          details: Json | null
+          id: string
+          ip_address: unknown | null
+          restore_point_id: string | null
+          user_agent: string | null
+          user_email: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          action_type: string
+          backup_job_id?: string | null
+          compliance_metadata?: Json | null
+          created_at?: string
+          details?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          restore_point_id?: string | null
+          user_agent?: string | null
+          user_email?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          action_type?: string
+          backup_job_id?: string | null
+          compliance_metadata?: Json | null
+          created_at?: string
+          details?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          restore_point_id?: string | null
+          user_agent?: string | null
+          user_email?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      backup_configurations: {
+        Row: {
+          backup_schedule: Json
+          backup_type: string
+          configuration: Json
+          created_at: string
+          created_by: string | null
+          cross_region_enabled: boolean
+          encryption_enabled: boolean
+          frequency: string
+          id: string
+          is_enabled: boolean
+          location_id: string | null
+          retention_days: number
+          target_region: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          backup_schedule?: Json
+          backup_type: string
+          configuration?: Json
+          created_at?: string
+          created_by?: string | null
+          cross_region_enabled?: boolean
+          encryption_enabled?: boolean
+          frequency: string
+          id?: string
+          is_enabled?: boolean
+          location_id?: string | null
+          retention_days?: number
+          target_region?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          backup_schedule?: Json
+          backup_type?: string
+          configuration?: Json
+          created_at?: string
+          created_by?: string | null
+          cross_region_enabled?: boolean
+          encryption_enabled?: boolean
+          frequency?: string
+          id?: string
+          is_enabled?: boolean
+          location_id?: string | null
+          retention_days?: number
+          target_region?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
+      backup_jobs: {
+        Row: {
+          backup_hash: string | null
+          backup_location: string | null
+          backup_size_bytes: number | null
+          completed_at: string | null
+          configuration_id: string
+          created_at: string
+          created_by: string | null
+          encryption_key_id: string | null
+          error_message: string | null
+          estimated_completion: string | null
+          id: string
+          job_type: string
+          metadata: Json | null
+          progress_percentage: number | null
+          started_at: string | null
+          status: string
+        }
+        Insert: {
+          backup_hash?: string | null
+          backup_location?: string | null
+          backup_size_bytes?: number | null
+          completed_at?: string | null
+          configuration_id: string
+          created_at?: string
+          created_by?: string | null
+          encryption_key_id?: string | null
+          error_message?: string | null
+          estimated_completion?: string | null
+          id?: string
+          job_type: string
+          metadata?: Json | null
+          progress_percentage?: number | null
+          started_at?: string | null
+          status?: string
+        }
+        Update: {
+          backup_hash?: string | null
+          backup_location?: string | null
+          backup_size_bytes?: number | null
+          completed_at?: string | null
+          configuration_id?: string
+          created_at?: string
+          created_by?: string | null
+          encryption_key_id?: string | null
+          error_message?: string | null
+          estimated_completion?: string | null
+          id?: string
+          job_type?: string
+          metadata?: Json | null
+          progress_percentage?: number | null
+          started_at?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
       billing_runs: {
         Row: {
           billing_period_end: string
@@ -436,6 +592,66 @@ export type Database = {
           performed_by_name?: string | null
           record_id?: string
           table_name?: string
+        }
+        Relationships: []
+      }
+      compliance_policies: {
+        Row: {
+          audit_requirements: Json | null
+          compliance_framework: string | null
+          created_at: string
+          created_by: string | null
+          effective_date: string
+          encryption_requirements: Json | null
+          expiry_date: string | null
+          geographic_restrictions: Json | null
+          id: string
+          is_mandatory: boolean
+          location_id: string | null
+          policy_name: string
+          policy_rules: Json
+          policy_type: string
+          retention_period_days: number | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          audit_requirements?: Json | null
+          compliance_framework?: string | null
+          created_at?: string
+          created_by?: string | null
+          effective_date?: string
+          encryption_requirements?: Json | null
+          expiry_date?: string | null
+          geographic_restrictions?: Json | null
+          id?: string
+          is_mandatory?: boolean
+          location_id?: string | null
+          policy_name: string
+          policy_rules?: Json
+          policy_type: string
+          retention_period_days?: number | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          audit_requirements?: Json | null
+          compliance_framework?: string | null
+          created_at?: string
+          created_by?: string | null
+          effective_date?: string
+          encryption_requirements?: Json | null
+          expiry_date?: string | null
+          geographic_restrictions?: Json | null
+          id?: string
+          is_mandatory?: boolean
+          location_id?: string | null
+          policy_name?: string
+          policy_rules?: Json
+          policy_type?: string
+          retention_period_days?: number | null
+          updated_at?: string
+          updated_by?: string | null
         }
         Relationships: []
       }
@@ -1028,6 +1244,69 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      disaster_recovery_plans: {
+        Row: {
+          automated_execution: boolean | null
+          created_at: string
+          created_by: string | null
+          emergency_contacts: Json | null
+          id: string
+          is_active: boolean
+          last_tested_at: string | null
+          location_id: string | null
+          plan_name: string
+          plan_steps: Json
+          plan_type: string
+          priority_level: string
+          recovery_point_objective: number | null
+          recovery_time_objective: number | null
+          status_page_integration: Json | null
+          test_results: Json | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          automated_execution?: boolean | null
+          created_at?: string
+          created_by?: string | null
+          emergency_contacts?: Json | null
+          id?: string
+          is_active?: boolean
+          last_tested_at?: string | null
+          location_id?: string | null
+          plan_name: string
+          plan_steps?: Json
+          plan_type: string
+          priority_level?: string
+          recovery_point_objective?: number | null
+          recovery_time_objective?: number | null
+          status_page_integration?: Json | null
+          test_results?: Json | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          automated_execution?: boolean | null
+          created_at?: string
+          created_by?: string | null
+          emergency_contacts?: Json | null
+          id?: string
+          is_active?: boolean
+          last_tested_at?: string | null
+          location_id?: string | null
+          plan_name?: string
+          plan_steps?: Json
+          plan_type?: string
+          priority_level?: string
+          recovery_point_objective?: number | null
+          recovery_time_objective?: number | null
+          status_page_integration?: Json | null
+          test_results?: Json | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
       }
       document_access_logs: {
         Row: {
@@ -3875,6 +4154,60 @@ export type Database = {
           },
         ]
       }
+      recovery_executions: {
+        Row: {
+          actual_rto: number | null
+          approved_by: string | null
+          completed_at: string | null
+          created_at: string
+          executed_by: string | null
+          execution_log: Json | null
+          execution_type: string
+          id: string
+          issues_encountered: Json | null
+          lessons_learned: string | null
+          plan_id: string
+          restore_point_id: string | null
+          started_at: string
+          status: string
+          success_percentage: number | null
+        }
+        Insert: {
+          actual_rto?: number | null
+          approved_by?: string | null
+          completed_at?: string | null
+          created_at?: string
+          executed_by?: string | null
+          execution_log?: Json | null
+          execution_type: string
+          id?: string
+          issues_encountered?: Json | null
+          lessons_learned?: string | null
+          plan_id: string
+          restore_point_id?: string | null
+          started_at?: string
+          status?: string
+          success_percentage?: number | null
+        }
+        Update: {
+          actual_rto?: number | null
+          approved_by?: string | null
+          completed_at?: string | null
+          created_at?: string
+          executed_by?: string | null
+          execution_log?: Json | null
+          execution_type?: string
+          id?: string
+          issues_encountered?: Json | null
+          lessons_learned?: string | null
+          plan_id?: string
+          restore_point_id?: string | null
+          started_at?: string
+          status?: string
+          success_percentage?: number | null
+        }
+        Relationships: []
+      }
       report_executions: {
         Row: {
           completed_at: string | null
@@ -4096,6 +4429,51 @@ export type Database = {
           updated_at?: string
           updated_by?: string | null
           visualization_config?: Json
+        }
+        Relationships: []
+      }
+      restore_points: {
+        Row: {
+          backup_job_id: string
+          backup_type: string
+          created_at: string
+          data_integrity_verified: boolean | null
+          id: string
+          is_available: boolean
+          location_path: string | null
+          metadata: Json | null
+          restore_point_name: string
+          size_bytes: number | null
+          timestamp: string
+          verification_date: string | null
+        }
+        Insert: {
+          backup_job_id: string
+          backup_type: string
+          created_at?: string
+          data_integrity_verified?: boolean | null
+          id?: string
+          is_available?: boolean
+          location_path?: string | null
+          metadata?: Json | null
+          restore_point_name: string
+          size_bytes?: number | null
+          timestamp: string
+          verification_date?: string | null
+        }
+        Update: {
+          backup_job_id?: string
+          backup_type?: string
+          created_at?: string
+          data_integrity_verified?: boolean | null
+          id?: string
+          is_available?: boolean
+          location_path?: string | null
+          metadata?: Json | null
+          restore_point_name?: string
+          size_bytes?: number | null
+          timestamp?: string
+          verification_date?: string | null
         }
         Relationships: []
       }
@@ -5132,6 +5510,17 @@ export type Database = {
         Args: { location_code: string }
         Returns: string
       }
+      get_backup_status: {
+        Args: { p_location_id?: string }
+        Returns: {
+          total_backups: number
+          successful_backups: number
+          failed_backups: number
+          total_size_gb: number
+          oldest_backup: string
+          latest_backup: string
+        }[]
+      }
       get_current_user_role: {
         Args: Record<PropertyKey, never>
         Returns: string
@@ -5166,6 +5555,10 @@ export type Database = {
       has_role: {
         Args: { _user_id: string; _role: string }
         Returns: boolean
+      }
+      schedule_backup: {
+        Args: { p_configuration_id: string; p_job_type?: string }
+        Returns: string
       }
       validate_api_key: {
         Args: { key: string }

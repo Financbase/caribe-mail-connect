@@ -55,8 +55,8 @@ export interface DisasterRecoveryPlan {
   recovery_time_objective?: number;
   recovery_point_objective?: number;
   automated_execution: boolean;
-  plan_steps: any[];
-  emergency_contacts: any[];
+  plan_steps: any;
+  emergency_contacts: any;
   last_tested_at?: string;
   is_active: boolean;
   created_at: string;
@@ -292,10 +292,10 @@ export const useBackupManagement = () => {
     return data;
   };
 
-  const createRecoveryPlan = async (plan: Partial<DisasterRecoveryPlan>) => {
+  const createRecoveryPlan = async (plan: any) => {
     const { data, error } = await supabase
       .from('disaster_recovery_plans')
-      .insert([plan])
+      .insert(plan)
       .select()
       .single();
 
@@ -310,7 +310,7 @@ export const useBackupManagement = () => {
     return data;
   };
 
-  const updateRecoveryPlan = async (id: string, updates: Partial<DisasterRecoveryPlan>) => {
+  const updateRecoveryPlan = async (id: string, updates: any) => {
     const { data, error } = await supabase
       .from('disaster_recovery_plans')
       .update(updates)

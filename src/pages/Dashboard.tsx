@@ -44,27 +44,27 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
       onClick: () => onNavigate('customers'),
     },
     {
-      title: 'Act 60 Dashboard',
+      title: t('actions.act60Dashboard'),
       icon: Crown,
       onClick: () => onNavigate('act60-dashboard'),
     },
     {
-      title: t('Mailboxes'),
+      title: t('actions.mailboxes'),
       icon: Mail,
       onClick: () => onNavigate('mailboxes'),
     },
     {
-      title: t('Routes'),
+      title: t('actions.routes'),
       icon: Truck,
       onClick: () => onNavigate('routes'),
     },
     {
-      title: t('Analytics'),
+      title: t('actions.analytics'),
       icon: BarChart3,
       onClick: () => onNavigate('analytics'),
     },
     {
-      title: t('Driver View'),
+      title: t('actions.driverView'),
       icon: Search,
       onClick: () => onNavigate('driver-route'),
     },

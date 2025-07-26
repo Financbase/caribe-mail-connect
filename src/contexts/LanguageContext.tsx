@@ -36,6 +36,11 @@ const translations = {
     'actions.search': 'Buscar',
     'actions.deliver': 'Entregar',
     'actions.customers': 'Clientes',
+    'actions.act60Dashboard': 'Panel Act 60',
+    'actions.mailboxes': 'Buzones',
+    'actions.routes': 'Rutas',
+    'actions.analytics': 'Analíticas',
+    'actions.driverView': 'Vista del Conductor',
     
     // Package Intake
     'intake.title': 'Recepción de Paquetes',
@@ -91,6 +96,11 @@ const translations = {
     'actions.search': 'Search',
     'actions.deliver': 'Deliver',
     'actions.customers': 'Customers',
+    'actions.act60Dashboard': 'Act 60 Dashboard',
+    'actions.mailboxes': 'Mailboxes',
+    'actions.routes': 'Routes',
+    'actions.analytics': 'Analytics',
+    'actions.driverView': 'Driver View',
     
     // Package Intake
     'intake.title': 'Package Intake',

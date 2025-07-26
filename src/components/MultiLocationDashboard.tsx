@@ -18,6 +18,7 @@ import {
 import { useLocations } from '@/hooks/useLocations';
 import { useCustomers } from '@/hooks/useCustomers';
 import { usePackages } from '@/hooks/usePackages';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface MultiLocationDashboardProps {
   onNavigate: (page: string) => void;
@@ -27,6 +28,7 @@ export function MultiLocationDashboard({ onNavigate }: MultiLocationDashboardPro
   const { locations, currentLocation, switchLocation } = useLocations();
   const { customers } = useCustomers();
   const { packages } = usePackages();
+  const { t } = useLanguage();
   const [selectedTab, setSelectedTab] = useState('overview');
 
   // Mock data for demonstration
@@ -44,35 +46,35 @@ export function MultiLocationDashboard({ onNavigate }: MultiLocationDashboardPro
   };
 
   const formatOperatingHours = (hours: any) => {
-    if (!hours) return 'Not set';
+    if (!hours) return t('locations.notSet');
     
     const today = new Date().getDay();
     const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
     const todayHours = hours[days[today]];
     
-    if (todayHours?.closed) return 'Closed';
+    if (todayHours?.closed) return t('locations.closed');
     if (todayHours?.open && todayHours?.close) {
       return `${todayHours.open} - ${todayHours.close}`;
     }
     
-    return 'Hours not set';
+    return t('locations.hoursNotSet');
   };
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Multi-Location Overview</h2>
+        <h2 className="text-2xl font-bold">{t('locations.multiLocationOverview')}</h2>
         <Button onClick={() => onNavigate('location-management')} variant="outline">
           <Building className="h-4 w-4 mr-2" />
-          Manage Locations
+          {t('locations.manageLocations')}
         </Button>
       </div>
 
       <Tabs value={selectedTab} onValueChange={setSelectedTab}>
         <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="performance">Performance</TabsTrigger>
-          <TabsTrigger value="comparison">Comparison</TabsTrigger>
+          <TabsTrigger value="overview">{t('locations.overview')}</TabsTrigger>
+          <TabsTrigger value="performance">{t('locations.performance')}</TabsTrigger>
+          <TabsTrigger value="comparison">{t('locations.comparison')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
@@ -82,7 +84,7 @@ export function MultiLocationDashboard({ onNavigate }: MultiLocationDashboardPro
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <MapPin className="h-5 w-5 text-primary" />
-                  <span>Current Location: {currentLocation.name}</span>
+                  <span>{t('locations.currentLocation')}: {currentLocation.name}</span>
                   {currentLocation.is_primary && <Star className="h-4 w-4 text-yellow-500" />}
                 </CardTitle>
               </CardHeader>
@@ -94,19 +96,19 @@ export function MultiLocationDashboard({ onNavigate }: MultiLocationDashboardPro
                       <>
                         <div className="text-center">
                           <div className="text-2xl font-bold text-primary">{metrics.customers}</div>
-                          <div className="text-sm text-muted-foreground">Customers</div>
+                          <div className="text-sm text-muted-foreground">{t('locations.customers')}</div>
                         </div>
                         <div className="text-center">
                           <div className="text-2xl font-bold text-primary">{metrics.packages}</div>
-                          <div className="text-sm text-muted-foreground">Packages</div>
+                          <div className="text-sm text-muted-foreground">{t('locations.packages')}</div>
                         </div>
                         <div className="text-center">
                           <div className="text-2xl font-bold text-green-600">${metrics.revenue}</div>
-                          <div className="text-sm text-muted-foreground">Monthly Revenue</div>
+                          <div className="text-sm text-muted-foreground">{t('locations.monthlyRevenue')}</div>
                         </div>
                         <div className="text-center">
                           <div className="text-2xl font-bold text-blue-600">{metrics.efficiency}%</div>
-                          <div className="text-sm text-muted-foreground">Efficiency</div>
+                          <div className="text-sm text-muted-foreground">{t('locations.efficiency')}</div>
                         </div>
                       </>
                     );
@@ -151,11 +153,11 @@ export function MultiLocationDashboard({ onNavigate }: MultiLocationDashboardPro
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div className="flex items-center space-x-2">
                         <Users className="h-4 w-4 text-muted-foreground" />
-                        <span>{metrics.customers} customers</span>
+                        <span>{metrics.customers} {t('locations.customers').toLowerCase()}</span>
                       </div>
                       <div className="flex items-center space-x-2">
                         <Package className="h-4 w-4 text-muted-foreground" />
-                        <span>{metrics.packages} packages</span>
+                        <span>{metrics.packages} {t('locations.packages').toLowerCase()}</span>
                       </div>
                       <div className="flex items-center space-x-2">
                         <DollarSign className="h-4 w-4 text-muted-foreground" />
@@ -211,7 +213,7 @@ export function MultiLocationDashboard({ onNavigate }: MultiLocationDashboardPro
                   <CardContent>
                     <div className="space-y-4">
                       <div className="flex justify-between items-center">
-                        <span className="text-sm">Efficiency</span>
+                        <span className="text-sm">{t('locations.efficiency')}</span>
                         <span className="font-medium">{metrics.efficiency}%</span>
                       </div>
                       <div className="w-full bg-muted rounded-full h-2">
@@ -222,7 +224,7 @@ export function MultiLocationDashboard({ onNavigate }: MultiLocationDashboardPro
                       </div>
                       
                       <div className="flex justify-between items-center">
-                        <span className="text-sm">Monthly Growth</span>
+                        <span className="text-sm">{t('locations.monthlyGrowth')}</span>
                         <span className={`font-medium ${metrics.growth >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                           {metrics.growth >= 0 ? '+' : ''}{metrics.growth}%
                         </span>
@@ -231,11 +233,11 @@ export function MultiLocationDashboard({ onNavigate }: MultiLocationDashboardPro
                       <div className="grid grid-cols-2 gap-4 pt-2">
                         <div className="text-center">
                           <div className="text-lg font-bold">{metrics.customers}</div>
-                          <div className="text-xs text-muted-foreground">Customers</div>
+                          <div className="text-xs text-muted-foreground">{t('locations.customers')}</div>
                         </div>
                         <div className="text-center">
                           <div className="text-lg font-bold">${metrics.revenue}</div>
-                          <div className="text-xs text-muted-foreground">Revenue</div>
+                          <div className="text-xs text-muted-foreground">{t('locations.revenue')}</div>
                         </div>
                       </div>
                     </div>
@@ -251,7 +253,7 @@ export function MultiLocationDashboard({ onNavigate }: MultiLocationDashboardPro
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <BarChart3 className="h-5 w-5" />
-                <span>Location Performance Ranking</span>
+                <span>{t('locations.performanceRanking')}</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -284,7 +286,7 @@ export function MultiLocationDashboard({ onNavigate }: MultiLocationDashboardPro
                       <div className="text-right">
                         <div className="font-bold text-green-600">${location.metrics.revenue}</div>
                         <div className="text-sm text-muted-foreground">
-                          {location.metrics.customers} customers
+                          {location.metrics.customers} {t('locations.customers').toLowerCase()}
                         </div>
                       </div>
                     </div>

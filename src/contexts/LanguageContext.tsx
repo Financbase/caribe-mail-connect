@@ -64,6 +64,24 @@ const translations = {
     'customers.phone': 'Teléfono',
     'customers.activePackages': 'Paquetes activos',
     
+    // Locations
+    'locations.multiLocationOverview': 'Vista General Multi-Ubicación',
+    'locations.manageLocations': 'Gestionar Ubicaciones',
+    'locations.overview': 'Vista General',
+    'locations.performance': 'Rendimiento',
+    'locations.comparison': 'Comparación',
+    'locations.currentLocation': 'Ubicación Actual',
+    'locations.customers': 'Clientes',
+    'locations.packages': 'Paquetes',
+    'locations.monthlyRevenue': 'Ingresos Mensuales',
+    'locations.efficiency': 'Eficiencia',
+    'locations.monthlyGrowth': 'Crecimiento Mensual',
+    'locations.revenue': 'Ingresos',
+    'locations.performanceRanking': 'Ranking de Rendimiento de Ubicaciones',
+    'locations.notSet': 'No establecido',
+    'locations.closed': 'Cerrado',
+    'locations.hoursNotSet': 'Horario no establecido',
+    
     // Common
     'common.save': 'Guardar',
     'common.cancel': 'Cancelar',
@@ -123,6 +141,24 @@ const translations = {
     'customers.mailbox': 'Mailbox',
     'customers.phone': 'Phone',
     'customers.activePackages': 'Active packages',
+    
+    // Locations
+    'locations.multiLocationOverview': 'Multi-Location Overview',
+    'locations.manageLocations': 'Manage Locations',
+    'locations.overview': 'Overview',
+    'locations.performance': 'Performance',
+    'locations.comparison': 'Comparison',
+    'locations.currentLocation': 'Current Location',
+    'locations.customers': 'Customers',
+    'locations.packages': 'Packages',
+    'locations.monthlyRevenue': 'Monthly Revenue',
+    'locations.efficiency': 'Efficiency',
+    'locations.monthlyGrowth': 'Monthly Growth',
+    'locations.revenue': 'Revenue',
+    'locations.performanceRanking': 'Location Performance Ranking',
+    'locations.notSet': 'Not set',
+    'locations.closed': 'Closed',
+    'locations.hoursNotSet': 'Hours not set',
     
     // Common
     'common.save': 'Save',

@@ -118,9 +118,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
         </div>
 
         {/* Multi-Location Dashboard */}
-        {locations.length > 1 && (
-          <MultiLocationDashboard onNavigate={onNavigate} />
-        )}
+        <MultiLocationDashboard onNavigate={onNavigate} />
 
         {/* Recent Activity */}
         <Card className="shadow-elegant animate-slide-up">

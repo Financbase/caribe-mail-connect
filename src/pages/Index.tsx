@@ -75,12 +75,13 @@ const PRMCMS = () => {
   }, []);
 
   const handleNavigation = (page: string) => {
-    setCurrentPage(page);
+    // Use hash-based navigation for consistency with AppRouter
+    window.location.hash = `#/${page}`;
   };
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    setCurrentPage('auth-selection');
+    window.location.hash = '#/';
   };
 
   // Show loading while checking authentication
@@ -146,8 +147,7 @@ const PRMCMS = () => {
       case 'virtual-mail':
         return <VirtualMail />;
       case 'qa':
-        // QA page needs to be lazy loaded due to AppRouter setup
-        window.location.hash = '#/qa';
+        // QA page handled by AppRouter
         return null;
       case 'profile-settings':
         return <ProfileSettings onNavigate={handleNavigation} />;

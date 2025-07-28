@@ -53,7 +53,8 @@ export function BottomNavigation({ currentPage, onNavigate }: BottomNavigationPr
       return;
     }
     
-    onNavigate(pageId);
+    // Use hash navigation for consistency
+    window.location.hash = `#/${pageId}`;
     setShowMore(false);
   };
 

@@ -91,7 +91,7 @@ export default function AppRouter() {
     const Analytics = lazy(() => import('./Analytics'));
     return (
       <Suspense fallback={<div className="p-4">Loading...</div>}>
-        <Analytics onNavigate={() => {}} />
+        <Analytics onNavigate={(page: string) => window.location.hash = `#/${page}`} />
       </Suspense>
     );
   }
@@ -99,7 +99,7 @@ export default function AppRouter() {
     const Customers = lazy(() => import('./Customers'));
     return (
       <Suspense fallback={<div className="p-4">Loading...</div>}>
-        <Customers onNavigate={() => {}} />
+        <Customers onNavigate={(page: string) => window.location.hash = `#/${page}`} />
       </Suspense>
     );
   }
@@ -107,7 +107,7 @@ export default function AppRouter() {
     const Mailboxes = lazy(() => import('./Mailboxes'));
     return (
       <Suspense fallback={<div className="p-4">Loading...</div>}>
-        <Mailboxes onNavigate={() => {}} />
+        <Mailboxes onNavigate={(page: string) => window.location.hash = `#/${page}`} />
       </Suspense>
     );
   }
@@ -116,6 +116,86 @@ export default function AppRouter() {
     return (
       <Suspense fallback={<div className="p-4">Loading...</div>}>
         <Integrations />
+      </Suspense>
+    );
+  }
+  if (currentRoute === '/billing') {
+    const Billing = lazy(() => import('./Billing'));
+    return (
+      <Suspense fallback={<div className="p-4">Loading...</div>}>
+        <Billing onNavigate={(page: string) => window.location.hash = `#/${page}`} />
+      </Suspense>
+    );
+  }
+  if (currentRoute === '/admin') {
+    const Admin = lazy(() => import('./Admin'));
+    return (
+      <Suspense fallback={<div className="p-4">Loading...</div>}>
+        <Admin onNavigate={(page: string) => window.location.hash = `#/${page}`} />
+      </Suspense>
+    );
+  }
+  if (currentRoute === '/inventory') {
+    const Inventory = lazy(() => import('./Inventory'));
+    return (
+      <Suspense fallback={<div className="p-4">Loading...</div>}>
+        <Inventory onNavigate={(page: string) => window.location.hash = `#/${page}`} />
+      </Suspense>
+    );
+  }
+  if (currentRoute === '/documents') {
+    const Documents = lazy(() => import('./Documents'));
+    return (
+      <Suspense fallback={<div className="p-4">Loading...</div>}>
+        <Documents onNavigate={(page: string) => window.location.hash = `#/${page}`} />
+      </Suspense>
+    );
+  }
+  if (currentRoute === '/virtual-mail') {
+    const VirtualMailComponent = lazy(() => import('./VirtualMail').then(module => ({ default: module.VirtualMail })));
+    return (
+      <Suspense fallback={<div className="p-4">Loading...</div>}>
+        <VirtualMailComponent />
+      </Suspense>
+    );
+  }
+  if (currentRoute === '/notifications') {
+    const Notifications = lazy(() => import('./Notifications'));
+    return (
+      <Suspense fallback={<div className="p-4">Loading...</div>}>
+        <Notifications onNavigate={(page: string) => window.location.hash = `#/${page}`} />
+      </Suspense>
+    );
+  }
+  if (currentRoute === '/routes') {
+    const Routes = lazy(() => import('./Routes'));
+    return (
+      <Suspense fallback={<div className="p-4">Loading...</div>}>
+        <Routes onNavigate={(page: string) => window.location.hash = `#/${page}`} />
+      </Suspense>
+    );
+  }
+  if (currentRoute === '/intake') {
+    const PackageIntake = lazy(() => import('./PackageIntake'));
+    return (
+      <Suspense fallback={<div className="p-4">Loading...</div>}>
+        <PackageIntake onNavigate={(page: string) => window.location.hash = `#/${page}`} />
+      </Suspense>
+    );
+  }
+  if (currentRoute === '/act60-dashboard') {
+    const Act60Dashboard = lazy(() => import('./Act60Dashboard'));
+    return (
+      <Suspense fallback={<div className="p-4">Loading...</div>}>
+        <Act60Dashboard onNavigate={(page: string) => window.location.hash = `#/${page}`} />
+      </Suspense>
+    );
+  }
+  if (currentRoute === '/driver-route') {
+    const DriverRoute = lazy(() => import('./DriverRoute'));
+    return (
+      <Suspense fallback={<div className="p-4">Loading...</div>}>
+        <DriverRoute onNavigate={(page: string) => window.location.hash = `#/${page}`} />
       </Suspense>
     );
   }

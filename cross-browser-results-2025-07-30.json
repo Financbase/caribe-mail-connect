@@ -1,0 +1,84 @@
+{
+  "timestamp": "2025-07-30T03:28:44.464Z",
+  "tests": [
+    {
+      "browser": "curl",
+      "url": "Home Page",
+      "path": "/",
+      "httpCode": "200",
+      "responseTime": 59,
+      "success": true,
+      "status": "passed"
+    },
+    {
+      "browser": "curl",
+      "url": "Authentication",
+      "path": "/auth",
+      "httpCode": "200",
+      "responseTime": 54,
+      "success": true,
+      "status": "passed"
+    },
+    {
+      "browser": "curl",
+      "url": "Customer Dashboard",
+      "path": "/customer",
+      "httpCode": "200",
+      "responseTime": 70,
+      "success": true,
+      "status": "passed"
+    },
+    {
+      "browser": "curl",
+      "url": "Staff Dashboard",
+      "path": "/staff",
+      "httpCode": "200",
+      "responseTime": 90,
+      "success": true,
+      "status": "passed"
+    },
+    {
+      "browser": "curl",
+      "url": "Package Tracking",
+      "path": "/tracking",
+      "httpCode": "200",
+      "responseTime": 79,
+      "success": true,
+      "status": "passed"
+    },
+    {
+      "browser": "curl",
+      "url": "Inventory",
+      "path": "/inventory",
+      "httpCode": "200",
+      "responseTime": 80,
+      "success": true,
+      "status": "passed"
+    },
+    {
+      "browser": "curl",
+      "url": "Billing",
+      "path": "/billing",
+      "httpCode": "200",
+      "responseTime": 59,
+      "success": true,
+      "status": "passed"
+    },
+    {
+      "browser": "curl",
+      "url": "Analytics",
+      "path": "/analytics",
+      "httpCode": "200",
+      "responseTime": 55,
+      "success": true,
+      "status": "passed"
+    }
+  ],
+  "summary": {
+    "total": 8,
+    "passed": 8,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browserResults": {}
+}

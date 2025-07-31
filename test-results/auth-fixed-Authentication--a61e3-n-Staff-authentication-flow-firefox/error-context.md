@@ -1,0 +1,20 @@
+# Page snapshot
+
+```yaml
+- button "Switch to English": ES
+- heading "Iniciar sesión" [level=1]
+- paragraph: Sistema de Gestión de Paquetes
+- heading "Iniciar sesión" [level=3]
+- paragraph: Enter your credentials to access PRMCMS
+- tablist:
+  - tab "Login" [selected]
+  - tab "Sign Up"
+- tabpanel "Login":
+  - text: Correo electrónico
+  - textbox "Correo electrónico"
+  - text: Contraseña
+  - textbox "Contraseña"
+  - link "Forgot your password?":
+    - /url: "#/auth/reset-password"
+  - button "Iniciar sesión"
+```

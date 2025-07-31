@@ -9,6 +9,19 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useRoutes } from '@/hooks/useRoutes';
 import { toast } from '@/hooks/use-toast';
 
+interface Delivery {
+  id: string;
+  address_line1: string;
+  city: string;
+  state: string;
+  zip_code: string;
+  status: string;
+  customer_name: string;
+  tracking_number: string;
+  estimated_time: string;
+  notes?: string;
+}
+
 interface DriverRouteProps {
   onNavigate: (page: string) => void;
 }
@@ -30,13 +43,13 @@ export default function DriverRoute({ onNavigate }: DriverRouteProps) {
     d.status === 'pending' || d.status === 'assigned' || d.status === 'in_transit'
   );
 
-  const handleNavigate = (delivery: any) => {
+  const handleNavigate = (delivery: Delivery) => {
     const address = `${delivery.address_line1}, ${delivery.city}, ${delivery.state} ${delivery.zip_code}`;
     const mapsUrl = `https://maps.google.com/?q=${encodeURIComponent(address)}`;
     window.open(mapsUrl, '_blank');
   };
 
-  const handleStartDelivery = async (delivery: any) => {
+  const handleStartDelivery = async (delivery: Delivery) => {
     const result = await updateDeliveryStatus(delivery.id, 'in_transit');
     if (result.success) {
       toast({
@@ -52,7 +65,7 @@ export default function DriverRoute({ onNavigate }: DriverRouteProps) {
     }
   };
 
-  const handleCompleteDelivery = async (delivery: any) => {
+  const handleCompleteDelivery = async (delivery: Delivery) => {
     setSelectedDelivery(delivery);
     setShowProofDialog(true);
   };
@@ -95,7 +108,7 @@ export default function DriverRoute({ onNavigate }: DriverRouteProps) {
     }
   };
 
-  const handleFailedDelivery = async (delivery: any) => {
+  const handleFailedDelivery = async (delivery: Delivery) => {
     const reason = prompt(t('Enter failure reason:'));
     if (!reason) return;
 

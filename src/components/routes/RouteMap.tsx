@@ -1,9 +1,35 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLanguage } from '@/contexts/LanguageContext';
 
+interface Route {
+  id: string;
+  name: string;
+  driver_id: string;
+  vehicle_id: string;
+  start_location: string;
+  end_location: string;
+  estimated_duration: number;
+  status: 'planned' | 'in_progress' | 'completed' | 'cancelled';
+  created_at: string;
+  updated_at: string;
+}
+
+interface Delivery {
+  id: string;
+  route_id: string;
+  customer_id: string;
+  package_id: string;
+  address: string;
+  coordinates: [number, number];
+  status: 'pending' | 'in_transit' | 'delivered' | 'failed';
+  estimated_time: string;
+  actual_time?: string;
+  notes?: string;
+}
+
 interface RouteMapProps {
-  routes: any[];
-  deliveries: any[];
+  routes: Route[];
+  deliveries: Delivery[];
 }
 
 export function RouteMap({ routes, deliveries }: RouteMapProps) {

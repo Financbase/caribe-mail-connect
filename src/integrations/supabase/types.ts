@@ -5471,6 +5471,922 @@ export type Database = {
         }
         Relationships: []
       }
+      loyalty_points: {
+        Row: {
+          id: string
+          user_id: string
+          balance: number
+          total_earned: number
+          total_redeemed: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          balance?: number
+          total_earned?: number
+          total_redeemed?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          balance?: number
+          total_earned?: number
+          total_redeemed?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "loyalty_points_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          }
+        ]
+      }
+      loyalty_tiers: {
+        Row: {
+          id: string
+          name: string
+          display_name: string
+          description: string
+          min_points: number
+          max_points: number | null
+          color: string
+          icon: string
+          benefits: Json
+          upgrade_requirements: Json
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          display_name: string
+          description: string
+          min_points: number
+          max_points?: number | null
+          color: string
+          icon: string
+          benefits?: Json
+          upgrade_requirements?: Json
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          display_name?: string
+          description?: string
+          min_points?: number
+          max_points?: number | null
+          color?: string
+          icon?: string
+          benefits?: Json
+          upgrade_requirements?: Json
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      loyalty_rewards: {
+        Row: {
+          id: string
+          name: string
+          description: string
+          category: string
+          points_cost: number
+          original_value: number
+          current_value: number
+          image_url: string | null
+          is_available: boolean
+          is_limited: boolean
+          max_redemptions: number | null
+          current_redemptions: number
+          valid_from: string
+          valid_until: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          description: string
+          category: string
+          points_cost: number
+          original_value: number
+          current_value: number
+          image_url?: string | null
+          is_available?: boolean
+          is_limited?: boolean
+          max_redemptions?: number | null
+          current_redemptions?: number
+          valid_from: string
+          valid_until?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          description?: string
+          category?: string
+          points_cost?: number
+          original_value?: number
+          current_value?: number
+          image_url?: string | null
+          is_available?: boolean
+          is_limited?: boolean
+          max_redemptions?: number | null
+          current_redemptions?: number
+          valid_from?: string
+          valid_until?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      loyalty_achievements: {
+        Row: {
+          id: string
+          name: string
+          description: string
+          category: string
+          icon: string
+          points_reward: number
+          max_progress: number
+          rarity: string
+          badge_image: string | null
+          trigger_type: string
+          is_active: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          description: string
+          category: string
+          icon: string
+          points_reward: number
+          max_progress: number
+          rarity: string
+          badge_image?: string | null
+          trigger_type: string
+          is_active?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          description?: string
+          category?: string
+          icon?: string
+          points_reward?: number
+          max_progress?: number
+          rarity?: string
+          badge_image?: string | null
+          trigger_type?: string
+          is_active?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      loyalty_challenges: {
+        Row: {
+          id: string
+          name: string
+          description: string
+          challenge_type: string
+          goal: number
+          points_reward: number
+          start_date: string
+          end_date: string
+          is_active: boolean
+          participants: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          description: string
+          challenge_type: string
+          goal: number
+          points_reward: number
+          start_date: string
+          end_date: string
+          is_active?: boolean
+          participants?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          description?: string
+          challenge_type?: string
+          goal?: number
+          points_reward?: number
+          start_date?: string
+          end_date?: string
+          is_active?: boolean
+          participants?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_loyalty_points: {
+        Row: {
+          id: string
+          user_id: string
+          balance: number
+          total_earned: number
+          total_redeemed: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          balance?: number
+          total_earned?: number
+          total_redeemed?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          balance?: number
+          total_earned?: number
+          total_redeemed?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_loyalty_points_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          }
+        ]
+      }
+      points_transactions: {
+        Row: {
+          id: string
+          user_id: string
+          transaction_type: string
+          amount: number
+          balance: number
+          description: string
+          metadata: Json | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          transaction_type: string
+          amount: number
+          balance: number
+          description: string
+          metadata?: Json | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          transaction_type?: string
+          amount?: number
+          balance?: number
+          description?: string
+          metadata?: Json | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "points_transactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          }
+        ]
+      }
+      reward_redemptions: {
+        Row: {
+          id: string
+          user_id: string
+          reward_id: string
+          points_cost: number
+          activation_code: string
+          status: string
+          redeemed_at: string
+          expires_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          reward_id: string
+          points_cost: number
+          activation_code: string
+          status?: string
+          redeemed_at?: string
+          expires_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          reward_id?: string
+          points_cost?: number
+          activation_code?: string
+          status?: string
+          redeemed_at?: string
+          expires_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reward_redemptions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "reward_redemptions_reward_id_fkey"
+            columns: ["reward_id"]
+            isOneToOne: false
+            referencedRelation: "loyalty_rewards"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      user_achievements: {
+        Row: {
+          id: string
+          user_id: string
+          achievement_id: string
+          is_unlocked: boolean
+          unlocked_at: string | null
+          progress: number
+          shares_count: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          achievement_id: string
+          is_unlocked?: boolean
+          unlocked_at?: string | null
+          progress?: number
+          shares_count?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          achievement_id?: string
+          is_unlocked?: boolean
+          unlocked_at?: string | null
+          progress?: number
+          shares_count?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_achievements_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "user_achievements_achievement_id_fkey"
+            columns: ["achievement_id"]
+            isOneToOne: false
+            referencedRelation: "loyalty_achievements"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      user_challenges: {
+        Row: {
+          id: string
+          user_id: string
+          challenge_id: string
+          is_active: boolean
+          is_completed: boolean
+          current_progress: number
+          started_at: string
+          completed_at: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          challenge_id: string
+          is_active?: boolean
+          is_completed?: boolean
+          current_progress?: number
+          started_at?: string
+          completed_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          challenge_id?: string
+          is_active?: boolean
+          is_completed?: boolean
+          current_progress?: number
+          started_at?: string
+          completed_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_challenges_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "user_challenges_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "loyalty_challenges"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      user_streaks: {
+        Row: {
+          id: string
+          user_id: string
+          streak_type: string
+          current_streak: number
+          longest_streak: number
+          last_activity: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          streak_type: string
+          current_streak?: number
+          longest_streak?: number
+          last_activity?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          streak_type?: string
+          current_streak?: number
+          longest_streak?: number
+          last_activity?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_streaks_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          }
+        ]
+      }
+      leaderboard_entries: {
+        Row: {
+          id: string
+          user_id: string
+          points: number
+          tier: string
+          achievements_count: number
+          streak_days: number
+          rank: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          points: number
+          tier: string
+          achievements_count?: number
+          streak_days?: number
+          rank?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          points?: number
+          tier?: string
+          achievements_count?: number
+          streak_days?: number
+          rank?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leaderboard_entries_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          }
+        ]
+      }
+      community_goals: {
+        Row: {
+          id: string
+          name: string
+          description: string
+          target: number
+          current_progress: number
+          reward: Json
+          start_date: string
+          end_date: string
+          is_active: boolean
+          participants: number
+          user_contribution: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          description: string
+          target: number
+          current_progress?: number
+          reward: Json
+          start_date: string
+          end_date: string
+          is_active?: boolean
+          participants?: number
+          user_contribution?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          description?: string
+          target?: number
+          current_progress?: number
+          reward?: Json
+          start_date?: string
+          end_date?: string
+          is_active?: boolean
+          participants?: number
+          user_contribution?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      referral_programs: {
+        Row: {
+          id: string
+          referrer_id: string
+          referred_email: string
+          referral_code: string
+          conversion_value: number | null
+          status: string
+          created_at: string
+          completed_at: string | null
+        }
+        Insert: {
+          id?: string
+          referrer_id: string
+          referred_email: string
+          referral_code: string
+          conversion_value?: number | null
+          status?: string
+          created_at?: string
+          completed_at?: string | null
+        }
+        Update: {
+          id?: string
+          referrer_id?: string
+          referred_email?: string
+          referral_code?: string
+          conversion_value?: number | null
+          status?: string
+          created_at?: string
+          completed_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_programs_referrer_id_fkey"
+            columns: ["referrer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          }
+        ]
+      }
+      social_shares: {
+        Row: {
+          id: string
+          user_id: string
+          platform: string
+          content_url: string | null
+          share_type: string
+          engagement_metrics: Json
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          platform: string
+          content_url?: string | null
+          share_type?: string
+          engagement_metrics?: Json
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          platform?: string
+          content_url?: string | null
+          share_type?: string
+          engagement_metrics?: Json
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "social_shares_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          }
+        ]
+      }
+      review_incentives: {
+        Row: {
+          id: string
+          user_id: string
+          platform: string
+          review_id: string | null
+          rating: number
+          review_text: string | null
+          review_url: string | null
+          verified: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          platform: string
+          review_id?: string | null
+          rating: number
+          review_text?: string | null
+          review_url?: string | null
+          verified?: boolean
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          platform?: string
+          review_id?: string | null
+          rating?: number
+          review_text?: string | null
+          review_url?: string | null
+          verified?: boolean
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "review_incentives_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          }
+        ]
+      }
+      loyalty_settings: {
+        Row: {
+          id: string
+          user_id: string
+          email_notifications: boolean
+          push_notifications: boolean
+          birthday_reminders: boolean
+          achievement_alerts: boolean
+          challenge_reminders: boolean
+          privacy_settings: Json
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          email_notifications?: boolean
+          push_notifications?: boolean
+          birthday_reminders?: boolean
+          achievement_alerts?: boolean
+          challenge_reminders?: boolean
+          privacy_settings?: Json
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          email_notifications?: boolean
+          push_notifications?: boolean
+          birthday_reminders?: boolean
+          achievement_alerts?: boolean
+          challenge_reminders?: boolean
+          privacy_settings?: Json
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "loyalty_settings_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          }
+        ]
+      }
+      webhook_events: {
+        Row: {
+          id: string
+          event_type: string
+          user_id: string | null
+          platform: string | null
+          payload: Json | null
+          processed_at: string
+          status: string
+          error_message: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          event_type: string
+          user_id?: string | null
+          platform?: string | null
+          payload?: Json | null
+          processed_at?: string
+          status?: string
+          error_message?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          event_type?: string
+          user_id?: string | null
+          platform?: string | null
+          payload?: Json | null
+          processed_at?: string
+          status?: string
+          error_message?: string | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "webhook_events_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          }
+        ]
+      }
+      community_goal_contributions: {
+        Row: {
+          id: string
+          user_id: string
+          goal_id: string
+          contribution: number
+          contributed_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          goal_id: string
+          contribution: number
+          contributed_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          goal_id?: string
+          contribution?: number
+          contributed_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_goal_contributions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "community_goal_contributions_goal_id_fkey"
+            columns: ["goal_id"]
+            isOneToOne: false
+            referencedRelation: "community_goals"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      external_achievements: {
+        Row: {
+          id: string
+          user_id: string
+          achievement_id: string
+          platform: string
+          achievement_data: Json
+          unlocked_at: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          achievement_id: string
+          platform: string
+          achievement_data: Json
+          unlocked_at?: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          achievement_id?: string
+          platform?: string
+          achievement_data?: Json
+          unlocked_at?: string
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "external_achievements_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          }
+        ]
+      }
+      social_engagement: {
+        Row: {
+          id: string
+          platform: string
+          engagement_type: string
+          content_id: string | null
+          timestamp: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          platform: string
+          engagement_type: string
+          content_id?: string | null
+          timestamp?: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          platform?: string
+          engagement_type?: string
+          content_id?: string | null
+          timestamp?: string
+          created_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

@@ -1,130 +1,137 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react-swc";
-import path from "path";
-import { componentTagger } from "lovable-tagger";
-import { VitePWA } from 'vite-plugin-pwa';
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import path from 'path'
+import { VitePWA } from 'vite-plugin-pwa'
 
-// https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
-  server: {
-    host: "::",
-    port: 8080,
-  },
+// https://vite.dev/config/
+export default defineConfig({
   plugins: [
-    react(),
-    mode === 'development' &&
-    componentTagger(),
+    react({
+      // Use React's automatic JSX runtime for smaller bundle
+      jsxRuntime: 'automatic',
+      // Enable fast refresh for better development experience
+      fastRefresh: true,
+    }),
     VitePWA({
       registerType: 'autoUpdate',
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,json,woff2}'],
-        maximumFileSizeToCacheInBytes: 5000000,
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // Reduced to 5MB for faster loading
+        // Optimize caching strategy
         runtimeCaching: [
           {
-            urlPattern: /^https:\/\/.*\.supabase\.co\/.*/i,
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'api-cache',
-              expiration: {
-                maxEntries: 50,
-                maxAgeSeconds: 60 * 60 * 24 // 24 hours
-              }
-            }
-          },
-          {
-            urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/,
+            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
             handler: 'CacheFirst',
             options: {
-              cacheName: 'images-cache',
+              cacheName: 'google-fonts-cache',
               expiration: {
-                maxEntries: 100,
-                maxAgeSeconds: 60 * 60 * 24 * 30 // 30 days
-              }
-            }
-          }
-        ]
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+              },
+            },
+          },
+          {
+            urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'gstatic-fonts-cache',
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+              },
+            },
+          },
+        ],
       },
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
+      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
-        name: 'PRMCMS - Caribbean Mail Connect',
-        short_name: 'Caribbean Mail',
-        description: 'Mobile-first mail carrier management system for Puerto Rico',
-        theme_color: '#0B5394',
-        background_color: '#ffffff',
-        display: 'standalone',
-        orientation: 'portrait-primary',
-        start_url: '/',
-        scope: '/',
-        lang: 'es-PR',
-        categories: ['business', 'productivity'],
+        name: 'PRMCMS - Package & Mail Management',
+        short_name: 'PRMCMS',
+        description: 'Comprehensive package and mail management system',
+        theme_color: '#ffffff',
         icons: [
           {
             src: 'pwa-192x192.png',
             sizes: '192x192',
-            type: 'image/png'
-          },
-          {
-            src: 'pwa-512x512.png',
-            sizes: '512x512',
-            type: 'image/png'
+            type: 'image/png',
           },
           {
             src: 'pwa-512x512.png',
             sizes: '512x512',
             type: 'image/png',
-            purpose: 'any maskable'
-          }
+          },
         ],
-        shortcuts: [
-          {
-            name: 'Escanear Paquete',
-            short_name: 'Escanear',
-            description: 'Escanear código de barras de paquete',
-            url: '/intake',
-            icons: [{ src: 'pwa-192x192.png', sizes: '192x192' }]
-          },
-          {
-            name: 'Buscar Cliente',
-            short_name: 'Buscar',
-            description: 'Buscar información de cliente',
-            url: '/customers',
-            icons: [{ src: 'pwa-192x192.png', sizes: '192x192' }]
-          },
-          {
-            name: 'Notificaciones',
-            short_name: 'Avisos',
-            description: 'Ver notificaciones pendientes',
-            url: '/notifications',
-            icons: [{ src: 'pwa-192x192.png', sizes: '192x192' }]
-          }
-        ]
-      }
-    })
-  ].filter(Boolean),
+      },
+    }),
+  ],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      '@': path.resolve(__dirname, './src'),
     },
   },
   build: {
-    // Performance optimizations
+    target: 'esnext',
+    minify: 'terser',
+    sourcemap: false,
     rollupOptions: {
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
-          ui: ['@radix-ui/react-accordion', '@radix-ui/react-alert-dialog'],
-          charts: ['recharts'],
-          supabase: ['@supabase/supabase-js'],
+          ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-toast'],
+          utils: ['date-fns', 'clsx', 'tailwind-merge'],
         },
       },
     },
-    target: 'esnext',
-    minify: 'esbuild',
-    sourcemap: mode === 'development',
-    chunkSizeWarningLimit: 1000,
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+        pure_funcs: ['console.log', 'console.info', 'console.debug'],
+      },
+    },
   },
   optimizeDeps: {
-    include: ['react', 'react-dom', '@supabase/supabase-js', 'recharts'],
-    exclude: ['@vite/client', '@vite/env'],
+    include: [
+      'react',
+      'react-dom',
+      '@supabase/supabase-js',
+      'lucide-react',
+      'date-fns',
+      '@radix-ui/react-toast',
+      '@radix-ui/react-dialog',
+      '@radix-ui/react-dropdown-menu',
+      '@radix-ui/react-separator',
+      '@radix-ui/react-tooltip',
+      '@radix-ui/react-tabs',
+      '@radix-ui/react-slot',
+    ],
+    exclude: ['@vite/client', '@vite/env', 'lovable-tagger'],
+    force: true,
+    esbuildOptions: {
+      target: 'es2020',
+    },
   },
-}));
+  server: {
+    port: 3000,
+    host: true,
+    strictPort: false,
+    hmr: {
+      overlay: false,
+      port: 3001,
+    },
+    fs: {
+      allow: ['..']
+    },
+  },
+  preview: {
+    port: 4173,
+    host: true,
+    strictPort: true,
+  },
+  css: {
+    devSourcemap: false,
+  },
+  define: {
+    __DEV__: JSON.stringify(process.env.NODE_ENV === 'development'),
+  },
+})

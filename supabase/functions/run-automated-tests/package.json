@@ -1,0 +1,16 @@
+{
+  "name": "supabase-edge-function-tests",
+  "version": "1.0.0",
+  "description": "Automated tests for Supabase Edge Functions",
+  "main": "index.ts",
+  "scripts": {
+    "start": "deno run --allow-net --allow-env --allow-read --allow-write --allow-ffi --unstable --import-map=import_map.json index.ts",
+    "test": "deno test --allow-net --allow-env --allow-read --allow-write --allow-ffi --unstable --import-map=import_map.json",
+    "lint": "deno lint --unstable",
+    "format": "deno fmt --unstable"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
+  },
+  "devDependencies": {}
+}

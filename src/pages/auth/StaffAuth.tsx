@@ -14,7 +14,8 @@ import {
   ArrowLeft,
   Eye,
   EyeOff,
-  AlertCircle
+  AlertCircle,
+  Loader2
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -84,7 +85,7 @@ export default function StaffAuth({ onNavigate }: StaffAuthProps) {
       });
 
       onNavigate('dashboard');
-    } catch (error: any) {
+    } catch (error) {
       setError('Error de conexión. Intente nuevamente.');
       console.error('Login error:', error);
     } finally {
@@ -149,7 +150,7 @@ export default function StaffAuth({ onNavigate }: StaffAuthProps) {
         confirmPassword: '',
         employeeId: ''
       });
-    } catch (error: any) {
+    } catch (error) {
       setError('Error de conexión. Intente nuevamente.');
       console.error('Signup error:', error);
     } finally {
@@ -173,7 +174,7 @@ export default function StaffAuth({ onNavigate }: StaffAuthProps) {
           
           <div className="flex items-center justify-center space-x-2">
             <Building2 className="h-6 w-6 text-primary" />
-            <h1 className="text-2xl font-bold text-primary">PRMCMS</h1>
+            <h1 className="text-2xl font-bold text-primary" data-testid="staff-auth-title">PRMCMS</h1>
           </div>
           
           <div className="flex items-center justify-center space-x-2 text-muted-foreground">
@@ -205,7 +206,7 @@ export default function StaffAuth({ onNavigate }: StaffAuthProps) {
               )}
 
               <TabsContent value="login">
-                <form onSubmit={handleLogin} className="space-y-4">
+                <form onSubmit={handleLogin} className="space-y-4" data-testid="staff-login-form">
                   <div>
                     <Label htmlFor="email">Email Corporativo</Label>
                     <div className="relative">
@@ -218,6 +219,7 @@ export default function StaffAuth({ onNavigate }: StaffAuthProps) {
                         onChange={(e) => setLoginForm({...loginForm, email: e.target.value})}
                         className="pl-10"
                         required
+                        data-testid="staff-email-input"
                       />
                     </div>
                   </div>
@@ -234,21 +236,43 @@ export default function StaffAuth({ onNavigate }: StaffAuthProps) {
                         onChange={(e) => setLoginForm({...loginForm, password: e.target.value})}
                         className="pl-10 pr-10"
                         required
+                        data-testid="staff-password-input"
                       />
-                      <Button
+                      <button
                         type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="absolute right-0 top-0 h-full px-3"
                         onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                        data-testid="staff-password-toggle"
                       >
                         {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                      </Button>
+                      </button>
                     </div>
                   </div>
 
-                  <Button type="submit" className="w-full" disabled={loading}>
-                    {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
+                  <div className="text-center">
+                    <a 
+                      href="#/auth/reset-password"
+                      className="text-sm text-primary hover:underline"
+                      data-testid="staff-forgot-password-link"
+                    >
+                      ¿Olvidó su contraseña?
+                    </a>
+                  </div>
+
+                  <Button
+                    type="submit"
+                    className="w-full h-12"
+                    disabled={loading}
+                    data-testid="staff-login-submit"
+                  >
+                    {loading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Iniciando sesión...
+                      </>
+                    ) : (
+                      'Iniciar sesión'
+                    )}
                   </Button>
                 </form>
               </TabsContent>

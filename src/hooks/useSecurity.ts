@@ -78,6 +78,15 @@ export interface SecurityScorecard {
   access_control_score: number;
   monitoring_score: number;
   compliance_score: number;
+  incident_response_score: number;
+  threat_level: 'low' | 'medium' | 'high' | 'critical';
+  threat_indicators: {
+    failed_logins: number;
+    suspicious_ips: number;
+    data_access_anomalies: number;
+    privilege_escalations: number;
+    malware_detections: number;
+  };
   recommendations: string[];
   last_assessment: string;
   created_at: string;
@@ -224,16 +233,60 @@ export function useSecurity() {
     if (!user) return;
     
     try {
-      // Mock data for now
+      // Calculate threat indicators
+      const failedLogins = loginAttempts.filter(attempt => attempt.attempt_result === 'failed').length;
+      const suspiciousIPs = securityAlerts.filter(alert => alert.alert_type === 'suspicious_login').length;
+      const dataAccessAnomalies = securityAlerts.filter(alert => alert.alert_type === 'unusual_activity').length;
+      const privilegeEscalations = securityAlerts.filter(alert => alert.alert_type === 'policy_violation').length;
+      const malwareDetections = securityAlerts.filter(alert => alert.alert_type === 'intrusion_attempt').length;
+
+      // Calculate threat level based on indicators
+      const totalThreats = failedLogins + suspiciousIPs + dataAccessAnomalies + privilegeEscalations + malwareDetections;
+      let threatLevel: 'low' | 'medium' | 'high' | 'critical' = 'low';
+      if (totalThreats > 20) threatLevel = 'critical';
+      else if (totalThreats > 10) threatLevel = 'high';
+      else if (totalThreats > 5) threatLevel = 'medium';
+
+      // Calculate scores based on various factors
+      const authenticationScore = Math.max(0, 100 - (failedLogins * 5));
+      const dataProtectionScore = Math.max(0, 100 - (dataAccessAnomalies * 10));
+      const accessControlScore = Math.max(0, 100 - (privilegeEscalations * 15));
+      const monitoringScore = Math.max(0, 100 - (suspiciousIPs * 8));
+      const complianceScore = 88; // Mock compliance score
+      const incidentResponseScore = Math.max(0, 100 - (malwareDetections * 20));
+
+      // Calculate overall score
+      const overallScore = Math.round(
+        (authenticationScore + dataProtectionScore + accessControlScore + 
+         monitoringScore + complianceScore + incidentResponseScore) / 6
+      );
+
+      // Generate recommendations based on scores
+      const recommendations: string[] = [];
+      if (authenticationScore < 80) recommendations.push('Habilitar autenticación de dos factores');
+      if (dataProtectionScore < 80) recommendations.push('Revisar políticas de acceso a datos');
+      if (accessControlScore < 80) recommendations.push('Auditar permisos de usuarios');
+      if (monitoringScore < 80) recommendations.push('Mejorar monitoreo de actividad');
+      if (incidentResponseScore < 80) recommendations.push('Actualizar procedimientos de respuesta a incidentes');
+
       setSecurityScorecard({
         id: '1',
-        overall_score: 85,
-        authentication_score: 90,
-        data_protection_score: 80,
-        access_control_score: 85,
-        monitoring_score: 75,
-        compliance_score: 88,
-        recommendations: ['Enable 2FA', 'Review password policy'],
+        overall_score: overallScore,
+        authentication_score: authenticationScore,
+        data_protection_score: dataProtectionScore,
+        access_control_score: accessControlScore,
+        monitoring_score: monitoringScore,
+        compliance_score: complianceScore,
+        incident_response_score: incidentResponseScore,
+        threat_level: threatLevel,
+        threat_indicators: {
+          failed_logins: failedLogins,
+          suspicious_ips: suspiciousIPs,
+          data_access_anomalies: dataAccessAnomalies,
+          privilege_escalations: privilegeEscalations,
+          malware_detections: malwareDetections,
+        },
+        recommendations,
         last_assessment: new Date().toISOString(),
         created_at: new Date().toISOString(),
       });

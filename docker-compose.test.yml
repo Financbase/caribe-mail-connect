@@ -1,0 +1,44 @@
+services:
+  test-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    environment:
+      - NODE_ENV=test
+      - CI=true
+      - VITE_SUPABASE_URL=http://localhost:54321
+      - VITE_SUPABASE_ANON_KEY=test_key
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - ./test-results:/app/test-results
+      - ./coverage:/app/coverage
+    command: npm run test:ci
+    networks:
+      - prmcms-test
+
+  # Mock Supabase for testing
+  supabase-test:
+    image: supabase/supabase:latest
+    ports:
+      - "54321:8000"
+    environment:
+      - SUPABASE_PUBLIC_URL=http://localhost:54321
+    networks:
+      - prmcms-test
+
+  # Test database
+  db-test:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: prmcms_test
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_password
+    ports:
+      - "5433:5432"
+    networks:
+      - prmcms-test
+
+networks:
+  prmcms-test:
+    driver: bridge 

@@ -18,7 +18,7 @@ export function CommunicationIntegrations({ integrations }: CommunicationIntegra
   const { language } = useLanguage();
   const { updateIntegration, testConnection, isUpdatingIntegration, isTestingConnection } = useIntegrations();
   const [selectedIntegration, setSelectedIntegration] = useState<string | null>(null);
-  const [credentials, setCredentials] = useState<{ [key: string]: any }>({});
+  const [credentials, setCredentials] = useState<{ [key: string]: Record<string, string> }>({});
   const [showCredentials, setShowCredentials] = useState<{ [key: string]: boolean }>({});
   const [testMessage, setTestMessage] = useState('');
 

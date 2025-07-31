@@ -11,7 +11,11 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { toast } from '@/hooks/use-toast';
 import { Package } from 'lucide-react';
 
-export default function Auth() {
+interface AuthProps {
+  type?: 'staff' | 'customer';
+}
+
+export default function Auth({ type = 'staff' }: AuthProps) {
   const [loginData, setLoginData] = useState({ email: '', password: '' });
   const [signupData, setSignupData] = useState({ 
     email: '', 
@@ -21,7 +25,7 @@ export default function Auth() {
     confirmPassword: '' 
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState('login');
+  const [activeTab, setActiveTab] = useState(type === 'customer' ? 'signup' : 'login');
   
   const { login, signUp } = useAuth();
   const { t } = useLanguage();
@@ -110,8 +114,12 @@ export default function Auth() {
             <Package className="h-8 w-8 text-white" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-primary">{t('auth.title')}</h1>
-            <p className="text-muted-foreground">{t('auth.subtitle')}</p>
+            <h1 className="text-3xl font-bold text-primary">
+              {type === 'customer' ? 'Cliente' : t('auth.login')}
+            </h1>
+            <p className="text-muted-foreground">
+              {type === 'customer' ? 'Portal de autoservicio para clientes' : t('auth.subtitle')}
+            </p>
           </div>
         </div>
 
@@ -119,7 +127,7 @@ export default function Auth() {
         <Card className="shadow-elegant border-2 border-primary/10">
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl text-center">
-              {activeTab === 'login' ? t('auth.login') : 'Sign Up'}
+              {activeTab === 'login' ? t('auth.login') : (type === 'customer' ? 'Crear cuenta' : 'Sign Up')}
             </CardTitle>
             <CardDescription className="text-center">
               {activeTab === 'login' 
@@ -160,6 +168,7 @@ export default function Auth() {
                       onChange={(e) => setLoginData(prev => ({ ...prev, password: e.target.value }))}
                       required
                       className="h-12"
+                      autoComplete="current-password"
                     />
                   </div>
 
@@ -240,6 +249,7 @@ export default function Auth() {
                       onChange={(e) => setSignupData(prev => ({ ...prev, password: e.target.value }))}
                       required
                       className="h-12"
+                      autoComplete="new-password"
                     />
                   </div>
                   
@@ -249,6 +259,7 @@ export default function Auth() {
                       id="confirm-password"
                       type="password"
                       placeholder="••••••••"
+                      autoComplete="new-password"
                       value={signupData.confirmPassword}
                       onChange={(e) => setSignupData(prev => ({ ...prev, confirmPassword: e.target.value }))}
                       required

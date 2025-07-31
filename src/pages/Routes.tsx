@@ -11,6 +11,19 @@ import { toast } from '@/hooks/use-toast';
 import { RouteMap } from '@/components/routes/RouteMap';
 import { RouteList } from '@/components/routes/RouteList';
 
+interface Route {
+  id: string;
+  name: string;
+  driver_id?: string;
+  vehicle_id?: string;
+  start_location: string;
+  end_location: string;
+  estimated_duration: number;
+  status: 'planned' | 'in_progress' | 'completed' | 'cancelled';
+  created_at: string;
+  updated_at: string;
+}
+
 interface RoutesProps {
   onNavigate: (page: string) => void;
 }
@@ -61,7 +74,7 @@ export default function Routes({ onNavigate }: RoutesProps) {
     }
   };
 
-  const handleViewRoute = (route: any) => {
+  const handleViewRoute = (route: Route) => {
     // Navigate to detailed route view
     console.log('View route:', route);
   };
@@ -106,7 +119,7 @@ export default function Routes({ onNavigate }: RoutesProps) {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="bg-white border-b border-border p-4">
+      <div className="bg-white border-b border-gray-200 p-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <Button

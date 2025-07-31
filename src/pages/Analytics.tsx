@@ -95,7 +95,7 @@ export default function Analytics({ onNavigate }: AnalyticsProps) {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="bg-white border-b border-border p-4">
+      <div className="bg-white border-b border-gray-200 p-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <Button

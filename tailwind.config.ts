@@ -1,14 +1,25 @@
 import type { Config } from "tailwindcss";
+import tailwindcssAnimate from "tailwindcss-animate";
 
 export default {
 	darkMode: ["class"],
 	content: [
-		"./pages/**/*.{ts,tsx}",
-		"./components/**/*.{ts,tsx}",
-		"./app/**/*.{ts,tsx}",
 		"./src/**/*.{ts,tsx}",
+		"./src/pages/**/*.{ts,tsx}",
+		"./src/components/**/*.{ts,tsx}",
+		"./src/app/**/*.{ts,tsx}",
 	],
 	prefix: "",
+	// Add PurgeCSS for production builds
+	safelist: [
+		// Keep critical classes that might be dynamically generated
+		'bg-primary',
+		'bg-secondary', 
+		'text-primary',
+		'text-secondary',
+		'border-primary',
+		'border-secondary'
+	],
 	theme: {
 		container: {
 			center: true,
@@ -126,5 +137,5 @@ export default {
 			}
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [tailwindcssAnimate],
 } satisfies Config;

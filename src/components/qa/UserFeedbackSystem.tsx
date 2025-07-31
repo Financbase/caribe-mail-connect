@@ -82,7 +82,7 @@ export const UserFeedbackWidget = () => {
                         className={`p-3 border rounded-lg text-left transition-colors ${
                           feedbackType === type.value
                             ? 'border-primary bg-primary/10'
-                            : 'border-border hover:bg-muted'
+                            : 'border-gray-200 hover:bg-muted'
                         }`}
                       >
                         <div className="flex items-center gap-2">
@@ -100,7 +100,7 @@ export const UserFeedbackWidget = () => {
                 <label className="text-sm font-medium">Category</label>
                 <Select
                   value={feedback.category}
-                  onValueChange={(value: any) => setFeedback({ ...feedback, category: value })}
+                  onValueChange={(value: string) => setFeedback({ ...feedback, category: value })}
                 >
                   <SelectTrigger>
                     <SelectValue />

@@ -9,12 +9,53 @@ import { Calendar, TrendingUp, DollarSign, Package, Users, FileText } from 'luci
 import { supabase } from '@/integrations/supabase/client';
 import { formatCurrency, formatDate } from '@/lib/utils';
 
+interface VirtualMailbox {
+  id: string;
+  service_tier: string;
+  status: string;
+  created_at: string;
+  customers: {
+    first_name: string;
+    last_name: string;
+    email: string;
+  };
+}
+
+interface BillingRecord {
+  id: string;
+  billing_period_start: string;
+  billing_period_end: string;
+  amount: number;
+  status: string;
+}
+
+interface MailAction {
+  action_type: string;
+  cost_amount: number;
+  created_at: string;
+  mail_pieces: {
+    virtual_mailbox_id: string;
+  };
+}
+
 interface ReportData {
-  virtualMailboxes: any[];
-  revenue: any[];
-  actionBreakdown: any[];
-  customerTiers: any[];
-  monthlyTrends: any[];
+  virtualMailboxes: VirtualMailbox[];
+  revenue: BillingRecord[];
+  actionBreakdown: Array<{
+    name: string;
+    value: number;
+    count: number;
+  }>;
+  customerTiers: Array<{
+    tier: string;
+    count: number;
+    revenue: number;
+  }>;
+  monthlyTrends: Array<{
+    month: string;
+    revenue: number;
+    actions: number;
+  }>;
 }
 
 const COLORS = ['hsl(var(--primary))', 'hsl(var(--secondary))', 'hsl(var(--accent))', 'hsl(var(--muted))'];
@@ -92,12 +133,12 @@ export function VirtualMailReporting() {
     }
   };
 
-  const processActionBreakdown = (actions: any[]) => {
+  const processActionBreakdown = (actions: MailAction[]) => {
     const breakdown = actions.reduce((acc, action) => {
       const type = action.action_type || 'unknown';
       acc[type] = (acc[type] || 0) + (action.cost_amount || 0);
       return acc;
-    }, {});
+    }, {} as Record<string, number>);
 
     return Object.entries(breakdown).map(([name, value]) => ({
       name: name.charAt(0).toUpperCase() + name.slice(1),
@@ -106,49 +147,63 @@ export function VirtualMailReporting() {
     }));
   };
 
-  const processCustomerTiers = (virtualMailboxes: any[]) => {
-    const tiers = virtualMailboxes.reduce((acc, vm) => {
-      const tier = vm.service_tier || 'basic';
-      acc[tier] = (acc[tier] || 0) + 1;
+  const processCustomerTiers = (virtualMailboxes: VirtualMailbox[]) => {
+    const tiers = virtualMailboxes.reduce((acc, mailbox) => {
+      const tier = mailbox.service_tier || 'basic';
+      if (!acc[tier]) {
+        acc[tier] = { count: 0, revenue: 0 };
+      }
+      acc[tier].count += 1;
+      // Mock revenue calculation - in real app, this would come from billing data
+      acc[tier].revenue += tier === 'premium' ? 50 : tier === 'standard' ? 30 : 20;
       return acc;
-    }, {});
+    }, {} as Record<string, { count: number; revenue: number }>);
 
-    return Object.entries(tiers).map(([name, value]) => ({
-      name: name.charAt(0).toUpperCase() + name.slice(1),
-      value
+    return Object.entries(tiers).map(([tier, data]) => ({
+      tier: tier.charAt(0).toUpperCase() + tier.slice(1),
+      count: data.count,
+      revenue: data.revenue
     }));
   };
 
-  const processRevenueData = (billing: any[]) => {
-    return billing.map(bill => ({
-      date: bill.billing_period_end,
-      amount: bill.total_amount,
-      status: bill.status
+  const processRevenueData = (billing: BillingRecord[]) => {
+    return billing.map(record => ({
+      ...record,
+      month: new Date(record.billing_period_start).toLocaleDateString('es-PR', { month: 'short', year: 'numeric' })
     }));
   };
 
-  const processMonthlyTrends = (actions: any[], billing: any[]) => {
-    const months: { [key: string]: { actions: number, revenue: number } } = {};
+  const processMonthlyTrends = (actions: MailAction[], billing: BillingRecord[]) => {
+    const months = {};
+    const currentDate = new Date(dateRange.start);
     
-    // Process actions
-    actions.forEach(action => {
-      const month = new Date(action.created_at).toISOString().slice(0, 7);
-      if (!months[month]) months[month] = { actions: 0, revenue: 0 };
-      months[month].actions++;
+    while (currentDate <= dateRange.end) {
+      const monthKey = currentDate.toISOString().slice(0, 7);
+      months[monthKey] = { revenue: 0, actions: 0 };
+      currentDate.setMonth(currentDate.getMonth() + 1);
+    }
+
+    // Process billing data
+    billing.forEach(record => {
+      const monthKey = record.billing_period_start.slice(0, 7);
+      if (months[monthKey]) {
+        months[monthKey].revenue += record.amount;
+      }
     });
 
-    // Process revenue
-    billing.forEach(bill => {
-      const month = bill.billing_period_end.slice(0, 7);
-      if (!months[month]) months[month] = { actions: 0, revenue: 0 };
-      months[month].revenue += bill.total_amount;
+    // Process actions data
+    actions.forEach(action => {
+      const monthKey = action.created_at.slice(0, 7);
+      if (months[monthKey]) {
+        months[monthKey].actions += 1;
+      }
     });
 
     return Object.entries(months).map(([month, data]) => ({
-      month,
-      actions: data.actions,
-      revenue: data.revenue
-    })).sort((a, b) => a.month.localeCompare(b.month));
+      month: new Date(month + '-01').toLocaleDateString('es-PR', { month: 'short', year: 'numeric' }),
+      revenue: data.revenue,
+      actions: data.actions
+    }));
   };
 
   const exportReport = async () => {
@@ -318,10 +373,10 @@ export function VirtualMailReporting() {
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={reportData?.customerTiers}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
+                <XAxis dataKey="tier" />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="value" fill="hsl(var(--primary))" />
+                <Bar dataKey="count" fill="hsl(var(--primary))" />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>

@@ -1,0 +1,86 @@
+{
+  "timestamp": "2025-07-30T03:28:42.125Z",
+  "server": "localhost:5173",
+  "tests": [
+    {
+      "name": "Home Page",
+      "path": "/",
+      "responseTime": 84,
+      "category": "excellent",
+      "httpCode": "200",
+      "status": "success"
+    },
+    {
+      "name": "Authentication",
+      "path": "/auth",
+      "responseTime": 84,
+      "category": "excellent",
+      "httpCode": "200",
+      "status": "success"
+    },
+    {
+      "name": "Customer Dashboard",
+      "path": "/customer",
+      "responseTime": 107,
+      "category": "excellent",
+      "httpCode": "200",
+      "status": "success"
+    },
+    {
+      "name": "Staff Dashboard",
+      "path": "/staff",
+      "responseTime": 101,
+      "category": "excellent",
+      "httpCode": "200",
+      "status": "success"
+    },
+    {
+      "name": "Package Tracking",
+      "path": "/tracking",
+      "responseTime": 73,
+      "category": "excellent",
+      "httpCode": "200",
+      "status": "success"
+    },
+    {
+      "name": "Inventory",
+      "path": "/inventory",
+      "responseTime": 59,
+      "category": "excellent",
+      "httpCode": "200",
+      "status": "success"
+    },
+    {
+      "name": "Billing",
+      "path": "/billing",
+      "responseTime": 69,
+      "category": "excellent",
+      "httpCode": "200",
+      "status": "success"
+    },
+    {
+      "name": "Analytics",
+      "path": "/analytics",
+      "responseTime": 70,
+      "category": "excellent",
+      "httpCode": "200",
+      "status": "success"
+    },
+    {
+      "name": "API Health",
+      "path": "/api/health",
+      "responseTime": 62,
+      "category": "excellent",
+      "httpCode": "200",
+      "status": "success"
+    }
+  ],
+  "summary": {
+    "total": 9,
+    "excellent": 9,
+    "good": 0,
+    "acceptable": 0,
+    "poor": 0,
+    "failed": 0
+  }
+}

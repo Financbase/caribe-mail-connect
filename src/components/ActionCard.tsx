@@ -11,6 +11,7 @@ interface ActionCardProps {
 export function ActionCard({ title, icon: Icon, onClick, className }: ActionCardProps) {
   return (
     <Card 
+      asChild
       className={`
         p-6 cursor-pointer transition-all duration-300 transform 
         hover:scale-105 hover:shadow-elegant 
@@ -19,12 +20,18 @@ export function ActionCard({ title, icon: Icon, onClick, className }: ActionCard
         active:scale-95 min-h-[120px] flex flex-col items-center justify-center
         ${className}
       `}
-      onClick={onClick}
     >
-      <Icon className="h-8 w-8 text-primary mb-3" />
-      <h3 className="text-sm font-semibold text-center text-foreground leading-tight">
-        {title}
-      </h3>
+      <button
+        onClick={onClick}
+        type="button"
+        aria-label={title}
+        className="w-full h-full flex flex-col items-center justify-center"
+      >
+        <Icon className="h-8 w-8 text-primary mb-3" />
+        <h3 className="text-sm font-semibold text-center text-foreground leading-tight">
+          {title}
+        </h3>
+      </button>
     </Card>
   );
 }

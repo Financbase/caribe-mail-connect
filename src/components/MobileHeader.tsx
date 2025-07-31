@@ -6,7 +6,7 @@ import { LanguageToggle } from './LanguageToggle';
 import { LocationSelector } from './LocationSelector';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
 interface UserProfile {
@@ -26,13 +26,7 @@ export function MobileHeader({ title, showLogout = false, onNavigate }: MobileHe
   const { t } = useLanguage();
   const [profile, setProfile] = useState<UserProfile | null>(null);
 
-  useEffect(() => {
-    if (user && showLogout) {
-      fetchUserProfile();
-    }
-  }, [user, showLogout]);
-
-  const fetchUserProfile = async () => {
+  const fetchUserProfile = useCallback(async () => {
     if (!user) return;
 
     try {
@@ -47,7 +41,13 @@ export function MobileHeader({ title, showLogout = false, onNavigate }: MobileHe
     } catch (error) {
       console.error('Error fetching user profile:', error);
     }
-  };
+  }, [user]);
+
+  useEffect(() => {
+    if (user && showLogout) {
+      fetchUserProfile();
+    }
+  }, [user, showLogout, fetchUserProfile]);
 
   const handleLogout = () => {
     logout();

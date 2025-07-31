@@ -21,8 +21,20 @@ import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
+interface CustomerData {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  loyaltyPoints?: number;
+  avatarUrl?: string;
+  preferredLanguage?: string;
+  notificationsEnabled?: boolean;
+  // Add more fields as needed
+}
+
 interface PortalDocumentsProps {
-  customerData: any;
+  customerData: CustomerData;
   onNavigate: (page: string) => void;
 }
 

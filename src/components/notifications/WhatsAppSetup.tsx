@@ -22,6 +22,14 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
+interface WhatsAppTemplate {
+  name: string;
+  language: string;
+  category: string;
+  content: string;
+  variables: string[];
+}
+
 export function WhatsAppSetup() {
   const [isConnected, setIsConnected] = useState(false);
   const [templates, setTemplates] = useState([
@@ -93,7 +101,7 @@ export function WhatsAppSetup() {
     }, 2000);
   };
 
-  const submitTemplate = (templateData: any) => {
+  const submitTemplate = (templateData: WhatsAppTemplate) => {
     toast({
       title: 'Plantilla enviada',
       description: 'Su plantilla ha sido enviada para revisión. Puede tomar hasta 24 horas.',

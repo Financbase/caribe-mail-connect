@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase, isSupabaseAvailable } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import type { Tables, TablesInsert } from '@/integrations/supabase/types';
 
@@ -18,6 +18,50 @@ export interface PackageFormData {
   requires_signature: boolean;
   notes?: string;
 }
+
+// Mock data for demo mode
+const mockPackages: Package[] = [
+  {
+    id: '1',
+    tracking_number: '1Z999AA1234567890',
+    carrier: 'UPS',
+    customer_id: '1',
+    customer_name: 'Juan Pérez',
+    size: 'medium',
+    special_handling: false,
+    weight: '2.5 lbs',
+    dimensions: '12x8x6 in',
+    requires_signature: false,
+    status: 'Received',
+    received_at: new Date().toISOString(),
+    delivered_at: null,
+    received_by: 'demo-user',
+    delivered_by: null,
+    notes: 'Demo package',
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  },
+  {
+    id: '2',
+    tracking_number: '9400100000000000000000',
+    carrier: 'USPS',
+    customer_id: '2',
+    customer_name: 'María González',
+    size: 'small',
+    special_handling: true,
+    weight: '1.2 lbs',
+    dimensions: '8x6x4 in',
+    requires_signature: true,
+    status: 'Ready',
+    received_at: new Date(Date.now() - 86400000).toISOString(), // Yesterday
+    delivered_at: null,
+    received_by: 'demo-user',
+    delivered_by: null,
+    notes: 'Fragile items',
+    created_at: new Date(Date.now() - 86400000).toISOString(),
+    updated_at: new Date(Date.now() - 86400000).toISOString()
+  }
+];
 
 export function usePackages() {
   const [packages, setPackages] = useState<Package[]>([]);
@@ -71,6 +115,14 @@ export function usePackages() {
   const fetchPackages = async () => {
     if (!user) return;
     
+    // If Supabase is not available, use mock data
+    if (!isSupabaseAvailable()) {
+      console.log('Using mock packages for demo mode');
+      setPackages(mockPackages);
+      setLoading(false);
+      return;
+    }
+    
     try {
       setLoading(true);
       console.log('Fetching packages from database...');
@@ -111,7 +163,7 @@ export function usePackages() {
 
   // Process pending sync operations
   const processSyncQueue = async () => {
-    if (syncQueue.length === 0) return;
+    if (syncQueue.length === 0 || !isSupabaseAvailable()) return;
     
     console.log('Processing sync queue:', syncQueue.length, 'operations');
     const processed = [];
@@ -136,8 +188,13 @@ export function usePackages() {
     // Remove successfully processed operations
     setSyncQueue(prev => prev.filter(op => !processed.includes(op)));
   };
+
   // Execute create operation
   const executeCreate = async (packageData: any) => {
+    if (!isSupabaseAvailable()) {
+      throw new Error('Supabase not available');
+    }
+
     const { data, error } = await supabase
       .from('packages')
       .insert([packageData])
@@ -157,6 +214,10 @@ export function usePackages() {
 
   // Execute update operation
   const executeUpdate = async (packageId: string, updateData: any) => {
+    if (!isSupabaseAvailable()) {
+      throw new Error('Supabase not available');
+    }
+
     const { data, error } = await supabase
       .from('packages')
       .update(updateData)
@@ -179,6 +240,24 @@ export function usePackages() {
 
     try {
       console.log('Creating package:', packageData.tracking_number);
+      
+      // If Supabase is not available, create mock package
+      if (!isSupabaseAvailable()) {
+        const mockPackage: Package = {
+          id: `demo-${Date.now()}`,
+          ...newPackageData,
+          received_at: new Date().toISOString(),
+          delivered_at: null,
+          delivered_by: null,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        } as Package;
+        
+        setPackages(prev => [mockPackage, ...prev]);
+        console.log('Created mock package:', mockPackage.id);
+        return { success: true, data: mockPackage };
+      }
+      
       const data = await executeCreate(newPackageData);
       
       // Update local state immediately
@@ -237,6 +316,18 @@ export function usePackages() {
 
     try {
       console.log('Updating package status:', packageId, status);
+      
+      // If Supabase is not available, update mock data
+      if (!isSupabaseAvailable()) {
+        setPackages(prev => prev.map(pkg => 
+          pkg.id === packageId 
+            ? { ...pkg, ...updateData }
+            : pkg
+        ));
+        console.log('Updated mock package status');
+        return { success: true };
+      }
+      
       await executeUpdate(packageId, updateData);
       
       // Update local state
@@ -300,9 +391,9 @@ export function usePackages() {
     fetchPackages();
   }, [user]);
 
-  // Set up real-time updates
+  // Set up real-time updates only if Supabase is available
   useEffect(() => {
-    if (!user) return;
+    if (!user || !isSupabaseAvailable()) return;
 
     const channel = supabase
       .channel('packages-changes')

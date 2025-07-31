@@ -76,7 +76,7 @@ export function ReportScheduleDialog({ open, onOpenChange, reportId }: ReportSch
             </Label>
             <Select 
               value={scheduleData.schedule_type}
-              onValueChange={(value: any) => setScheduleData(prev => ({ ...prev, schedule_type: value }))}
+              onValueChange={(value: string) => setScheduleData(prev => ({ ...prev, schedule_type: value }))}
             >
               <SelectTrigger>
                 <SelectValue />
@@ -96,7 +96,7 @@ export function ReportScheduleDialog({ open, onOpenChange, reportId }: ReportSch
             </Label>
             <Select 
               value={scheduleData.format}
-              onValueChange={(value: any) => setScheduleData(prev => ({ ...prev, format: value }))}
+              onValueChange={(value: string) => setScheduleData(prev => ({ ...prev, format: value }))}
             >
               <SelectTrigger>
                 <SelectValue />

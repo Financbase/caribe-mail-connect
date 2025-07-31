@@ -1,555 +1,771 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Switch } from '@/components/ui/switch';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { 
   Bell, 
-  Mail, 
-  MessageSquare, 
   Clock, 
-  Calendar,
+  MapPin, 
+  Package, 
+  Truck, 
+  Calendar as CalendarIcon,
   Settings,
+  Plus,
+  X,
+  CheckCircle,
+  AlertCircle,
+  Info,
+  Zap,
+  Shield,
+  Users,
+  Mail,
+  Smartphone,
+  Tablet,
+  Monitor,
+  Watch,
+  Volume2,
+  VolumeX,
+  Wifi,
+  WifiOff,
+  Download,
+  Upload,
+  Send,
   Save,
-  ArrowLeft,
-  Phone,
-  AlertCircle
+  Edit,
+  Trash2,
+  Star,
+  Crown,
+  Gift,
+  MessageCircle,
+  FileText,
+  Camera,
+  CreditCard,
+  Building,
+  Home,
+  Car,
+  Plane,
+  Ship,
+  Train,
+  Bus,
+  Bike,
+  
+  Eye,
+  EyeOff,
+  Lock,
+  Unlock,
+  Key,
+  Fingerprint,
+  Smartphone as Phone,
+  Mail as Email,
+  MessageSquare,
+  PhoneCall,
+  Video,
+  Mic,
+  MicOff,
+  Headphones,
+  Speaker,
+  Vibrate,
+  Moon,
+  Sun,
+  Cloud,
+  CloudRain,
+  CloudSnow,
+  Wind,
+  Thermometer,
+  Droplets,
+  Umbrella,
+  Sun as Sunny,
+  Cloud as Cloudy,
+  CloudRain as Rainy,
+  CloudSnow as Snowy,
+  Wind as Windy,
+  Thermometer as Hot,
+  Droplets as Humid,
+  Umbrella as Stormy
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
+import { cn } from '@/lib/utils';
+
+interface CustomerData {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  loyaltyPoints?: number;
+  avatarUrl?: string;
+  preferredLanguage?: string;
+  notificationsEnabled?: boolean;
+  // Add more fields as needed
+}
 
 interface PortalNotificationsProps {
-  customerData: any;
+  customerData: CustomerData;
   onNavigate: (page: string) => void;
 }
 
-interface NotificationSettings {
-  email_enabled: boolean;
-  sms_enabled: boolean;
-  whatsapp_enabled: boolean;
-  package_arrival: boolean;
-  package_ready: boolean;
-  package_delivered: boolean;
-  mail_hold_expiry: boolean;
-  account_updates: boolean;
-  preferred_time: string;
-  quiet_hours_start: string;
-  quiet_hours_end: string;
+interface NotificationPreference {
+  id: string;
+  type: 'email' | 'sms' | 'push' | 'in-app';
+  category: 'delivery' | 'package' | 'billing' | 'security' | 'promotional';
+  enabled: boolean;
+  priority: 'high' | 'medium' | 'low';
+  schedule?: {
+    start: string;
+    end: string;
+    timezone: string;
+  };
+}
+
+interface DeliveryWindow {
+  id: string;
+  day: string;
+  startTime: string;
+  endTime: string;
+  enabled: boolean;
+  priority: 'preferred' | 'acceptable' | 'avoid';
+}
+
+interface AlternativeDelivery {
+  id: string;
+  type: 'neighbor' | 'locker' | 'office' | 'garage' | 'mailbox';
+  address: string;
+  instructions: string;
+  enabled: boolean;
+  contact: {
+    name: string;
+    phone: string;
+    email: string;
+  };
+}
+
+interface VacationHold {
+  id: string;
+  startDate: Date;
+  endDate: Date;
+  instructions: string;
+  autoResume: boolean;
+  active: boolean;
+}
+
+interface SenderInstructions {
+  sender: string;
+  instructions: string;
+  priority: 'high' | 'medium' | 'low';
+  active: boolean;
+}
+
+interface ConsolidationRequest {
+  id: string;
+  packages: string[];
+  requestedDate: Date;
+  status: 'pending' | 'approved' | 'rejected' | 'completed';
+  savings: number;
+  notes: string;
 }
 
 export default function PortalNotifications({ customerData, onNavigate }: PortalNotificationsProps) {
-  const [loading, setLoading] = useState(false);
-  const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState('preferences');
+  const [showDeliveryWindowDialog, setShowDeliveryWindowDialog] = useState(false);
+  const [showAlternativeDeliveryDialog, setShowAlternativeDeliveryDialog] = useState(false);
+  const [showVacationHoldDialog, setShowVacationHoldDialog] = useState(false);
+  const [showConsolidationDialog, setShowConsolidationDialog] = useState(false);
+  const [showSenderInstructionsDialog, setShowSenderInstructionsDialog] = useState(false);
+  const [showPWAInstall, setShowPWAInstall] = useState(false);
+  const [showPushNotification, setShowPushNotification] = useState(false);
+  const [isOffline, setIsOffline] = useState(false);
   const { toast } = useToast();
 
-  const [settings, setSettings] = useState<NotificationSettings>({
-    email_enabled: true,
-    sms_enabled: false,
-    whatsapp_enabled: false,
-    package_arrival: true,
-    package_ready: true,
-    package_delivered: false,
-    mail_hold_expiry: true,
-    account_updates: true,
-    preferred_time: 'morning',
-    quiet_hours_start: '22:00',
-    quiet_hours_end: '08:00',
-  });
+  // Mock data for enhanced features
+  const notificationPreferences: NotificationPreference[] = [
+    { id: '1', type: 'push', category: 'delivery', enabled: true, priority: 'high' },
+    { id: '2', type: 'email', category: 'package', enabled: true, priority: 'medium' },
+    { id: '3', type: 'sms', category: 'delivery', enabled: false, priority: 'high' },
+    { id: '4', type: 'in-app', category: 'billing', enabled: true, priority: 'low' },
+    { id: '5', type: 'email', category: 'promotional', enabled: false, priority: 'low' },
+  ];
 
-  const [appointmentForm, setAppointmentForm] = useState({
-    date: '',
-    time: '',
-    service: '',
-    notes: '',
-  });
+  const deliveryWindows: DeliveryWindow[] = [
+    { id: '1', day: 'Lunes', startTime: '18:00', endTime: '20:00', enabled: true, priority: 'preferred' },
+    { id: '2', day: 'Martes', startTime: '18:00', endTime: '20:00', enabled: true, priority: 'preferred' },
+    { id: '3', day: 'Miércoles', startTime: '18:00', endTime: '20:00', enabled: true, priority: 'preferred' },
+    { id: '4', day: 'Jueves', startTime: '18:00', endTime: '20:00', enabled: true, priority: 'preferred' },
+    { id: '5', day: 'Viernes', startTime: '18:00', endTime: '20:00', enabled: true, priority: 'preferred' },
+    { id: '6', day: 'Sábado', startTime: '09:00', endTime: '14:00', enabled: false, priority: 'acceptable' },
+    { id: '7', day: 'Domingo', startTime: '09:00', endTime: '14:00', enabled: false, priority: 'avoid' },
+  ];
 
-  const [mailHoldForm, setMailHoldForm] = useState({
-    start_date: '',
-    end_date: '',
-    forward_address: '',
-    reason: '',
-  });
+  const alternativeDeliveries: AlternativeDelivery[] = [
+    {
+      id: '1',
+      type: 'neighbor',
+      address: 'Casa del vecino - María González',
+      instructions: 'Entregar a María si no estoy en casa',
+      enabled: true,
+      contact: {
+        name: 'María González',
+        phone: '+1-787-555-0123',
+        email: 'maria@email.com'
+      }
+    },
+    {
+      id: '2',
+      type: 'locker',
+      address: 'Locker #A15 - Centro Comercial Plaza',
+      instructions: 'Usar código 1234 para acceso',
+      enabled: false,
+      contact: {
+        name: 'Locker System',
+        phone: '+1-787-555-0000',
+        email: 'locker@plaza.com'
+      }
+    }
+  ];
 
-  const saveSettings = async () => {
-    try {
-      setSaving(true);
-      
-      // TODO: Save notification settings to database
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
-      
-      toast({
-        title: 'Configuración guardada',
-        description: 'Sus preferencias de notificación han sido actualizadas',
-      });
-    } catch (error) {
-      console.error('Error saving settings:', error);
-      toast({
-        title: 'Error',
-        description: 'No se pudo guardar la configuración',
-        variant: 'destructive',
-      });
-    } finally {
-      setSaving(false);
+  const vacationHolds: VacationHold[] = [
+    {
+      id: '1',
+      startDate: new Date('2024-12-20'),
+      endDate: new Date('2024-12-27'),
+      instructions: 'Retener todo el correo hasta el 27 de diciembre',
+      autoResume: true,
+      active: false
+    }
+  ];
+
+  const senderInstructions: SenderInstructions[] = [
+    {
+      sender: 'Amazon',
+      instructions: 'Entregar en la puerta principal, no en el buzón',
+      priority: 'high',
+      active: true
+    },
+    {
+      sender: 'Walmart',
+      instructions: 'Llamar antes de entregar',
+      priority: 'medium',
+      active: true
+    }
+  ];
+
+  const consolidationRequests: ConsolidationRequest[] = [
+    {
+      id: '1',
+      packages: ['PKG001', 'PKG002', 'PKG003'],
+      requestedDate: new Date('2024-12-15'),
+      status: 'approved',
+      savings: 15.50,
+      notes: 'Consolidar envíos de Amazon'
+    }
+  ];
+
+  useEffect(() => {
+    checkOnlineStatus();
+    checkPWAInstallation();
+  }, []);
+
+  const checkOnlineStatus = () => {
+    setIsOffline(!navigator.onLine);
+    window.addEventListener('online', () => setIsOffline(false));
+    window.addEventListener('offline', () => setIsOffline(true));
+  };
+
+  const checkPWAInstallation = () => {
+    const isInstalled = window.matchMedia('(display-mode: standalone)').matches;
+    if (!isInstalled && 'serviceWorker' in navigator) {
+      setShowPWAInstall(true);
     }
   };
 
-  const scheduleAppointment = async () => {
-    try {
-      setSaving(true);
-      
-      if (!appointmentForm.date || !appointmentForm.time || !appointmentForm.service) {
-        toast({
-          title: 'Campos requeridos',
-          description: 'Complete todos los campos obligatorios',
-          variant: 'destructive',
-        });
-        return;
-      }
+  const handleNotificationToggle = (id: string, enabled: boolean) => {
+    toast({
+      title: enabled ? 'Notificaciones activadas' : 'Notificaciones desactivadas',
+      description: 'Tu preferencia ha sido guardada',
+    });
+  };
 
-      // TODO: Save appointment to database
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
-      
-      toast({
-        title: 'Cita programada',
-        description: `Su cita para ${appointmentForm.service} ha sido programada para ${appointmentForm.date} a las ${appointmentForm.time}`,
+  const handlePushNotificationOptIn = () => {
+    if ('Notification' in window) {
+      Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+          toast({
+            title: 'Notificaciones Push Activadas',
+            description: 'Recibirás alertas instantáneas',
+          });
+          setShowPushNotification(false);
+        }
       });
-      
-      setAppointmentForm({ date: '', time: '', service: '', notes: '' });
-    } catch (error) {
-      console.error('Error scheduling appointment:', error);
-      toast({
-        title: 'Error',
-        description: 'No se pudo programar la cita',
-        variant: 'destructive',
-      });
-    } finally {
-      setSaving(false);
     }
   };
 
-  const requestMailHold = async () => {
-    try {
-      setSaving(true);
-      
-      if (!mailHoldForm.start_date || !mailHoldForm.end_date) {
-        toast({
-          title: 'Campos requeridos',
-          description: 'Seleccione las fechas de inicio y fin',
-          variant: 'destructive',
-        });
-        return;
-      }
+  const getPriorityColor = (priority: string) => {
+    switch (priority) {
+      case 'high': return 'bg-red-100 text-red-800 border-red-200';
+      case 'medium': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'low': return 'bg-green-100 text-green-800 border-green-200';
+      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+    }
+  };
 
-      // TODO: Save mail hold request to database
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
-      
-      toast({
-        title: 'Solicitud enviada',
-        description: 'Su solicitud de retención de correo ha sido enviada',
-      });
-      
-      setMailHoldForm({ start_date: '', end_date: '', forward_address: '', reason: '' });
-    } catch (error) {
-      console.error('Error requesting mail hold:', error);
-      toast({
-        title: 'Error',
-        description: 'No se pudo enviar la solicitud',
-        variant: 'destructive',
-      });
-    } finally {
-      setSaving(false);
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case 'email': return <Mail className="h-4 w-4" />;
+      case 'sms': return <Smartphone className="h-4 w-4" />;
+      case 'push': return <Bell className="h-4 w-4" />;
+      case 'in-app': return <MessageSquare className="h-4 w-4" />;
+      default: return <Bell className="h-4 w-4" />;
+    }
+  };
+
+  const getCategoryIcon = (category: string) => {
+    switch (category) {
+      case 'delivery': return <Truck className="h-4 w-4" />;
+      case 'package': return <Package className="h-4 w-4" />;
+      case 'billing': return <CreditCard className="h-4 w-4" />;
+      case 'security': return <Shield className="h-4 w-4" />;
+      case 'promotional': return <Gift className="h-4 w-4" />;
+      default: return <Bell className="h-4 w-4" />;
+    }
+  };
+
+  const getDeliveryTypeIcon = (type: string) => {
+    switch (type) {
+      case 'neighbor': return <Users className="h-4 w-4" />;
+      case 'locker': return <Lock className="h-4 w-4" />;
+      case 'office': return <Building className="h-4 w-4" />;
+      case 'garage': return <Home className="h-4 w-4" />;
+      case 'mailbox': return <Mail className="h-4 w-4" />;
+      default: return <MapPin className="h-4 w-4" />;
     }
   };
 
   return (
-    <div className="p-4 space-y-6">
+    <div className="space-y-6">
+      {/* PWA Install Prompt */}
+      {showPWAInstall && (
+        <Card className="bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <Download className="h-6 w-6 text-blue-600" />
+                <div>
+                  <h3 className="font-semibold text-blue-900">Instalar App</h3>
+                  <p className="text-sm text-blue-700">Recibe notificaciones push instantáneas</p>
+                </div>
+              </div>
+              <div className="flex space-x-2">
+                <Button size="sm" onClick={() => setShowPWAInstall(false)} variant="outline">
+                  Más tarde
+                </Button>
+                <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
+                  Instalar
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Push Notification Opt-in */}
+      {showPushNotification && (
+        <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <Bell className="h-6 w-6 text-green-600" />
+                <div>
+                  <h3 className="font-semibold text-green-900">Notificaciones Push</h3>
+                  <p className="text-sm text-green-700">Recibe alertas instantáneas sobre tus paquetes</p>
+                </div>
+              </div>
+              <div className="flex space-x-2">
+                <Button size="sm" onClick={() => setShowPushNotification(false)} variant="outline">
+                  No gracias
+                </Button>
+                <Button size="sm" onClick={handlePushNotificationOptIn} className="bg-green-600 hover:bg-green-700">
+                  Activar
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Header */}
-      <div className="flex items-center space-x-3">
-        <Button variant="ghost" size="sm" onClick={() => onNavigate('dashboard')}>
-          <ArrowLeft className="h-4 w-4" />
-        </Button>
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold">Avisos y Servicios</h1>
-          <p className="text-sm text-muted-foreground">
-            Configure sus preferencias y solicite servicios
-          </p>
+          <h1 className="text-2xl font-bold">Notificaciones Avanzadas</h1>
+          <p className="text-muted-foreground">Gestiona todas tus preferencias de notificaciones</p>
         </div>
-      </div>
-
-      {/* Tab Navigation */}
-      <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
-        <Button
-          variant={activeTab === 'preferences' ? 'default' : 'ghost'}
-          size="sm"
-          onClick={() => setActiveTab('preferences')}
-          className="flex-1"
-        >
-          <Bell className="w-4 h-4 mr-2" />
-          Avisos
-        </Button>
-        <Button
-          variant={activeTab === 'appointments' ? 'default' : 'ghost'}
-          size="sm"
-          onClick={() => setActiveTab('appointments')}
-          className="flex-1"
-        >
-          <Calendar className="w-4 h-4 mr-2" />
-          Citas
-        </Button>
-        <Button
-          variant={activeTab === 'mailhold' ? 'default' : 'ghost'}
-          size="sm"
-          onClick={() => setActiveTab('mailhold')}
-          className="flex-1"
-        >
-          <Mail className="w-4 h-4 mr-2" />
-          Correo
-        </Button>
-      </div>
-
-      {/* Notification Preferences Tab */}
-      {activeTab === 'preferences' && (
-        <div className="space-y-6">
-          {/* Notification Methods */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Settings className="w-5 h-5 mr-2" />
-                Métodos de Notificación
-              </CardTitle>
-              <CardDescription>
-                Seleccione cómo desea recibir notificaciones
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Mail className="w-4 h-4 text-primary" />
-                  <Label>Email</Label>
-                </div>
-                <Switch
-                  checked={settings.email_enabled}
-                  onCheckedChange={(checked) => setSettings({...settings, email_enabled: checked})}
-                />
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Phone className="w-4 h-4 text-primary" />
-                  <Label>SMS</Label>
-                </div>
-                <Switch
-                  checked={settings.sms_enabled}
-                  onCheckedChange={(checked) => setSettings({...settings, sms_enabled: checked})}
-                />
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <MessageSquare className="w-4 h-4 text-primary" />
-                  <Label>WhatsApp</Label>
-                </div>
-                <Switch
-                  checked={settings.whatsapp_enabled}
-                  onCheckedChange={(checked) => setSettings({...settings, whatsapp_enabled: checked})}
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Notification Types */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Tipos de Notificaciones</CardTitle>
-              <CardDescription>
-                Seleccione qué eventos desea recibir
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label>Llegada de Paquetes</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Cuando llegue un nuevo paquete
-                  </p>
-                </div>
-                <Switch
-                  checked={settings.package_arrival}
-                  onCheckedChange={(checked) => setSettings({...settings, package_arrival: checked})}
-                />
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label>Listo para Recoger</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Cuando su paquete esté listo
-                  </p>
-                </div>
-                <Switch
-                  checked={settings.package_ready}
-                  onCheckedChange={(checked) => setSettings({...settings, package_ready: checked})}
-                />
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label>Paquete Entregado</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Confirmación de entrega
-                  </p>
-                </div>
-                <Switch
-                  checked={settings.package_delivered}
-                  onCheckedChange={(checked) => setSettings({...settings, package_delivered: checked})}
-                />
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label>Actualizaciones de Cuenta</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Cambios importantes en su cuenta
-                  </p>
-                </div>
-                <Switch
-                  checked={settings.account_updates}
-                  onCheckedChange={(checked) => setSettings({...settings, account_updates: checked})}
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Timing Preferences */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Clock className="w-5 h-5 mr-2" />
-                Horarios Preferidos
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <Label>Horario Preferido</Label>
-                <Select 
-                  value={settings.preferred_time} 
-                  onValueChange={(value) => setSettings({...settings, preferred_time: value})}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="morning">Mañana (8:00 AM - 12:00 PM)</SelectItem>
-                    <SelectItem value="afternoon">Tarde (12:00 PM - 6:00 PM)</SelectItem>
-                    <SelectItem value="evening">Noche (6:00 PM - 10:00 PM)</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label>Silenciar Desde</Label>
-                  <Input
-                    type="time"
-                    value={settings.quiet_hours_start}
-                    onChange={(e) => setSettings({...settings, quiet_hours_start: e.target.value})}
-                  />
-                </div>
-                <div>
-                  <Label>Silenciar Hasta</Label>
-                  <Input
-                    type="time"
-                    value={settings.quiet_hours_end}
-                    onChange={(e) => setSettings({...settings, quiet_hours_end: e.target.value})}
-                  />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Button onClick={saveSettings} disabled={saving} className="w-full">
-            {saving ? 'Guardando...' : 'Guardar Configuración'}
+        <div className="flex items-center space-x-4">
+          {isOffline && (
+            <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
+              <WifiOff className="h-3 w-3 mr-1" />
+              Modo Offline
+            </Badge>
+          )}
+          <Button variant="outline" size="icon">
+            <Settings className="h-4 w-4" />
           </Button>
         </div>
-      )}
+      </div>
 
-      {/* Appointments Tab */}
-      {activeTab === 'appointments' && (
-        <div className="space-y-6">
+      {/* Main Tabs */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+        <TabsList className="grid w-full grid-cols-6">
+          <TabsTrigger value="preferences">Preferencias</TabsTrigger>
+          <TabsTrigger value="delivery-windows">Horarios</TabsTrigger>
+          <TabsTrigger value="alternative-delivery">Entrega Alternativa</TabsTrigger>
+          <TabsTrigger value="vacation-holds">Retención</TabsTrigger>
+          <TabsTrigger value="consolidation">Consolidación</TabsTrigger>
+          <TabsTrigger value="sender-instructions">Instrucciones</TabsTrigger>
+        </TabsList>
+
+        {/* Preferences Tab */}
+        <TabsContent value="preferences" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center">
-                <Calendar className="w-5 h-5 mr-2" />
-                Programar Cita
-              </CardTitle>
+              <CardTitle>Preferencias de Notificaciones</CardTitle>
               <CardDescription>
-                Programe una cita para servicios especiales
+                Configura cómo y cuándo recibir notificaciones
               </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label>Fecha</Label>
-                  <Input
-                    type="date"
-                    value={appointmentForm.date}
-                    onChange={(e) => setAppointmentForm({...appointmentForm, date: e.target.value})}
-                    min={new Date().toISOString().split('T')[0]}
-                  />
-                </div>
-                <div>
-                  <Label>Hora</Label>
-                  <Select 
-                    value={appointmentForm.time} 
-                    onValueChange={(value) => setAppointmentForm({...appointmentForm, time: value})}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Seleccionar hora" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="09:00">9:00 AM</SelectItem>
-                      <SelectItem value="10:00">10:00 AM</SelectItem>
-                      <SelectItem value="11:00">11:00 AM</SelectItem>
-                      <SelectItem value="14:00">2:00 PM</SelectItem>
-                      <SelectItem value="15:00">3:00 PM</SelectItem>
-                      <SelectItem value="16:00">4:00 PM</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              
-              <div>
-                <Label>Servicio</Label>
-                <Select 
-                  value={appointmentForm.service} 
-                  onValueChange={(value) => setAppointmentForm({...appointmentForm, service: value})}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar servicio" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="package_pickup">Recogida de Paquetes</SelectItem>
-                    <SelectItem value="document_signing">Firma de Documentos</SelectItem>
-                    <SelectItem value="notarization">Notarización</SelectItem>
-                    <SelectItem value="consultation">Consulta</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div>
-                <Label>Notas (opcional)</Label>
-                <Textarea
-                  placeholder="Información adicional sobre su cita..."
-                  value={appointmentForm.notes}
-                  onChange={(e) => setAppointmentForm({...appointmentForm, notes: e.target.value})}
-                />
-              </div>
-              
-              <Button onClick={scheduleAppointment} disabled={saving} className="w-full">
-                {saving ? 'Programando...' : 'Programar Cita'}
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* Upcoming Appointments */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Próximas Citas</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-center py-4">
-                <Calendar className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
-                <p className="text-muted-foreground">No hay citas programadas</p>
+              <div className="space-y-4">
+                {notificationPreferences.map((pref) => (
+                  <div key={pref.id} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="flex items-center space-x-3">
+                      <div className="p-2 bg-blue-100 rounded-lg">
+                        {getTypeIcon(pref.type)}
+                      </div>
+                      <div>
+                        <p className="font-medium capitalize">{pref.type}</p>
+                        <p className="text-sm text-muted-foreground capitalize">
+                          {pref.category} • Prioridad {pref.priority}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Badge className={getPriorityColor(pref.priority)}>
+                        {pref.priority}
+                      </Badge>
+                      <Switch
+                        checked={pref.enabled}
+                        onCheckedChange={(enabled) => handleNotificationToggle(pref.id, enabled)}
+                      />
+                    </div>
+                  </div>
+                ))}
               </div>
             </CardContent>
           </Card>
-        </div>
-      )}
 
-      {/* Mail Hold Tab */}
-      {activeTab === 'mailhold' && (
-        <div className="space-y-6">
+          {/* Device Preferences */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center">
-                <Mail className="w-5 h-5 mr-2" />
-                Retención de Correo
-              </CardTitle>
+              <CardTitle>Preferencias por Dispositivo</CardTitle>
               <CardDescription>
-                Solicite retener su correo temporalmente
+                Configura notificaciones específicas por dispositivo
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
-                <div className="flex items-start space-x-2">
-                  <AlertCircle className="w-4 h-4 text-blue-600 mt-0.5" />
-                  <div className="text-sm text-blue-800">
-                    <p className="font-medium">Información importante:</p>
-                    <p>La retención de correo debe solicitarse con al menos 24 horas de anticipación.</p>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="flex items-center space-x-3 p-3 border rounded-lg">
+                  <Smartphone className="h-5 w-5 text-blue-600" />
+                  <div>
+                    <p className="font-medium">Móvil</p>
+                    <p className="text-sm text-muted-foreground">Notificaciones push</p>
                   </div>
+                  <Switch defaultChecked />
+                </div>
+                <div className="flex items-center space-x-3 p-3 border rounded-lg">
+                  <Tablet className="h-5 w-5 text-green-600" />
+                  <div>
+                    <p className="font-medium">Tablet</p>
+                    <p className="text-sm text-muted-foreground">Notificaciones push</p>
+                  </div>
+                  <Switch defaultChecked />
+                </div>
+                <div className="flex items-center space-x-3 p-3 border rounded-lg">
+                  <Monitor className="h-5 w-5 text-purple-600" />
+                  <div>
+                    <p className="font-medium">Desktop</p>
+                    <p className="text-sm text-muted-foreground">Notificaciones del navegador</p>
+                  </div>
+                  <Switch />
                 </div>
               </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label>Fecha de Inicio</Label>
-                  <Input
-                    type="date"
-                    value={mailHoldForm.start_date}
-                    onChange={(e) => setMailHoldForm({...mailHoldForm, start_date: e.target.value})}
-                    min={new Date(Date.now() + 24*60*60*1000).toISOString().split('T')[0]}
-                  />
-                </div>
-                <div>
-                  <Label>Fecha de Fin</Label>
-                  <Input
-                    type="date"
-                    value={mailHoldForm.end_date}
-                    onChange={(e) => setMailHoldForm({...mailHoldForm, end_date: e.target.value})}
-                    min={mailHoldForm.start_date || new Date(Date.now() + 24*60*60*1000).toISOString().split('T')[0]}
-                  />
-                </div>
-              </div>
-              
-              <div>
-                <Label>Dirección de Reenvío (opcional)</Label>
-                <Textarea
-                  placeholder="Si desea que su correo sea reenviado a otra dirección..."
-                  value={mailHoldForm.forward_address}
-                  onChange={(e) => setMailHoldForm({...mailHoldForm, forward_address: e.target.value})}
-                />
-              </div>
-              
-              <div>
-                <Label>Motivo</Label>
-                <Select 
-                  value={mailHoldForm.reason} 
-                  onValueChange={(value) => setMailHoldForm({...mailHoldForm, reason: value})}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar motivo" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="vacation">Vacaciones</SelectItem>
-                    <SelectItem value="travel">Viaje de Trabajo</SelectItem>
-                    <SelectItem value="temporary_relocation">Reubicación Temporal</SelectItem>
-                    <SelectItem value="other">Otro</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <Button onClick={requestMailHold} disabled={saving} className="w-full">
-                {saving ? 'Enviando Solicitud...' : 'Solicitar Retención'}
-              </Button>
             </CardContent>
           </Card>
-        </div>
-      )}
+        </TabsContent>
+
+        {/* Delivery Windows Tab */}
+        <TabsContent value="delivery-windows" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Ventanas de Entrega</CardTitle>
+                  <CardDescription>
+                    Configura tus horarios preferidos de entrega
+                  </CardDescription>
+                </div>
+                <Button onClick={() => setShowDeliveryWindowDialog(true)}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Agregar Horario
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {deliveryWindows.map((window) => (
+                  <div key={window.id} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="flex items-center space-x-3">
+                      <div className="p-2 bg-blue-100 rounded-lg">
+                        <Clock className="h-4 w-4 text-blue-600" />
+                      </div>
+                      <div>
+                        <p className="font-medium">{window.day}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {window.startTime} - {window.endTime}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Badge variant={window.priority === 'preferred' ? 'default' : 'secondary'}>
+                        {window.priority === 'preferred' ? 'Preferido' : 
+                         window.priority === 'acceptable' ? 'Aceptable' : 'Evitar'}
+                      </Badge>
+                      <Switch checked={window.enabled} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Alternative Delivery Tab */}
+        <TabsContent value="alternative-delivery" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Opciones de Entrega Alternativa</CardTitle>
+                  <CardDescription>
+                    Configura entregas cuando no estés en casa
+                  </CardDescription>
+                </div>
+                <Button onClick={() => setShowAlternativeDeliveryDialog(true)}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Agregar Opción
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {alternativeDeliveries.map((delivery) => (
+                  <Card key={delivery.id} className="border-l-4 border-l-blue-500">
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                          <div className="p-2 bg-blue-100 rounded-lg">
+                            {getDeliveryTypeIcon(delivery.type)}
+                          </div>
+                          <div>
+                            <p className="font-medium capitalize">{delivery.type}</p>
+                            <p className="text-sm text-muted-foreground">{delivery.address}</p>
+                            <p className="text-xs text-muted-foreground">{delivery.instructions}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Button variant="outline" size="sm">
+                            <Edit className="h-3 w-3 mr-1" />
+                            Editar
+                          </Button>
+                          <Switch checked={delivery.enabled} />
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Vacation Holds Tab */}
+        <TabsContent value="vacation-holds" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Retención de Correo</CardTitle>
+                  <CardDescription>
+                    Programa retenciones cuando estés de vacaciones
+                  </CardDescription>
+                </div>
+                <Button onClick={() => setShowVacationHoldDialog(true)}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Programar Retención
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {vacationHolds.map((hold) => (
+                  <Card key={hold.id} className={cn(
+                    "border-l-4",
+                    hold.active ? "border-l-green-500" : "border-l-gray-300"
+                  )}>
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                          <div className="p-2 bg-blue-100 rounded-lg">
+                            <CalendarIcon className="h-4 w-4 text-blue-600" />
+                          </div>
+                          <div>
+                            <p className="font-medium">
+                              {format(hold.startDate, 'MMM dd', { locale: es })} - {format(hold.endDate, 'MMM dd, yyyy', { locale: es })}
+                            </p>
+                            <p className="text-sm text-muted-foreground">{hold.instructions}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {hold.autoResume ? 'Reanudación automática' : 'Reanudación manual'}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Badge variant={hold.active ? 'default' : 'secondary'}>
+                            {hold.active ? 'Activo' : 'Inactivo'}
+                          </Badge>
+                          <Button variant="outline" size="sm">
+                            <Edit className="h-3 w-3 mr-1" />
+                            Editar
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Consolidation Tab */}
+        <TabsContent value="consolidation" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Solicitudes de Consolidación</CardTitle>
+                  <CardDescription>
+                    Consolida múltiples paquetes para ahorrar en envíos
+                  </CardDescription>
+                </div>
+                <Button onClick={() => setShowConsolidationDialog(true)}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Nueva Solicitud
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {consolidationRequests.map((request) => (
+                  <Card key={request.id} className="border-l-4 border-l-green-500">
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                          <div className="p-2 bg-green-100 rounded-lg">
+                            <Package className="h-4 w-4 text-green-600" />
+                          </div>
+                          <div>
+                            <p className="font-medium">
+                              Paquetes: {request.packages.join(', ')}
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              Solicitado: {format(request.requestedDate, 'MMM dd, yyyy', { locale: es })}
+                            </p>
+                            <p className="text-sm text-green-600 font-medium">
+                              Ahorro estimado: ${request.savings.toFixed(2)}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Badge className="bg-green-100 text-green-800 border-green-200">
+                            {request.status === 'approved' ? 'Aprobado' : 
+                             request.status === 'pending' ? 'Pendiente' : 
+                             request.status === 'rejected' ? 'Rechazado' : 'Completado'}
+                          </Badge>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Sender Instructions Tab */}
+        <TabsContent value="sender-instructions" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Instrucciones por Remitente</CardTitle>
+                  <CardDescription>
+                    Configura instrucciones específicas por remitente
+                  </CardDescription>
+                </div>
+                <Button onClick={() => setShowSenderInstructionsDialog(true)}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Agregar Instrucción
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {senderInstructions.map((instruction, index) => (
+                  <Card key={index} className="border-l-4 border-l-blue-500">
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                          <div className="p-2 bg-blue-100 rounded-lg">
+                            <FileText className="h-4 w-4 text-blue-600" />
+                          </div>
+                          <div>
+                            <p className="font-medium">{instruction.sender}</p>
+                            <p className="text-sm text-muted-foreground">{instruction.instructions}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Badge className={getPriorityColor(instruction.priority)}>
+                            {instruction.priority}
+                          </Badge>
+                          <Switch checked={instruction.active} />
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+
+      {/* Dialogs will be implemented in the next part */}
     </div>
   );
 }

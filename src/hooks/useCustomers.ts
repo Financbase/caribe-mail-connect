@@ -3,6 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLocations } from '@/hooks/useLocations';
 import type { Tables, TablesInsert } from '@/integrations/supabase/types';
+import { Package } from '@/types/api';
 
 export type Customer = Tables<'customers'>;
 export type CustomerInsert = TablesInsert<'customers'>;
@@ -88,7 +89,7 @@ export function useCustomers() {
       const customersWithCounts = data?.map(customer => ({
         ...customer,
         activePackages: customer.packages?.filter(
-          (pkg: any) => pkg.status === 'Received' || pkg.status === 'Ready'
+          (pkg: Package) => pkg.status === 'received' || pkg.status === 'processing'
         ).length || 0,
         totalPackages: customer.packages?.length || 0
       })) || [];

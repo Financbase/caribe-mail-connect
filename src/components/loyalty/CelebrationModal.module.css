@@ -1,0 +1,153 @@
+/* CelebrationModal.module.css */
+
+/* Confetti animation classes */
+.confetti {
+  position: absolute;
+  animation: bounce 2s infinite;
+  pointer-events: none;
+}
+
+.confetti0 { left: 0%; top: 0%; animation-delay: 0s; animation-duration: 1s; }
+.confetti1 { left: 5%; top: 10%; animation-delay: 0.1s; animation-duration: 1.2s; }
+.confetti2 { left: 10%; top: 20%; animation-delay: 0.2s; animation-duration: 1.4s; }
+.confetti3 { left: 15%; top: 30%; animation-delay: 0.3s; animation-duration: 1.6s; }
+.confetti4 { left: 20%; top: 40%; animation-delay: 0.4s; animation-duration: 1.8s; }
+.confetti5 { left: 25%; top: 50%; animation-delay: 0.5s; animation-duration: 2s; }
+.confetti6 { left: 30%; top: 60%; animation-delay: 0.6s; animation-duration: 1.1s; }
+.confetti7 { left: 35%; top: 70%; animation-delay: 0.7s; animation-duration: 1.3s; }
+.confetti8 { left: 40%; top: 80%; animation-delay: 0.8s; animation-duration: 1.5s; }
+.confetti9 { left: 45%; top: 90%; animation-delay: 0.9s; animation-duration: 1.7s; }
+.confetti10 { left: 50%; top: 5%; animation-delay: 1s; animation-duration: 1.9s; }
+.confetti11 { left: 55%; top: 15%; animation-delay: 1.1s; animation-duration: 1.2s; }
+.confetti12 { left: 60%; top: 25%; animation-delay: 1.2s; animation-duration: 1.4s; }
+.confetti13 { left: 65%; top: 35%; animation-delay: 1.3s; animation-duration: 1.6s; }
+.confetti14 { left: 70%; top: 45%; animation-delay: 1.4s; animation-duration: 1.8s; }
+.confetti15 { left: 75%; top: 55%; animation-delay: 1.5s; animation-duration: 2s; }
+.confetti16 { left: 80%; top: 65%; animation-delay: 1.6s; animation-duration: 1.1s; }
+.confetti17 { left: 85%; top: 75%; animation-delay: 1.7s; animation-duration: 1.3s; }
+.confetti18 { left: 90%; top: 85%; animation-delay: 1.8s; animation-duration: 1.5s; }
+.confetti19 { left: 95%; top: 95%; animation-delay: 1.9s; animation-duration: 1.7s; }
+.confetti20 { left: 2%; top: 8%; animation-delay: 0.2s; animation-duration: 1.3s; }
+.confetti21 { left: 7%; top: 18%; animation-delay: 0.3s; animation-duration: 1.5s; }
+.confetti22 { left: 12%; top: 28%; animation-delay: 0.4s; animation-duration: 1.7s; }
+.confetti23 { left: 17%; top: 38%; animation-delay: 0.5s; animation-duration: 1.9s; }
+.confetti24 { left: 22%; top: 48%; animation-delay: 0.6s; animation-duration: 1.1s; }
+.confetti25 { left: 27%; top: 58%; animation-delay: 0.7s; animation-duration: 1.3s; }
+.confetti26 { left: 32%; top: 68%; animation-delay: 0.8s; animation-duration: 1.5s; }
+.confetti27 { left: 37%; top: 78%; animation-delay: 0.9s; animation-duration: 1.7s; }
+.confetti28 { left: 42%; top: 88%; animation-delay: 1s; animation-duration: 1.9s; }
+.confetti29 { left: 47%; top: 98%; animation-delay: 1.1s; animation-duration: 1.2s; }
+.confetti30 { left: 52%; top: 3%; animation-delay: 1.2s; animation-duration: 1.4s; }
+.confetti31 { left: 57%; top: 13%; animation-delay: 1.3s; animation-duration: 1.6s; }
+.confetti32 { left: 62%; top: 23%; animation-delay: 1.4s; animation-duration: 1.8s; }
+.confetti33 { left: 67%; top: 33%; animation-delay: 1.5s; animation-duration: 2s; }
+.confetti34 { left: 72%; top: 43%; animation-delay: 1.6s; animation-duration: 1.1s; }
+.confetti35 { left: 77%; top: 53%; animation-delay: 1.7s; animation-duration: 1.3s; }
+.confetti36 { left: 82%; top: 63%; animation-delay: 1.8s; animation-duration: 1.5s; }
+.confetti37 { left: 87%; top: 73%; animation-delay: 1.9s; animation-duration: 1.7s; }
+.confetti38 { left: 92%; top: 83%; animation-delay: 0.1s; animation-duration: 1.9s; }
+.confetti39 { left: 97%; top: 93%; animation-delay: 0.2s; animation-duration: 1.1s; }
+.confetti40 { left: 3%; top: 12%; animation-delay: 0.3s; animation-duration: 1.3s; }
+.confetti41 { left: 8%; top: 22%; animation-delay: 0.4s; animation-duration: 1.5s; }
+.confetti42 { left: 13%; top: 32%; animation-delay: 0.5s; animation-duration: 1.7s; }
+.confetti43 { left: 18%; top: 42%; animation-delay: 0.6s; animation-duration: 1.9s; }
+.confetti44 { left: 23%; top: 52%; animation-delay: 0.7s; animation-duration: 1.1s; }
+.confetti45 { left: 28%; top: 62%; animation-delay: 0.8s; animation-duration: 1.3s; }
+.confetti46 { left: 33%; top: 72%; animation-delay: 0.9s; animation-duration: 1.5s; }
+.confetti47 { left: 38%; top: 82%; animation-delay: 1s; animation-duration: 1.7s; }
+.confetti48 { left: 43%; top: 92%; animation-delay: 1.1s; animation-duration: 1.9s; }
+.confetti49 { left: 48%; top: 2%; animation-delay: 1.2s; animation-duration: 1.2s; }
+
+/* Sparkle animation classes */
+.sparkle {
+  position: absolute;
+  animation: ping 3s infinite;
+  pointer-events: none;
+}
+
+.sparkle0 { left: 5%; top: 15%; animation-delay: 0s; }
+.sparkle1 { left: 15%; top: 25%; animation-delay: 0.2s; }
+.sparkle2 { left: 25%; top: 35%; animation-delay: 0.4s; }
+.sparkle3 { left: 35%; top: 45%; animation-delay: 0.6s; }
+.sparkle4 { left: 45%; top: 55%; animation-delay: 0.8s; }
+.sparkle5 { left: 55%; top: 65%; animation-delay: 1s; }
+.sparkle6 { left: 65%; top: 75%; animation-delay: 1.2s; }
+.sparkle7 { left: 75%; top: 85%; animation-delay: 1.4s; }
+.sparkle8 { left: 85%; top: 95%; animation-delay: 1.6s; }
+.sparkle9 { left: 95%; top: 5%; animation-delay: 1.8s; }
+.sparkle10 { left: 10%; top: 20%; animation-delay: 2s; }
+.sparkle11 { left: 20%; top: 30%; animation-delay: 2.2s; }
+.sparkle12 { left: 30%; top: 40%; animation-delay: 2.4s; }
+.sparkle13 { left: 40%; top: 50%; animation-delay: 2.6s; }
+.sparkle14 { left: 50%; top: 60%; animation-delay: 2.8s; }
+.sparkle15 { left: 60%; top: 70%; animation-delay: 0.1s; }
+.sparkle16 { left: 70%; top: 80%; animation-delay: 0.3s; }
+.sparkle17 { left: 80%; top: 90%; animation-delay: 0.5s; }
+.sparkle18 { left: 90%; top: 10%; animation-delay: 0.7s; }
+.sparkle19 { left: 100%; top: 20%; animation-delay: 0.9s; }
+
+/* Confetti colors */
+.confettiYellow { background-color: #fbbf24; }
+.confettiRed { background-color: #f87171; }
+.confettiBlue { background-color: #60a5fa; }
+.confettiGreen { background-color: #34d399; }
+.confettiPurple { background-color: #a78bfa; }
+
+/* Crown color variants */
+.crownGold { color: #FFD700; }
+.crownSilver { color: #C0C0C0; }
+.crownBronze { color: #CD7F32; }
+.crownPurple { color: #8B5CF6; }
+.crownBlue { color: #3B82F6; }
+
+/* Close button */
+.closeButton {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10;
+  padding: 0.5rem;
+  border-radius: 9999px;
+  background-color: rgba(255, 255, 255, 0.8);
+  transition: background-color 0.2s;
+}
+
+.closeButton:hover {
+  background-color: white;
+}
+
+/* Confetti piece */
+.confettiPiece {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+}
+
+/* Sparkle icon */
+.sparkleIcon {
+  width: 0.75rem;
+  height: 0.75rem;
+  color: #fbbf24;
+}
+
+@keyframes bounce {
+  0%, 20%, 53%, 80%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  40%, 43% {
+    transform: translate3d(0, -30px, 0);
+  }
+  70% {
+    transform: translate3d(0, -15px, 0);
+  }
+  90% {
+    transform: translate3d(0, -4px, 0);
+  }
+}
+
+@keyframes ping {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+} 

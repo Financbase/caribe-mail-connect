@@ -22,11 +22,11 @@ const COLORS = [
 export function CarrierBreakdownChart({ data }: CarrierBreakdownChartProps) {
   const { t } = useLanguage();
 
-  const CustomTooltip = ({ active, payload }: any) => {
+  const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ payload: CarrierData }> }) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
-        <div className="bg-background border border-border rounded-lg p-3 shadow-lg">
+        <div className="bg-background border border-gray-200 rounded-lg p-3 shadow-lg">
           <p className="font-medium">{data.carrier}</p>
           <p className="text-sm text-muted-foreground">
             {data.count} {t('packages')} ({data.percentage.toFixed(1)}%)
@@ -37,7 +37,7 @@ export function CarrierBreakdownChart({ data }: CarrierBreakdownChartProps) {
     return null;
   };
 
-  const CustomLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percentage }: any) => {
+  const CustomLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percentage }: { cx: number; cy: number; midAngle: number; innerRadius: number; outerRadius: number; percentage: number }) => {
     if (percentage < 5) return null; // Don't show labels for small slices
     
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
@@ -86,7 +86,7 @@ export function CarrierBreakdownChart({ data }: CarrierBreakdownChartProps) {
               </Pie>
               <Tooltip content={<CustomTooltip />} />
               <Legend 
-                formatter={(value, entry: any) => (
+                formatter={(value, entry: { color: string; payload?: { percentage?: number } }) => (
                   <span style={{ color: entry.color }}>
                     {value} ({entry.payload?.percentage?.toFixed(1) || 0}%)
                   </span>

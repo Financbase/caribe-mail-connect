@@ -1,0 +1,187 @@
+{
+  "tech_stack": [
+    "TypeScript",
+    "React 18",
+    "Vite",
+    "Tailwind CSS",
+    "shadcn/ui",
+    "Supabase",
+    "PostgreSQL",
+    "PWA",
+    "Capacitor"
+  ],
+  "features": [
+    {
+      "name": "Authentication System",
+      "description": "Complete authentication system with staff/customer login, password reset, and two-factor authentication",
+      "files": [
+        "src/contexts/AuthContext.tsx",
+        "src/pages/Auth.tsx",
+        "src/pages/auth/ResetPassword.tsx",
+        "src/pages/Security.tsx"
+      ]
+    },
+    {
+      "name": "Routing System",
+      "description": "Hash-based routing with lazy loading and protected routes",
+      "files": [
+        "src/pages/AppRouter.tsx",
+        "src/utils/routeUtils.ts"
+      ]
+    },
+    {
+      "name": "Internationalization",
+      "description": "Bilingual support (Spanish/English) with context-based language switching",
+      "files": [
+        "src/contexts/LanguageContext.tsx"
+      ]
+    },
+    {
+      "name": "Package Management",
+      "description": "Package intake, tracking, and delivery management system",
+      "files": [
+        "src/hooks/usePackages.ts",
+        "src/pages/PackageIntake.tsx",
+        "src/pages/PackageTracking.tsx"
+      ]
+    },
+    {
+      "name": "Customer Management",
+      "description": "Customer directory, mailbox management, and customer portal",
+      "files": [
+        "src/pages/Customers.tsx",
+        "src/pages/CustomerPortal.tsx",
+        "src/components/CustomerForm.tsx"
+      ]
+    },
+    {
+      "name": "Dashboard & Analytics",
+      "description": "Main dashboard with statistics, analytics, and reporting",
+      "files": [
+        "src/pages/Dashboard.tsx",
+        "src/components/analytics/CarrierBreakdownChart.tsx",
+        "src/components/analytics/MetricCard.tsx"
+      ]
+    },
+    {
+      "name": "Device Management",
+      "description": "IoT device tracking, mobile device management, and asset tracking",
+      "files": [
+        "src/pages/Devices.tsx",
+        "src/components/devices/DeviceInventory.tsx",
+        "src/components/devices/AssetTracking.tsx"
+      ]
+    },
+    {
+      "name": "Maps & Location",
+      "description": "Google Maps integration, live tracking, and route optimization",
+      "files": [
+        "src/components/maps/GoogleMapsProvider.tsx",
+        "src/components/maps/LiveTrackingMap.tsx",
+        "src/components/maps/RouteOptimizer.tsx"
+      ]
+    },
+    {
+      "name": "Billing & Invoicing",
+      "description": "Automated billing, invoice generation, and financial reporting",
+      "files": [
+        "src/components/billing/BillingRuns.tsx",
+        "src/components/billing/CreateInvoiceDialog.tsx",
+        "src/components/billing/FinancialReports.tsx"
+      ]
+    },
+    {
+      "name": "Employee Management",
+      "description": "Employee tracking, payroll management, and performance monitoring",
+      "files": [
+        "src/components/employees/EmployeeCard.tsx",
+        "src/components/employees/PayrollManager.tsx",
+        "src/components/employees/PerformanceTracker.tsx"
+      ]
+    },
+    {
+      "name": "Inventory Management",
+      "description": "Inventory tracking, analytics, and management system",
+      "files": [
+        "src/components/inventory/InventoryDashboard.tsx",
+        "src/components/inventory/InventoryItems.tsx",
+        "src/components/inventory/InventoryAnalytics.tsx"
+      ]
+    },
+    {
+      "name": "Last Mile Delivery",
+      "description": "Delivery optimization, partnerships, and customer communication",
+      "files": [
+        "src/components/last-mile/DeliveryOptimization.tsx",
+        "src/components/last-mile/DeliveryPartnerships.tsx",
+        "src/components/last-mile/CustomerCommunication.tsx"
+      ]
+    },
+    {
+      "name": "Notifications System",
+      "description": "Real-time notifications, alerts, and communication system",
+      "files": [
+        "src/hooks/useNotifications.ts",
+        "src/components/notifications/NotificationCenter.tsx"
+      ]
+    },
+    {
+      "name": "Error Handling",
+      "description": "Global error boundaries, route error handling, and graceful degradation",
+      "files": [
+        "src/components/common/GlobalErrorBoundary.tsx",
+        "src/components/common/RouteErrorBoundary.tsx"
+      ]
+    },
+    {
+      "name": "Supabase Integration",
+      "description": "Database integration, authentication, and edge functions",
+      "files": [
+        "src/integrations/supabase/client.ts",
+        "supabase/functions/",
+        "supabase/migrations/"
+      ]
+    },
+    {
+      "name": "PWA Features",
+      "description": "Progressive Web App with offline capabilities and service worker",
+      "files": [
+        "public/manifest.json",
+        "public/sw.js",
+        "vite.config.ts"
+      ]
+    },
+    {
+      "name": "UI Components",
+      "description": "Reusable UI components built with shadcn/ui and Tailwind CSS",
+      "files": [
+        "src/components/ui/",
+        "src/index.css"
+      ]
+    },
+    {
+      "name": "Testing Framework",
+      "description": "Playwright end-to-end testing and component testing",
+      "files": [
+        "tests/e2e/",
+        "src/components/__tests__/"
+      ]
+    },
+    {
+      "name": "Performance Optimization",
+      "description": "Code splitting, lazy loading, and performance optimizations",
+      "files": [
+        "vite.config.ts",
+        "src/lib/performance.ts"
+      ]
+    },
+    {
+      "name": "Security Features",
+      "description": "Security monitoring, audit logs, and compliance features",
+      "files": [
+        "src/components/security/",
+        "src/pages/Security.tsx"
+      ]
+    }
+  ]
+} 

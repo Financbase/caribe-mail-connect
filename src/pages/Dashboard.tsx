@@ -1,163 +1,161 @@
-import { Package, Search, CheckCircle, Users, Mail, BarChart3, Truck, Crown, Building } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ActionCard } from '@/components/ActionCard';
-import { MobileHeader } from '@/components/MobileHeader';
-import { MultiLocationDashboard } from '@/components/MultiLocationDashboard';
-import { useAuth } from '@/contexts/AuthContext';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { usePackages } from '@/hooks/usePackages';
-import { useNotifications } from '@/hooks/useNotifications';
-import { useLocations } from '@/hooks/useLocations';
+import React from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { 
+  Package, 
+  Users, 
+  Mail, 
+  BarChart3, 
+  Truck, 
+  MessageSquare, 
+  Store, 
+  Smartphone, 
+  Zap, 
+  UserCheck, 
+  GraduationCap, 
+  Code, 
+  Shield, 
+  Navigation 
+} from 'lucide-react';
 
 interface DashboardProps {
-  onNavigate: (page: string) => void;
+  onNavigate?: (page: string) => void;
 }
 
 export default function Dashboard({ onNavigate }: DashboardProps) {
-  const { user } = useAuth();
-  const { t } = useLanguage();
-  const { packages, getTodayStats } = usePackages();
-  const { notifications } = useNotifications();
-  const { locations } = useLocations();
-  
-  const stats = getTodayStats();
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return t('dashboard.goodMorning');
-    if (hour < 18) return t('dashboard.goodAfternoon');
-    return t('dashboard.goodEvening');
+  const handleNavigation = (page: string) => {
+    if (onNavigate) {
+      onNavigate(page);
+    } else {
+      window.location.hash = `#/${page}`;
+    }
   };
 
-  const recentActivity = packages
-    .sort((a, b) => new Date(b.received_at).getTime() - new Date(a.received_at).getTime())
-    .slice(0, 5);
-
-  const actionCards = [
-    {
-      title: t('actions.receivePackages'),
-      icon: Package,
-      onClick: () => onNavigate('intake'),
-    },
-    {
-      title: t('actions.customers'),
-      icon: Users,
-      onClick: () => onNavigate('customers'),
-    },
-    {
-      title: 'Act 60 Dashboard',
-      icon: Crown,
-      onClick: () => onNavigate('act60-dashboard'),
-    },
-    {
-      title: t('Mailboxes'),
-      icon: Mail,
-      onClick: () => onNavigate('mailboxes'),
-    },
-    {
-      title: t('Routes'),
-      icon: Truck,
-      onClick: () => onNavigate('routes'),
-    },
-    {
-      title: t('Analytics'),
-      icon: BarChart3,
-      onClick: () => onNavigate('analytics'),
-    },
-    {
-      title: t('Driver View'),
-      icon: Search,
-      onClick: () => onNavigate('driver-route'),
-    },
+  const dashboardItems = [
+    { id: 'package-intake', icon: Package, label: 'Entrada de Paquetes', description: 'Registrar nuevos paquetes' },
+    { id: 'customers', icon: Users, label: 'Clientes', description: 'Gestión de clientes' },
+    { id: 'mailboxes', icon: Mail, label: 'Buzones', description: 'Gestión de buzones' },
+    { id: 'analytics', icon: BarChart3, label: 'Analytics', description: 'Reportes y análisis' },
+    { id: 'routes', icon: Truck, label: 'Rutas', description: 'Gestión de rutas' },
+    { id: 'last-mile', icon: Navigation, label: 'Last-Mile', description: 'Entrega final' },
+    { id: 'communications', icon: MessageSquare, label: 'Comunicaciones', description: 'Mensajes y notificaciones' },
+    { id: 'marketplace', icon: Store, label: 'Marketplace', description: 'Tienda y servicios' },
+    { id: 'devices', icon: Smartphone, label: 'Dispositivos', description: 'Gestión de dispositivos' },
+    { id: 'iot-monitoring', icon: Zap, label: 'IoT', description: 'Monitoreo IoT' },
+    { id: 'employees', icon: UserCheck, label: 'Empleados', description: 'Gestión de empleados' },
+    { id: 'training', icon: GraduationCap, label: 'Capacitación', description: 'Programas de entrenamiento' },
+    { id: 'qa', icon: Shield, label: 'QA', description: 'Control de calidad' },
+    { id: 'developers', icon: Code, label: 'Desarrolladores', description: 'Herramientas de desarrollo' },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-accent/20">
-      <MobileHeader title="PRMCMS" showLogout onNavigate={onNavigate} />
-      
-      <main className="container mx-auto px-4 py-6 space-y-6">
-        {/* Welcome Section */}
-        <div className="space-y-2 animate-fade-in">
-          <h2 className="text-2xl font-bold text-foreground">
-            {getGreeting()}, {user?.user_metadata?.first_name || user?.email?.split('@')[0]}
-          </h2>
-          <p className="text-muted-foreground">
-            PRMCMS Staff Member
-          </p>
+    <div className="min-h-screen bg-gradient-to-br from-background to-accent/20 p-4 md:p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* Header */}
+        <div className="text-center space-y-4">
+          <h1 className="text-3xl font-bold text-primary">Panel de Control</h1>
+          <p className="text-muted-foreground">Bienvenido al sistema de gestión de correo privado de Puerto Rico</p>
         </div>
 
-        {/* Today's Stats */}
-        <Card className="shadow-elegant animate-slide-up">
-          <CardHeader>
-            <CardTitle className="text-lg">{t('dashboard.todayStats')}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="text-center p-4 bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg">
-                <div className="text-2xl font-bold text-primary">{stats.packagesReceived}</div>
-                <div className="text-sm text-muted-foreground">{t('dashboard.packagesReceived')}</div>
-              </div>
-              <div className="text-center p-4 bg-gradient-to-br from-secondary/10 to-secondary/5 rounded-lg">
-                <div className="text-2xl font-bold text-secondary">{stats.pendingDeliveries}</div>
-                <div className="text-sm text-muted-foreground">{t('dashboard.pendingDeliveries')}</div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Quick Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Paquetes Hoy</CardTitle>
+              <Package className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">24</div>
+              <p className="text-xs text-muted-foreground">+12% desde ayer</p>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Clientes Activos</CardTitle>
+              <Users className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">156</div>
+              <p className="text-xs text-muted-foreground">+3 nuevos esta semana</p>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Entregas Pendientes</CardTitle>
+              <Truck className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">8</div>
+              <p className="text-xs text-muted-foreground">-2 desde ayer</p>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Ingresos del Mes</CardTitle>
+              <BarChart3 className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">$12,450</div>
+              <p className="text-xs text-muted-foreground">+8% desde el mes pasado</p>
+            </CardContent>
+          </Card>
+        </div>
 
-        {/* Action Cards Grid */}
-        <div className="grid grid-cols-2 gap-4 animate-slide-up">
-          {actionCards.map((card, index) => (
-            <ActionCard
-              key={card.title}
-              title={card.title}
-              icon={card.icon}
-              onClick={card.onClick}
-              className={`animation-delay-${index * 100}`}
-            />
+        {/* Main Navigation Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {dashboardItems.map((item) => (
+            <Card 
+              key={item.id}
+              className="cursor-pointer transition-all duration-300 transform hover:scale-105 hover:shadow-elegant"
+              onClick={() => handleNavigation(item.id)}
+            >
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">{item.label}</CardTitle>
+                <item.icon className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <p className="text-xs text-muted-foreground">{item.description}</p>
+              </CardContent>
+            </Card>
           ))}
         </div>
 
-        {/* Multi-Location Dashboard */}
-        {locations.length > 1 && (
-          <MultiLocationDashboard onNavigate={onNavigate} />
-        )}
-
         {/* Recent Activity */}
-        <Card className="shadow-elegant animate-slide-up">
+        <Card>
           <CardHeader>
-            <CardTitle className="text-lg">{t('dashboard.recentActivity')}</CardTitle>
+            <CardTitle>Actividad Reciente</CardTitle>
+            <CardDescription>Últimas actividades del sistema</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
-              {recentActivity.map((pkg) => (
-                <div
-                  key={pkg.id}
-                  className="flex items-center justify-between p-3 bg-muted/30 rounded-lg"
-                >
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">
-                      {pkg.customer_name}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {pkg.tracking_number}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className={`
-                      inline-block px-2 py-1 rounded-full text-xs font-medium
-                      ${pkg.status === 'Delivered' ? 'bg-green-100 text-green-800' : 
-                        pkg.status === 'Ready' ? 'bg-blue-100 text-blue-800' :
-                        'bg-yellow-100 text-yellow-800'}
-                    `}>
-                      {pkg.status}
-                    </span>
-                  </div>
+            <div className="space-y-4">
+              <div className="flex items-center space-x-4">
+                <Package className="h-4 w-4 text-primary" />
+                <div className="flex-1">
+                  <p className="text-sm font-medium">Nuevo paquete registrado</p>
+                  <p className="text-xs text-muted-foreground">Tracking: TEST123456789 - Hace 5 minutos</p>
                 </div>
-              ))}
+              </div>
+              <div className="flex items-center space-x-4">
+                <Users className="h-4 w-4 text-primary" />
+                <div className="flex-1">
+                  <p className="text-sm font-medium">Nuevo cliente registrado</p>
+                  <p className="text-xs text-muted-foreground">Juan Pérez - Hace 15 minutos</p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-4">
+                <Truck className="h-4 w-4 text-primary" />
+                <div className="flex-1">
+                  <p className="text-sm font-medium">Entrega completada</p>
+                  <p className="text-xs text-muted-foreground">Tracking: TEST987654321 - Hace 1 hora</p>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
-      </main>
+      </div>
     </div>
   );
 }

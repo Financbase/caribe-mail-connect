@@ -1,0 +1,598 @@
+[
+  {
+    "id": "TC001",
+    "title": "Staff Login with Correct Credentials and 2FA",
+    "description": "Verify that staff can log in successfully using correct username/email and password, including two-factor authentication.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to staff login page."
+      },
+      {
+        "type": "action",
+        "description": "Enter valid username/email and password."
+      },
+      {
+        "type": "action",
+        "description": "Submit login form."
+      },
+      {
+        "type": "action",
+        "description": "Perform two-factor authentication using valid 2FA code."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify login is successful and user is redirected to the appropriate dashboard based on role."
+      }
+    ]
+  },
+  {
+    "id": "TC002",
+    "title": "Login Failure with Incorrect Password",
+    "description": "Verify login fails when staff enters an incorrect password.",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to staff login page."
+      },
+      {
+        "type": "action",
+        "description": "Enter valid username/email and incorrect password."
+      },
+      {
+        "type": "action",
+        "description": "Submit login form."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an error message is displayed indicating invalid credentials and login is denied."
+      }
+    ]
+  },
+  {
+    "id": "TC003",
+    "title": "Password Reset Flow for Staff",
+    "description": "Verify staff can successfully reset their password through the password reset feature.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to password reset page."
+      },
+      {
+        "type": "action",
+        "description": "Enter registered email address."
+      },
+      {
+        "type": "action",
+        "description": "Submit password reset request."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify confirmation message is shown stating password reset instructions sent."
+      },
+      {
+        "type": "action",
+        "description": "Follow link in email and set a new password."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify staff can log in successfully with the new password."
+      }
+    ]
+  },
+  {
+    "id": "TC004",
+    "title": "Package Intake with Barcode Scanning and Photo Documentation",
+    "description": "Verify staff can intake a package by scanning barcode, capturing a photo, associating with customer and submitting successfully.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Log in as operations staff."
+      },
+      {
+        "type": "action",
+        "description": "Navigate to package intake page."
+      },
+      {
+        "type": "action",
+        "description": "Scan package barcode."
+      },
+      {
+        "type": "action",
+        "description": "Capture photo of package condition."
+      },
+      {
+        "type": "action",
+        "description": "Associate package with existing customer profile."
+      },
+      {
+        "type": "action",
+        "description": "Submit package intake."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify package is saved in system with correct barcode, photo, and customer association, and intake process time is under 2 minutes."
+      }
+    ]
+  },
+  {
+    "id": "TC005",
+    "title": "Package Intake Offline Mode and Data Synchronization",
+    "description": "Verify that package intake can be completed offline and data synchronizes correctly when connection is restored.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Log in as operations staff on mobile app with offline-first capability."
+      },
+      {
+        "type": "action",
+        "description": "Turn off network connectivity."
+      },
+      {
+        "type": "action",
+        "description": "Perform package intake with barcode scanning, photo capture, and customer association."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify intake is saved locally with no errors."
+      },
+      {
+        "type": "action",
+        "description": "Restore network connectivity."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify package intake data is synchronized to the central database correctly."
+      }
+    ]
+  },
+  {
+    "id": "TC006",
+    "title": "Customer Notification Sent via Preferred Channel and Language",
+    "description": "Verify automated notifications are sent to customers according to their language preference (Spanish/English) and selected notification channels (SMS, Email, in-app).",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Create or update customer profile with language preference set to Spanish and channels to SMS and Email."
+      },
+      {
+        "type": "action",
+        "description": "Trigger notification event (e.g., package arrival)."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify notification is sent successfully via SMS and Email in Spanish."
+      },
+      {
+        "type": "action",
+        "description": "Update customer preference to English and channel to in-app messaging only."
+      },
+      {
+        "type": "action",
+        "description": "Trigger notification event."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify notification is delivered via in-app messaging in English."
+      }
+    ]
+  },
+  {
+    "id": "TC007",
+    "title": "Notification Delivery Failure Handling and Retry",
+    "description": "Verify the system retries and logs failures when notifications cannot be delivered via selected channels.",
+    "category": "error handling",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Simulate failure in delivering notification via SMS (e.g., invalid phone number)."
+      },
+      {
+        "type": "action",
+        "description": "Trigger notification."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify system attempts retry according to retry policy and logs failure details."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify notification sent via alternate available channels if configured."
+      }
+    ]
+  },
+  {
+    "id": "TC008",
+    "title": "Mailbox Rental Workflow with Digital Agreement and Billing",
+    "description": "Verify mailbox rental process including availability checking, digital contract generation, signing, and integrated billing compliant with PR payment standards.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Log in as staff."
+      },
+      {
+        "type": "action",
+        "description": "Check mailbox availability for requested period."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify availability status is accurate and up-to-date."
+      },
+      {
+        "type": "action",
+        "description": "Create new mailbox rental agreement digitally."
+      },
+      {
+        "type": "action",
+        "description": "Customer signs the agreement electronically."
+      },
+      {
+        "type": "action",
+        "description": "Complete billing process including invoice generation and collect payment."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify billing complies with Puerto Rico payment standards and invoice is recorded."
+      }
+    ]
+  },
+  {
+    "id": "TC009",
+    "title": "Compliance Report Generation and Submission",
+    "description": "Verify automated generation and submission of compliance reports including CMRA quarterly certifications and Puerto Rico regulatory reports.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Trigger compliance report generation for current quarter."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify report contains all required fields per USPS and Puerto Rico regulations."
+      },
+      {
+        "type": "action",
+        "description": "Submit generated report to regulatory authorities."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify submission confirmation received and logged."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify system alerts staff of upcoming deadlines."
+      }
+    ]
+  },
+  {
+    "id": "TC010",
+    "title": "Customer Mobile App Access to Mail Status and Appointments",
+    "description": "Verify customers can log in and view their mail status, payment history, and schedule appointments in the customer mobile app, supporting both Spanish and English languages.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login to customer mobile app with valid credentials."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify mail status for all packages is displayed correctly."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify payment history is accurate."
+      },
+      {
+        "type": "action",
+        "description": "Schedule appointment using app functionality."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify appointment is scheduled and confirmation is shown."
+      },
+      {
+        "type": "action",
+        "description": "Switch app language from Spanish to English and vice versa."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify app content and notifications update accordingly."
+      }
+    ]
+  },
+  {
+    "id": "TC011",
+    "title": "Dashboard Analytics Accuracy and Real-Time Update",
+    "description": "Verify management dashboard displays accurate operational, financial, and compliance metrics with real-time updates.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as manager."
+      },
+      {
+        "type": "action",
+        "description": "Navigate to analytics dashboard."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify dashboard shows correct performance statistics, revenue figures, and compliance status."
+      },
+      {
+        "type": "action",
+        "description": "Perform operations that affect metrics (e.g., package intake, payment)."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify dashboard updates metrics in real time within acceptable delay."
+      }
+    ]
+  },
+  {
+    "id": "TC012",
+    "title": "Multi-Location Data Synchronization After Network Restore",
+    "description": "Verify that data from multiple locations using the system synchronize correctly after network outages with no data loss or conflicts.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Simulate operations offline in two different locations, entering new package intakes, customer updates, and billing data."
+      },
+      {
+        "type": "action",
+        "description": "Restore network connectivity for both locations."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify all data is synchronized to central database accurately."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify no data conflicts or duplicates exist post-synchronization."
+      }
+    ]
+  },
+  {
+    "id": "TC013",
+    "title": "Role-Based Access Control Enforcement",
+    "description": "Verify system enforces role-based access control preventing users from accessing unauthorized features or data.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as operations staff."
+      },
+      {
+        "type": "action",
+        "description": "Attempt to access management dashboard and compliance modules."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify access is denied with appropriate error message."
+      },
+      {
+        "type": "action",
+        "description": "Login as manager."
+      },
+      {
+        "type": "action",
+        "description": "Access all permitted features successfully."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify no unauthorized access is possible beyond assigned roles."
+      }
+    ]
+  },
+  {
+    "id": "TC014",
+    "title": "Data Encryption at Rest and in Transit",
+    "description": "Verify sensitive data is encrypted both at rest in the database and during transmission over the network.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Capture network traffic during login and data operations."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify all sensitive data including passwords, personal data, and payment information is transmitted using encrypted channels (e.g., TLS)."
+      },
+      {
+        "type": "action",
+        "description": "Check storage layers (e.g., PostgreSQL) for encryption configuration."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify sensitive data at rest is encrypted according to security policy."
+      }
+    ]
+  },
+  {
+    "id": "TC015",
+    "title": "Audit Log Creation and Access",
+    "description": "Verify that all critical user actions are recorded in audit logs and logs can be accessed securely by authorized personnel.",
+    "category": "security",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Perform critical actions such as login, package intake, billing update."
+      },
+      {
+        "type": "action",
+        "description": "Access audit logs as an authorized security personnel."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify logs contain timestamps, user details, action types, and are tamper-proof."
+      },
+      {
+        "type": "action",
+        "description": "Attempt to access audit logs as unauthorized user."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify access is denied."
+      }
+    ]
+  },
+  {
+    "id": "TC016",
+    "title": "Progressive Web App Offline Functionality on iOS and Android",
+    "description": "Verify mobile apps on iOS and Android support offline operations, allow data entry, and sync when online, with UI and language defaulting to Spanish.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Install app on iOS and Android devices."
+      },
+      {
+        "type": "action",
+        "description": "Launch app with no network connectivity."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify app loads and UI displays primarily in Spanish."
+      },
+      {
+        "type": "action",
+        "description": "Perform offline operations such as package intake or mailbox rental."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify operations succeed without errors."
+      },
+      {
+        "type": "action",
+        "description": "Restore connectivity."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify all offline data synchronizes correctly."
+      }
+    ]
+  },
+  {
+    "id": "TC017",
+    "title": "Integration with USPS API for Package Tracking",
+    "description": "Verify that the system correctly integrates with USPS API for real-time package tracking updates.",
+    "category": "integration",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Submit package tracking request via system."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify system calls USPS API and receives valid tracking information."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify tracking information is displayed correctly to staff and customers."
+      }
+    ]
+  },
+  {
+    "id": "TC018",
+    "title": "Financial Reporting Accuracy and Billing Automation",
+    "description": "Verify automated billing generates accurate invoices and financial reports reflect true operational data.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Perform mailbox rental and package intake with various billing scenarios."
+      },
+      {
+        "type": "action",
+        "description": "Trigger billing run to generate invoices."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify invoices are generated with correct amounts and details."
+      },
+      {
+        "type": "action",
+        "description": "Access financial reports from dashboard."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify reports accurately reflect all billed and received payments."
+      }
+    ]
+  },
+  {
+    "id": "TC019",
+    "title": "Error Boundary Display and Recovery",
+    "description": "Verify global and route-specific error boundaries catch errors and display user-friendly error messages with options to recover.",
+    "category": "error handling",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Simulate runtime error in route component."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify route error boundary displays custom error message."
+      },
+      {
+        "type": "action",
+        "description": "Trigger error outside routing context."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify global error boundary displays fallback UI allowing reload or navigation."
+      }
+    ]
+  },
+  {
+    "id": "TC020",
+    "title": "User Training Completion and Feature Utilization Monitoring",
+    "description": "Verify that the system tracks user training progress and monitors usage to ensure 90% feature utilization within two weeks.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Log user training completions in the system."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify training completion percentages are tracked accurately."
+      },
+      {
+        "type": "action",
+        "description": "Monitor feature usage metrics for users over two weeks."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify at least 90% of critical features have been utilized by users."
+      }
+    ]
+  }
+]

@@ -127,7 +127,7 @@ export const ErrorReportsManager = () => {
                       <label className="text-sm font-medium">Error Type</label>
                       <Select
                         value={newReport.error_type}
-                        onValueChange={(value: any) => setNewReport({ ...newReport, error_type: value })}
+                        onValueChange={(value: string) => setNewReport({ ...newReport, error_type: value })}
                       >
                         <SelectTrigger>
                           <SelectValue />
@@ -145,7 +145,7 @@ export const ErrorReportsManager = () => {
                       <label className="text-sm font-medium">Priority</label>
                       <Select
                         value={newReport.priority}
-                        onValueChange={(value: any) => setNewReport({ ...newReport, priority: value })}
+                        onValueChange={(value: string) => setNewReport({ ...newReport, priority: value })}
                       >
                         <SelectTrigger>
                           <SelectValue />
@@ -355,7 +355,7 @@ export const ErrorReportsManager = () => {
                                 <div className="flex gap-2">
                                   <Select
                                     value={selectedReport.status}
-                                    onValueChange={(value: any) => handleUpdateStatus(selectedReport.id, value)}
+                                    onValueChange={(value: string) => handleUpdateStatus(selectedReport.id, value)}
                                   >
                                     <SelectTrigger className="w-40">
                                       <SelectValue />

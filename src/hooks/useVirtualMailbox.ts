@@ -39,7 +39,7 @@ export function useVirtualMailbox() {
       
       if (error) throw error;
       setVirtualMailboxes(data || []);
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error fetching virtual mailboxes:', error);
       toast({
         title: 'Error',
@@ -65,7 +65,7 @@ export function useVirtualMailbox() {
       
       if (error) throw error;
       setMailPieces(data || []);
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error fetching mail pieces:', error);
       toast({
         title: 'Error',
@@ -96,7 +96,7 @@ export function useVirtualMailbox() {
       });
       
       return data;
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error creating virtual mailbox:', error);
       toast({
         title: 'Error',
@@ -132,7 +132,7 @@ export function useVirtualMailbox() {
       });
       
       return data;
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error adding mail piece:', error);
       toast({
         title: 'Error',
@@ -170,7 +170,7 @@ export function useVirtualMailbox() {
       });
       
       return data;
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error creating mail action:', error);
       toast({
         title: 'Error',
@@ -199,7 +199,7 @@ export function useVirtualMailbox() {
       if (error) throw error;
       setScanningQueue(prev => [data, ...prev]);
       return data;
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error adding to scanning queue:', error);
       throw error;
     }
@@ -224,7 +224,7 @@ export function useVirtualMailbox() {
       });
       
       return data;
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error creating check deposit:', error);
       toast({
         title: 'Error',
@@ -248,7 +248,7 @@ export function useVirtualMailbox() {
 
       if (error) throw error;
       setPricing(data || []);
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error fetching pricing:', error);
     }
   };
@@ -302,7 +302,7 @@ export function useVirtualMailbox() {
             : piece
         )
       );
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error updating mail piece status:', error);
       throw error;
     }

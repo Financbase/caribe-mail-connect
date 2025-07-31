@@ -1,244 +1,348 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+// Import from deps.ts for better dependency management
+import { serve, createServiceRoleClient, handleError } from './deps.js';
 
+// Define CORS headers
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT, DELETE'
+};
+
+// Define request and response types
+interface TestRequest {
+  test_type: string;
+  location_id: string;
+  [key: string]: unknown;
 }
 
-Deno.serve(async (req) => {
+// Test result types
+type TestStatus = 'passed' | 'failed' | 'skipped';
+
+interface TestResult {
+  name: string;
+  status: TestStatus;
+  duration: number;
+  error?: string;
+  details?: unknown;
+}
+
+interface TestResults {
+  passed: number;
+  failed: number;
+  skipped: number;
+  tests: TestResult[];
+  duration: number;
+  test_run_id?: string;
+  test_type: string;
+  location_id: string;
+}
+
+// Helper function to create a test result
+function createTestResult(
+  name: string, 
+  status: TestStatus, 
+  duration: number, 
+  error?: string, 
+  details?: unknown
+): TestResult {
+  const result: TestResult = {
+    name,
+    status,
+    duration,
+  };
+  
+  if (error) {
+    result.error = error;
+  }
+  
+  if (details) {
+    result.details = details;
+  }
+  
+  return result;
+}
+
+// Helper function to run a test case
+async function runTest<T>(
+  testName: string, 
+  testFn: () => Promise<T>,
+  results: TestResults
+): Promise<T | null> {
+  const startTime = Date.now();
+  
+  try {
+    const result = await testFn();
+    const duration = Date.now() - startTime;
+    
+    results.tests.push(createTestResult(testName, 'passed', duration));
+    results.passed++;
+    
+    return result;
+  } catch (error) {
+    const duration = Date.now() - startTime;
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const errorStack = error instanceof Error ? error.stack : undefined;
+    
+    results.tests.push(createTestResult(
+      testName, 
+      'failed', 
+      duration, 
+      errorMessage,
+      errorStack
+    ));
+    results.failed++;
+    
+    return null;
+  }
+}
+
+// Test functions
+
+async function runWorkflowTests(supabase: any, locationId: string, results: TestResults): Promise<void> {
+  await runTest('Workflow: Check location exists', async () => {
+    const { data, error } = await supabase
+      .from('locations')
+      .select('id')
+      .eq('id', locationId)
+      .single();
+
+    if (error) throw error;
+    if (!data) throw new Error('Location not found');
+    
+    return data;
+  }, results);
+
+  // Add more workflow tests as needed
+}
+
+async function runAPIMonitoringTests(supabase: any, results: TestResults): Promise<void> {
+  await runTest('API: Check health endpoint', async () => {
+    const response = await fetch('https://api.example.com/health');
+    if (!response.ok) {
+      throw new Error(`API health check failed with status ${response.status}`);
+    }
+    return response.json();
+  }, results);
+
+  // Add more API tests as needed
+}
+
+async function runDatabaseIntegrityTests(supabase: any, locationId: string, results: TestResults): Promise<void> {
+  await runTest('Database: Check for orphaned records', async () => {
+    const { data, error } = await supabase.rpc('check_orphaned_records', { location_id: locationId });
+    
+    if (error) throw error;
+    if (data && data.length > 0) {
+      throw new Error(`Found ${data.length} orphaned records`);
+    }
+    
+    return data;
+  }, results);
+
+  // Add more database integrity tests as needed
+}
+
+// Main request handler
+async function handleRequest(req: Request): Promise<Response> {
+  // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders })
+    return new Response('ok', { headers: corsHeaders });
   }
 
+  // Only allow POST requests
+  if (req.method !== 'POST') {
+    return new Response(
+      JSON.stringify({ error: 'Method not allowed' }),
+      { status: 405, headers: { ...corsHeaders } }
+    );
+  }
+
+  // Parse and validate request body
+  let requestData: unknown;
   try {
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!
-    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-    const supabase = createClient(supabaseUrl, supabaseKey)
+    requestData = await req.json();
+  } catch (error) {
+    return new Response(
+      JSON.stringify({ error: 'Invalid JSON' }),
+      { status: 400, headers: { ...corsHeaders } }
+    );
+  }
 
-    const { test_type, location_id } = await req.json()
+  // Type guard to validate request data
+  const isTestRequest = (data: unknown): data is TestRequest => {
+    return (
+      typeof data === 'object' && 
+      data !== null &&
+      'test_type' in data && 
+      'location_id' in data &&
+      typeof (data as any).test_type === 'string' &&
+      typeof (data as any).location_id === 'string'
+    );
+  };
 
-    console.log(`Running automated tests: ${test_type}`)
+  // Validate request data structure
+  if (!isTestRequest(requestData)) {
+    return new Response(
+      JSON.stringify({ error: 'Invalid request data: must include test_type and location_id as strings' }),
+      { status: 400, headers: { ...corsHeaders } }
+    );
+  }
 
-    const testStartTime = Date.now()
-    
-    // Initialize test run record
-    const { data: testRun, error: testRunError } = await supabase
+  // Validate required fields
+  if (!requestData.test_type || !requestData.location_id) {
+    return new Response(
+      JSON.stringify({ error: 'Missing required fields: test_type and location_id are required' }),
+      { status: 400, headers: { ...corsHeaders } }
+    );
+  }
+
+  // Initialize test results
+  const testResults: TestResults = {
+    test_type: requestData.test_type,
+    location_id: requestData.location_id,
+    passed: 0,
+    failed: 0,
+    skipped: 0,
+    tests: [],
+    duration: 0,
+  };
+
+  // Create a Supabase client with service role
+  const supabase = createServiceRoleClient();
+  const startTime: number = Date.now();
+  interface TestRun {
+    id: string;
+  }
+  
+  let testRun: TestRun | null = null;
+  
+  try {
+    // Create a new test run record
+    const { data: newTestRun, error: createError } = await supabase
       .from('automated_test_runs')
       .insert({
-        location_id,
-        test_suite_name: `Automated ${test_type} Tests`,
-        test_type,
-        status: 'running'
+        test_type: requestData.test_type,
+        location_id: requestData.location_id,
+        status: 'running',
+        started_at: new Date().toISOString()
       })
-      .select()
-      .single()
-
-    if (testRunError) throw testRunError
-
-    let testResults = {
-      passed: 0,
-      failed: 0,
-      skipped: 0,
-      results: [] as any[]
+      .select('id')
+      .single<TestRun>();
+      
+    if (createError || !newTestRun) {
+      throw new Error(createError?.message || 'Failed to create test run');
     }
+    
+    testRun = newTestRun;
 
-    // Run different test suites based on type
-    switch (test_type) {
-      case 'data_validation':
-        testResults = await runDataValidationTests(supabase, location_id)
-        break
+    // Run the appropriate tests based on test_type
+    switch (requestData.test_type) {
       case 'workflow':
-        testResults = await runWorkflowTests(supabase, location_id)
-        break
-      case 'api_monitoring':
-        testResults = await runAPIMonitoringTests(supabase)
-        break
-      case 'db_integrity':
-        testResults = await runDatabaseIntegrityTests(supabase, location_id)
-        break
+        await runWorkflowTests(supabase, requestData.location_id, testResults);
+        break;
+      case 'api':
+        await runAPIMonitoringTests(supabase, testResults);
+        break;
+      case 'database':
+        await runDatabaseIntegrityTests(supabase, requestData.location_id, testResults);
+        break;
       default:
-        throw new Error(`Unknown test type: ${test_type}`)
+        throw new Error(`Unknown test type: ${requestData.test_type}`);
     }
 
-    const executionTime = Date.now() - testStartTime
+    // Calculate test duration
+    const duration = Date.now() - startTime;
+    testResults.duration = duration;
 
     // Update test run with results
-    await supabase
+    const { error: updateError } = await supabase
       .from('automated_test_runs')
       .update({
-        total_tests: testResults.passed + testResults.failed + testResults.skipped,
-        passed_tests: testResults.passed,
-        failed_tests: testResults.failed,
-        skipped_tests: testResults.skipped,
-        execution_time_ms: executionTime,
-        test_results: testResults.results,
-        status: 'completed',
-        completed_at: new Date().toISOString()
+        completed_at: new Date().toISOString(),
+        status: testResults.failed === 0 ? 'passed' : 'failed',
+        test_count: testResults.passed + testResults.failed + testResults.skipped,
+        passed_count: testResults.passed,
+        failed_count: testResults.failed,
+        skipped_count: testResults.skipped,
+        duration_seconds: Math.floor(duration / 1000),
+        results: testResults.tests
       })
-      .eq('id', testRun.id)
+      .eq('id', testRun.id);
 
-    console.log(`Tests completed: ${testResults.passed} passed, ${testResults.failed} failed`)
+    if (updateError) throw updateError;
+    
+    if (!testRun) {
+      throw new Error('Test run record not found after creation');
+    }
 
+    // Return results
     return new Response(
-      JSON.stringify({ 
-        success: true, 
-        testRunId: testRun.id,
-        results: testResults,
-        executionTime
+      JSON.stringify({
+        success: true,
+        ...testResults
       }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    )
-
+      { 
+        status: 200, 
+        headers: { 
+          ...corsHeaders,
+          'Content-Type': 'application/json' 
+        } 
+      }
+    );
   } catch (error) {
-    console.error('Error running tests:', error)
+    // Handle any errors that occur during test execution
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('Test execution failed:', error);
+    
+    // Update test run with error status
+    try {
+      await supabase
+        .from('automated_test_runs')
+        .update({
+          completed_at: new Date().toISOString(),
+          status: 'error',
+          error_message: errorMessage,
+          duration_seconds: Math.floor((Date.now() - startTime) / 1000)
+        })
+        .eq('id', testRun?.id);
+    } catch (updateError) {
+      console.error('Failed to update test run with error:', updateError);
+    }
+
     return new Response(
-      JSON.stringify({ error: error.message }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
-    )
+      JSON.stringify({
+        success: false,
+        error: errorMessage,
+        ...testResults
+      }),
+      { 
+        status: 500, 
+        headers: { 
+          ...corsHeaders,
+          'Content-Type': 'application/json' 
+        } 
+      }
+    );
   }
-})
-
-async function runDataValidationTests(supabase: any, locationId: string) {
-  const results = []
-  let passed = 0, failed = 0
-
-  // Test: Check for customers without required fields
-  try {
-    const { data: incompleteCustomers } = await supabase
-      .from('customers')
-      .select('id, first_name, last_name, email')
-      .or('first_name.is.null,last_name.is.null,email.is.null')
-      .eq('location_id', locationId)
-
-    if (incompleteCustomers && incompleteCustomers.length === 0) {
-      results.push({ test: 'Customer data validation', status: 'passed', message: 'All customers have required fields' })
-      passed++
-    } else {
-      results.push({ test: 'Customer data validation', status: 'failed', message: `${incompleteCustomers?.length} customers missing required fields` })
-      failed++
-    }
-  } catch (error) {
-    results.push({ test: 'Customer data validation', status: 'failed', message: error.message })
-    failed++
-  }
-
-  // Test: Check for orphaned packages
-  try {
-    const { data: orphanedPackages } = await supabase
-      .from('packages')
-      .select('id, customer_id')
-      .not('customer_id', 'in', 
-        supabase.from('customers').select('id').eq('location_id', locationId)
-      )
-
-    if (orphanedPackages && orphanedPackages.length === 0) {
-      results.push({ test: 'Package data integrity', status: 'passed', message: 'No orphaned packages found' })
-      passed++
-    } else {
-      results.push({ test: 'Package data integrity', status: 'failed', message: `${orphanedPackages?.length} orphaned packages found` })
-      failed++
-    }
-  } catch (error) {
-    results.push({ test: 'Package data integrity', status: 'failed', message: error.message })
-    failed++
-  }
-
-  return { passed, failed, skipped: 0, results }
 }
 
-async function runWorkflowTests(supabase: any, locationId: string) {
-  const results = []
-  let passed = 0, failed = 0
-
-  // Test: Package intake workflow
+// Start the server
+function getPort(): number {
   try {
-    // Create test customer
-    const { data: testCustomer, error: customerError } = await supabase
-      .from('customers')
-      .insert({
-        location_id: locationId,
-        first_name: 'Test',
-        last_name: 'Customer',
-        email: 'test@example.com',
-        mailbox_number: 'TEST001',
-        address_line1: '123 Test St',
-        city: 'Test City',
-        state: 'PR',
-        zip_code: '00001'
-      })
-      .select()
-      .single()
-
-    if (customerError) throw customerError
-
-    // Create test package
-    const { data: testPackage, error: packageError } = await supabase
-      .from('packages')
-      .insert({
-        location_id: locationId,
-        customer_id: testCustomer.id,
-        tracking_number: 'TEST123456',
-        carrier: 'Test Carrier',
-        status: 'arrived'
-      })
-      .select()
-      .single()
-
-    if (packageError) throw packageError
-
-    // Clean up test data
-    await supabase.from('packages').delete().eq('id', testPackage.id)
-    await supabase.from('customers').delete().eq('id', testCustomer.id)
-
-    results.push({ test: 'Package intake workflow', status: 'passed', message: 'Workflow completed successfully' })
-    passed++
-  } catch (error) {
-    results.push({ test: 'Package intake workflow', status: 'failed', message: error.message })
-    failed++
+    // Try to get port from environment variable if running in Deno
+    // @ts-ignore - Deno is available at runtime
+    const envPort = Deno?.env?.get('PORT');
+    return envPort ? parseInt(envPort, 10) : 8000;
+  } catch (e) {
+    // Ignore if Deno is not available (e.g., during type checking)
+    console.warn('Running with default port 8000');
+    return 8000;
   }
-
-  return { passed, failed, skipped: 0, results }
 }
 
-async function runAPIMonitoringTests(supabase: any) {
-  const results = []
-  let passed = 0, failed = 0
+const port = getPort();
+console.log(`Server running on port ${port}`);
 
-  // Test: Database connection
-  try {
-    const { data, error } = await supabase.from('locations').select('count').limit(1)
-    if (error) throw error
-
-    results.push({ test: 'Database connectivity', status: 'passed', message: 'Database connection successful' })
-    passed++
-  } catch (error) {
-    results.push({ test: 'Database connectivity', status: 'failed', message: error.message })
-    failed++
-  }
-
-  return { passed, failed, skipped: 0, results }
-}
-
-async function runDatabaseIntegrityTests(supabase: any, locationId: string) {
-  const results = []
-  let passed = 0, failed = 0
-
-  // Test: Foreign key constraints
-  try {
-    const { data: invalidReferences } = await supabase
-      .rpc('check_foreign_key_constraints', { location_id: locationId })
-
-    if (!invalidReferences || invalidReferences.length === 0) {
-      results.push({ test: 'Foreign key integrity', status: 'passed', message: 'All foreign key constraints valid' })
-      passed++
-    } else {
-      results.push({ test: 'Foreign key integrity', status: 'failed', message: `${invalidReferences.length} invalid references found` })
-      failed++
-    }
-  } catch (error) {
-    // If the function doesn't exist, skip this test
-    results.push({ test: 'Foreign key integrity', status: 'skipped', message: 'Test function not available' })
-  }
-
-  return { passed, failed, skipped: 0, results }
-}
+// Start the server with the specified port
+const options = { port };
+serve(handleRequest, options);

@@ -16,10 +16,23 @@ import { useSearch } from '@/hooks/useSearch';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
+interface SearchFilters {
+  dateRange?: { start: Date; end: Date };
+  carrier?: string;
+  status?: string;
+  size?: string;
+  customerType?: string;
+  searchTerm?: string;
+  carriers?: string[];
+  statuses?: string[];
+  sizes?: string[];
+  hasPackages?: boolean;
+}
+
 interface SearchPreset {
   id: string;
   name: string;
-  filters: any;
+  filters: SearchFilters;
   isPublic: boolean;
 }
 
@@ -62,7 +75,7 @@ export default function AdvancedSearch() {
   });
 
   const handleSearch = () => {
-    const filterObj: any = {};
+    const filterObj: SearchFilters = {};
     
     if (dateRange.start && dateRange.end) {
       filterObj.dateRange = { start: dateRange.start, end: dateRange.end };

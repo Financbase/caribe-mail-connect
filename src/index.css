@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -18,20 +20,20 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 210 50% 15%;
 
-    /* Ocean blue primary */
-    --primary: 210 79% 31%;
+    /* Ocean blue primary - #0B5394 */
+    --primary: 210 83% 31%;
     --primary-foreground: 0 0% 100%;
-    --primary-light: 210 79% 45%;
-    --primary-dark: 210 79% 25%;
+    --primary-light: 210 83% 45%;
+    --primary-dark: 210 83% 25%;
 
-    /* Sunrise orange secondary */
-    --secondary: 12 100% 60%;
+    /* Sunrise orange secondary - #FF6B35 */
+    --secondary: 17 100% 60%;
     --secondary-foreground: 0 0% 100%;
-    --secondary-light: 12 100% 75%;
+    --secondary-light: 17 100% 75%;
 
-    /* Caribbean sky accent */
-    --accent: 195 100% 85%;
-    --accent-foreground: 210 50% 15%;
+    /* Palm green accent - #2ECC71 */
+    --accent: 145 63% 49%;
+    --accent-foreground: 0 0% 100%;
 
     --muted: 210 40% 96%;
     --muted-foreground: 210 25% 45%;
@@ -117,11 +119,12 @@ All colors MUST be HSL.
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-[hsl(var(--border))];
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
 }
 
@@ -147,5 +150,10 @@ All colors MUST be HSL.
   /* Smooth scrolling */
   .scroll-smooth {
     scroll-behavior: smooth;
+  }
+  
+  /* Progress bar with custom property */
+  .progress-bar {
+    width: var(--progress-width, 0%);
   }
 }

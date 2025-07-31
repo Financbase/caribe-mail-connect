@@ -43,7 +43,17 @@ export function MultiLocationDashboard({ onNavigate }: MultiLocationDashboardPro
     };
   };
 
-  const formatOperatingHours = (hours: any) => {
+  type DayHours = {
+    open?: string;
+    close?: string;
+    closed?: boolean;
+  };
+
+  type OperatingHours = {
+    [key: string]: DayHours;
+  };
+
+  const formatOperatingHours = (hours: OperatingHours | null | undefined) => {
     if (!hours) return 'Not set';
     
     const today = new Date().getDay();

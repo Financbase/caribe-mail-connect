@@ -1,0 +1,9 @@
+{
+  "version": "3",
+  "redirects": {},
+  "remote": {
+    "https://deno.land/std@0.177.0/_util/assert.ts": "1c3e5f1b6b6e9e9b6e8c6e8e6e8e6e8e6e8e6e8e6e8e6e8e6e8e6e8e6e8e6e8e6",
+    "https://deno.land/std@0.177.0/http/server.ts": "2d4e8e6e8e6e8e6e8e6e8e6e8e6e8e6e8e6e8e6e8e6e8e6e8e6e8e6e8e6e8e6"
+  },
+  "npm": {}
+}

@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
+import { ApiError } from '@/types/api';
 
 export interface Integration {
   id: string;
@@ -8,8 +9,8 @@ export interface Integration {
   service_type: 'carrier' | 'payment' | 'accounting' | 'communication' | 'api';
   service_name: string;
   display_name: string;
-  configuration: any;
-  credentials: any;
+  configuration: Record<string, unknown>;
+  credentials: Record<string, unknown>;
   is_active: boolean;
   is_connected: boolean;
   last_sync_at: string | null;
@@ -27,8 +28,8 @@ export interface IntegrationLog {
   request_type: 'sync' | 'webhook' | 'api_call';
   endpoint: string | null;
   method: string | null;
-  request_data: any;
-  response_data: any;
+  request_data: Record<string, unknown>;
+  response_data: Record<string, unknown>;
   status_code: number | null;
   error_message: string | null;
   execution_time_ms: number | null;
@@ -159,7 +160,7 @@ export function useIntegrations() {
         description: 'The integration has been updated successfully.',
       });
     },
-    onError: (error: any) => {
+    onError: (error: ApiError) => {
       toast({
         title: 'Error updating integration',
         description: error.message,
@@ -186,7 +187,7 @@ export function useIntegrations() {
         variant: data.success ? 'default' : 'destructive',
       });
     },
-    onError: (error: any) => {
+    onError: (error: ApiError) => {
       toast({
         title: 'Connection test failed',
         description: error.message,
@@ -212,7 +213,7 @@ export function useIntegrations() {
         description: 'A new API key has been generated successfully.',
       });
     },
-    onError: (error: any) => {
+    onError: (error: ApiError) => {
       toast({
         title: 'Error generating API key',
         description: error.message,
@@ -240,7 +241,7 @@ export function useIntegrations() {
         description: 'The webhook endpoint has been created successfully.',
       });
     },
-    onError: (error: any) => {
+    onError: (error: ApiError) => {
       toast({
         title: 'Error creating webhook',
         description: error.message,
@@ -267,7 +268,7 @@ export function useIntegrations() {
         description: 'Integration data has been synchronized successfully.',
       });
     },
-    onError: (error: any) => {
+    onError: (error: ApiError) => {
       toast({
         title: 'Sync failed',
         description: error.message,

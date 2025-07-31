@@ -1,0 +1,72 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  - "alert_rules.yml"
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - alertmanager:9093
+
+scrape_configs:
+  # PRMCMS Application Metrics
+  - job_name: 'prmcms-app'
+    static_configs:
+      - targets: ['localhost:5173']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+    scrape_timeout: 10s
+
+  # Node.js Application Metrics
+  - job_name: 'prmcms-node'
+    static_configs:
+      - targets: ['localhost:3000']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  # Database Metrics
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['localhost:5432']
+    scrape_interval: 30s
+
+  # Redis Metrics
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['localhost:6379']
+    scrape_interval: 30s
+
+  # System Metrics
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['localhost:9100']
+    scrape_interval: 15s
+
+  # Vite Dev Server
+  - job_name: 'vite-dev'
+    static_configs:
+      - targets: ['localhost:5173']
+    metrics_path: '/@vite/client'
+    scrape_interval: 10s
+
+  # Custom Application Endpoints
+  - job_name: 'prmcms-health'
+    static_configs:
+      - targets: ['localhost:5173']
+    metrics_path: '/api/health'
+    scrape_interval: 30s
+
+  - job_name: 'prmcms-performance'
+    static_configs:
+      - targets: ['localhost:5173']
+    metrics_path: '/api/performance'
+    scrape_interval: 60s
+
+  - job_name: 'prmcms-errors'
+    static_configs:
+      - targets: ['localhost:5173']
+    metrics_path: '/api/errors'
+    scrape_interval: 30s 

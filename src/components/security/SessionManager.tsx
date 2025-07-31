@@ -18,6 +18,25 @@ import {
 } from 'lucide-react';
 import { useSecurity } from '@/hooks/useSecurity';
 
+interface DeviceInfo {
+  browser?: string;
+  version?: string;
+  os?: string;
+  device?: string;
+}
+
+interface Session {
+  id: string;
+  user_id: string;
+  device_info: DeviceInfo;
+  ip_address: string;
+  user_agent: string;
+  created_at: string;
+  last_activity: string;
+  expires_at: string;
+  is_active: boolean;
+}
+
 export function SessionManager() {
   const { userSessions, loading, terminateSession, fetchUserSessions } = useSecurity();
   const [terminatingSession, setTerminatingSession] = useState<string | null>(null);
@@ -38,7 +57,7 @@ export function SessionManager() {
     return <Monitor className="h-4 w-4" />;
   };
 
-  const getDeviceInfo = (userAgent?: string, deviceInfo?: any) => {
+  const getDeviceInfo = (userAgent?: string, deviceInfo?: DeviceInfo) => {
     if (deviceInfo?.browser) {
       return `${deviceInfo.browser} ${deviceInfo.version || ''}`;
     }
@@ -52,7 +71,7 @@ export function SessionManager() {
     return 'Navegador desconocido';
   };
 
-  const isCurrentSession = (session: any) => {
+  const isCurrentSession = (session: Session) => {
     // This would normally check against the current session token
     return session.id === userSessions[0]?.id;
   };

@@ -12,10 +12,23 @@ import { Separator } from '@/components/ui/separator';
 import { useNotificationSystem } from '@/hooks/useNotificationSystem';
 import { Mail, MessageSquare, Smartphone, Bell } from 'lucide-react';
 
+interface NotificationRule {
+  id?: string;
+  name: string;
+  description: string;
+  trigger_type: string;
+  conditions: Record<string, unknown>;
+  channels: Record<string, boolean>;
+  delay_minutes: number;
+  is_active: boolean;
+  quiet_hours_start: string;
+  quiet_hours_end: string;
+}
+
 interface NotificationRuleDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  rule?: any;
+  rule?: NotificationRule;
   onSuccess: () => void;
 }
 
@@ -79,7 +92,7 @@ export function NotificationRuleDialog({
     if (rule) {
       updateRule({ id: rule.id, updates: formData });
     } else {
-      createRule(formData as any);
+      createRule(formData);
     }
     onSuccess();
   };
@@ -91,7 +104,7 @@ export function NotificationRuleDialog({
     }));
   };
 
-  const updateCondition = (key: string, value: any) => {
+  const updateCondition = (key: string, value: string | number | boolean) => {
     setFormData(prev => ({
       ...prev,
       conditions: { ...prev.conditions, [key]: value }

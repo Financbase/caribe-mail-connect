@@ -10,10 +10,22 @@ import { Camera, Settings, Download, RotateCcw, Crop, Zap, Focus } from 'lucide-
 import { useCamera } from '@/hooks/useCamera';
 import { useToast } from '@/hooks/use-toast';
 
+interface Photo {
+  id: string;
+  data: string;
+  timestamp: string;
+  metadata: {
+    width: number;
+    height: number;
+    size: number;
+    format: string;
+  };
+}
+
 interface EnhancedCameraInterfaceProps {
   isOpen: boolean;
   onClose: () => void;
-  onCapture: (photos: any[]) => void;
+  onCapture: (photos: Photo[]) => void;
   title?: string;
   description?: string;
 }
@@ -103,7 +115,7 @@ export function EnhancedCameraInterface({
     }
   }, [takePhoto, toast]);
 
-  const enhanceImage = useCallback((photo: any) => {
+  const enhanceImage = useCallback((photo: Photo) => {
     if (!canvasRef.current) return photo;
 
     const canvas = canvasRef.current;
@@ -125,7 +137,7 @@ export function EnhancedCameraInterface({
       
       return canvas.toDataURL('image/jpeg', settings.quality / 100);
     };
-    img.src = photo.webPath;
+    img.src = photo.data;
     
     return photo;
   }, [settings.quality]);
@@ -304,7 +316,7 @@ export function EnhancedCameraInterface({
                 {photos.map((photo, index) => (
                   <div key={photo.id} className="relative group">
                     <img
-                      src={photo.webPath}
+                      src={photo.data}
                       alt={`Captured ${index + 1}`}
                       className="w-full h-32 object-cover rounded-lg border"
                     />

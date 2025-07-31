@@ -21,8 +21,8 @@ interface BottomNavigationProps {
 const navigationItems = [
   { id: 'dashboard', label: 'Inicio', icon: Home },
   { id: 'intake', label: 'Paquetes', icon: Package },
+  { id: 'intelligence', label: 'Inteligencia', icon: BarChart3 },
   { id: 'customers', label: 'Clientes', icon: Users },
-  { id: 'notifications', label: 'Avisos', icon: Bell },
   { id: 'more', label: 'Más', icon: Menu },
 ];
 
@@ -32,6 +32,7 @@ const moreItems = [
   { id: 'analytics', label: 'Reportes', icon: BarChart3 },
   { id: 'routes', label: 'Rutas', icon: Search },
   { id: 'camera', label: 'Cámara', icon: Camera },
+  { id: 'notifications', label: 'Avisos', icon: Bell },
 ];
 
 export function BottomNavigation({ currentPage, onNavigate }: BottomNavigationProps) {
@@ -50,6 +51,12 @@ export function BottomNavigation({ currentPage, onNavigate }: BottomNavigationPr
     
     if (pageId === 'more') {
       setShowMore(!showMore);
+      return;
+    }
+    
+    // Handle navigation to intelligence dashboard
+    if (pageId === 'intelligence') {
+      window.location.hash = '/intelligence';
       return;
     }
     
@@ -95,7 +102,11 @@ export function BottomNavigation({ currentPage, onNavigate }: BottomNavigationPr
         <div className="flex items-center justify-around h-16">
           {navigationItems.map((item) => {
             const Icon = item.icon;
-            const isActive = currentPage === item.id || (item.id === 'more' && showMore);
+            const isIntelligencePage = window.location.hash === '#/intelligence';
+            const isActive = 
+              (item.id === 'intelligence' && isIntelligencePage) ||
+              (currentPage === item.id && !isIntelligencePage) || 
+              (item.id === 'more' && showMore);
             
             return (
               <button

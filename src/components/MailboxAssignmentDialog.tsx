@@ -99,11 +99,11 @@ export function MailboxAssignmentDialog({
               </div>
               
               {showCustomerDropdown && filteredCustomers.length > 0 && (
-                <div className="absolute z-10 w-full mt-1 bg-background border border-border rounded-md shadow-lg max-h-60 overflow-y-auto">
+                <div className="absolute z-10 w-full mt-1 bg-background border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto">
                   {filteredCustomers.map((customer) => (
                     <button
                       key={customer.id}
-                      className="w-full text-left px-3 py-2 hover:bg-accent hover:text-accent-foreground border-b border-border last:border-b-0"
+                      className="w-full text-left px-3 py-2 hover:bg-accent hover:text-accent-foreground border-b border-gray-200 last:border-b-0"
                       onClick={() => {
                         setSelectedCustomerId(customer.id);
                         setCustomerSearch(`${customer.first_name} ${customer.last_name} (${customer.email})`);

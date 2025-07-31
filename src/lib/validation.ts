@@ -123,6 +123,35 @@ export const packageSchema = z.object({
 });
 
 // Search validation schema
+// API Key validation
+export const apiKeySchema = z.object({
+  name: z.string()
+    .min(1, 'API key name is required')
+    .max(50, 'API key name must be less than 50 characters')
+    .regex(/^[a-zA-Z0-9\s_-]+$/, 'API key name contains invalid characters'),
+  permissions: z.array(z.string())
+    .min(1, 'At least one permission is required'),
+  rate_limit: z.number()
+    .min(1, 'Rate limit must be at least 1')
+    .max(1000, 'Rate limit cannot exceed 1000 requests per minute')
+});
+
+// Webhook validation
+export const webhookSchema = z.object({
+  name: z.string()
+    .min(1, 'Webhook name is required')
+    .max(50, 'Webhook name must be less than 50 characters'),
+  url: z.string()
+    .url('Please enter a valid URL')
+    .startsWith('https://', 'Webhook URL must use HTTPS'),
+  events: z.array(z.string())
+    .min(1, 'At least one event is required'),
+  secret: z.string()
+    .min(32, 'Webhook secret must be at least 32 characters')
+    .max(255, 'Webhook secret must be less than 255 characters')
+});
+
+// Search validation
 export const searchSchema = z.object({
   query: z.string()
     .min(1, 'Search query is required')
@@ -140,6 +169,8 @@ export const roleSchema = z.object({
 
 // Export types for form data
 export type LoginFormData = z.infer<typeof loginSchema>;
+export type ApiKeyFormData = z.infer<typeof apiKeySchema>;
+export type WebhookFormData = z.infer<typeof webhookSchema>;
 export type SignupFormData = z.infer<typeof signupSchema>;
 export type CustomerFormData = z.infer<typeof customerSchema>;
 export type PackageFormData = z.infer<typeof packageSchema>;

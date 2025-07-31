@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -56,13 +56,7 @@ export function MailboxDetailDialog({
   const [payments, setPayments] = useState<Payment[]>([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (mailbox && open) {
-      fetchMailboxDetails();
-    }
-  }, [mailbox, open]);
-
-  const fetchMailboxDetails = async () => {
+  const fetchMailboxDetails = useCallback(async () => {
     if (!mailbox) return;
     
     setLoading(true);
@@ -95,7 +89,13 @@ export function MailboxDetailDialog({
     } finally {
       setLoading(false);
     }
-  };
+  }, [mailbox]);
+
+  useEffect(() => {
+    if (mailbox && open) {
+      fetchMailboxDetails();
+    }
+  }, [mailbox, open, fetchMailboxDetails]);
 
   if (!mailbox) return null;
 

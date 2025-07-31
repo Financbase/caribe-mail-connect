@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -51,9 +51,9 @@ export function UserManagement() {
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [fetchUsers]);
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
       setLoading(true);
       
@@ -64,7 +64,7 @@ export function UserManagement() {
       if (error) throw error;
 
       // Transform data to match User interface
-      const transformedUsers = usersData?.map((userData: any) => ({
+      const transformedUsers = usersData?.map((userData: { user_id: string; email?: string; first_name?: string; last_name?: string; role?: string; updated_at?: string; created_at?: string }) => ({
         id: userData.user_id,
         email: userData.email || '',
         first_name: userData.first_name || '',
@@ -86,7 +86,7 @@ export function UserManagement() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
 
   const createUser = async () => {
     try {
@@ -120,11 +120,11 @@ export function UserManagement() {
       setNewUser({ email: '', first_name: '', last_name: '', role: 'staff', password: '' });
       setShowCreateUser(false);
       fetchUsers();
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error creating user:', error);
       toast({
         title: 'Error',
-        description: error.message || 'Error al crear usuario',
+        description: error instanceof Error ? error.message : 'Error al crear usuario',
         variant: 'destructive',
       });
     }
@@ -143,7 +143,7 @@ export function UserManagement() {
         title: 'Enlace enviado',
         description: `Enlace de restablecimiento enviado a ${email}`,
       });
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error resetting password:', error);
       toast({
         title: 'Error',
@@ -167,7 +167,7 @@ export function UserManagement() {
       });
 
       fetchUsers();
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error deactivating user:', error);
       toast({
         title: 'Error',

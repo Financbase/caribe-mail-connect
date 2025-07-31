@@ -1,0 +1,51 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "lib": ["esnext", "dom"],
+    "strict": true,
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@std/*": ["./node_modules/@types/deno_std/*"]
+    },
+    "typeRoots": [
+      "./types",
+      "./node_modules/@types"
+    ]
+  },
+  "importMap": "./import_map.json",
+  "tasks": {
+    "dev": "deno run --allow-net --allow-env --allow-read --allow-write --allow-ffi --unstable --import-map=import_map.json index.ts",
+    "test": "deno test --allow-net --allow-env --allow-read --allow-write --allow-ffi --unstable --import-map=import_map.json",
+    "start": "deno run --allow-net --allow-env --allow-read --allow-write --allow-ffi --unstable --import-map=import_map.json index.ts",
+    "lint": "deno lint --unstable",
+    "format": "deno fmt --unstable"
+  },
+  "lint": {
+    "include": ["**/*.ts"],
+    "exclude": ["**/node_modules"]
+  },
+  "fmt": {
+    "files": {
+      "include": ["**/*.ts"],
+      "exclude": ["**/node_modules"]
+    },
+    "options": {
+      "useTabs": false,
+      "lineWidth": 100,
+      "indentWidth": 2,
+      "singleQuote": true,
+      "semi": true,
+      "proseWrap": "always"
+    }
+  }
+}

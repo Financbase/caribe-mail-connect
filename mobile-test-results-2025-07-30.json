@@ -1,0 +1,1148 @@
+{
+  "timestamp": "2025-07-30T03:28:46.210Z",
+  "tests": [
+    {
+      "device": "iPhone SE",
+      "url": "Home Page",
+      "path": "/",
+      "httpCode": "200",
+      "responseTime": 59,
+      "success": true,
+      "status": "passed",
+      "viewport": "375x667"
+    },
+    {
+      "device": "iPhone SE",
+      "url": "Authentication",
+      "path": "/auth",
+      "httpCode": "200",
+      "responseTime": 59,
+      "success": true,
+      "status": "passed",
+      "viewport": "375x667"
+    },
+    {
+      "device": "iPhone SE",
+      "url": "Customer Dashboard",
+      "path": "/customer",
+      "httpCode": "200",
+      "responseTime": 59,
+      "success": true,
+      "status": "passed",
+      "viewport": "375x667"
+    },
+    {
+      "device": "iPhone SE",
+      "url": "Staff Dashboard",
+      "path": "/staff",
+      "httpCode": "200",
+      "responseTime": 51,
+      "success": true,
+      "status": "passed",
+      "viewport": "375x667"
+    },
+    {
+      "device": "iPhone SE",
+      "url": "Package Tracking",
+      "path": "/tracking",
+      "httpCode": "200",
+      "responseTime": 49,
+      "success": true,
+      "status": "passed",
+      "viewport": "375x667"
+    },
+    {
+      "device": "iPhone SE",
+      "url": "Inventory",
+      "path": "/inventory",
+      "httpCode": "200",
+      "responseTime": 51,
+      "success": true,
+      "status": "passed",
+      "viewport": "375x667"
+    },
+    {
+      "device": "iPhone SE",
+      "url": "Billing",
+      "path": "/billing",
+      "httpCode": "200",
+      "responseTime": 50,
+      "success": true,
+      "status": "passed",
+      "viewport": "375x667"
+    },
+    {
+      "device": "iPhone SE",
+      "url": "Analytics",
+      "path": "/analytics",
+      "httpCode": "200",
+      "responseTime": 54,
+      "success": true,
+      "status": "passed",
+      "viewport": "375x667"
+    },
+    {
+      "device": "iPhone 12 Pro",
+      "url": "Home Page",
+      "path": "/",
+      "httpCode": "200",
+      "responseTime": 51,
+      "success": true,
+      "status": "passed",
+      "viewport": "390x844"
+    },
+    {
+      "device": "iPhone 12 Pro",
+      "url": "Authentication",
+      "path": "/auth",
+      "httpCode": "200",
+      "responseTime": 53,
+      "success": true,
+      "status": "passed",
+      "viewport": "390x844"
+    },
+    {
+      "device": "iPhone 12 Pro",
+      "url": "Customer Dashboard",
+      "path": "/customer",
+      "httpCode": "200",
+      "responseTime": 52,
+      "success": true,
+      "status": "passed",
+      "viewport": "390x844"
+    },
+    {
+      "device": "iPhone 12 Pro",
+      "url": "Staff Dashboard",
+      "path": "/staff",
+      "httpCode": "200",
+      "responseTime": 49,
+      "success": true,
+      "status": "passed",
+      "viewport": "390x844"
+    },
+    {
+      "device": "iPhone 12 Pro",
+      "url": "Package Tracking",
+      "path": "/tracking",
+      "httpCode": "200",
+      "responseTime": 55,
+      "success": true,
+      "status": "passed",
+      "viewport": "390x844"
+    },
+    {
+      "device": "iPhone 12 Pro",
+      "url": "Inventory",
+      "path": "/inventory",
+      "httpCode": "200",
+      "responseTime": 51,
+      "success": true,
+      "status": "passed",
+      "viewport": "390x844"
+    },
+    {
+      "device": "iPhone 12 Pro",
+      "url": "Billing",
+      "path": "/billing",
+      "httpCode": "200",
+      "responseTime": 49,
+      "success": true,
+      "status": "passed",
+      "viewport": "390x844"
+    },
+    {
+      "device": "iPhone 12 Pro",
+      "url": "Analytics",
+      "path": "/analytics",
+      "httpCode": "200",
+      "responseTime": 47,
+      "success": true,
+      "status": "passed",
+      "viewport": "390x844"
+    },
+    {
+      "device": "iPhone 12 Pro Max",
+      "url": "Home Page",
+      "path": "/",
+      "httpCode": "200",
+      "responseTime": 51,
+      "success": true,
+      "status": "passed",
+      "viewport": "428x926"
+    },
+    {
+      "device": "iPhone 12 Pro Max",
+      "url": "Authentication",
+      "path": "/auth",
+      "httpCode": "200",
+      "responseTime": 53,
+      "success": true,
+      "status": "passed",
+      "viewport": "428x926"
+    },
+    {
+      "device": "iPhone 12 Pro Max",
+      "url": "Customer Dashboard",
+      "path": "/customer",
+      "httpCode": "200",
+      "responseTime": 59,
+      "success": true,
+      "status": "passed",
+      "viewport": "428x926"
+    },
+    {
+      "device": "iPhone 12 Pro Max",
+      "url": "Staff Dashboard",
+      "path": "/staff",
+      "httpCode": "200",
+      "responseTime": 66,
+      "success": true,
+      "status": "passed",
+      "viewport": "428x926"
+    },
+    {
+      "device": "iPhone 12 Pro Max",
+      "url": "Package Tracking",
+      "path": "/tracking",
+      "httpCode": "200",
+      "responseTime": 68,
+      "success": true,
+      "status": "passed",
+      "viewport": "428x926"
+    },
+    {
+      "device": "iPhone 12 Pro Max",
+      "url": "Inventory",
+      "path": "/inventory",
+      "httpCode": "200",
+      "responseTime": 60,
+      "success": true,
+      "status": "passed",
+      "viewport": "428x926"
+    },
+    {
+      "device": "iPhone 12 Pro Max",
+      "url": "Billing",
+      "path": "/billing",
+      "httpCode": "200",
+      "responseTime": 60,
+      "success": true,
+      "status": "passed",
+      "viewport": "428x926"
+    },
+    {
+      "device": "iPhone 12 Pro Max",
+      "url": "Analytics",
+      "path": "/analytics",
+      "httpCode": "200",
+      "responseTime": 59,
+      "success": true,
+      "status": "passed",
+      "viewport": "428x926"
+    },
+    {
+      "device": "Samsung Galaxy S20",
+      "url": "Home Page",
+      "path": "/",
+      "httpCode": "200",
+      "responseTime": 55,
+      "success": true,
+      "status": "passed",
+      "viewport": "360x800"
+    },
+    {
+      "device": "Samsung Galaxy S20",
+      "url": "Authentication",
+      "path": "/auth",
+      "httpCode": "200",
+      "responseTime": 57,
+      "success": true,
+      "status": "passed",
+      "viewport": "360x800"
+    },
+    {
+      "device": "Samsung Galaxy S20",
+      "url": "Customer Dashboard",
+      "path": "/customer",
+      "httpCode": "200",
+      "responseTime": 54,
+      "success": true,
+      "status": "passed",
+      "viewport": "360x800"
+    },
+    {
+      "device": "Samsung Galaxy S20",
+      "url": "Staff Dashboard",
+      "path": "/staff",
+      "httpCode": "200",
+      "responseTime": 52,
+      "success": true,
+      "status": "passed",
+      "viewport": "360x800"
+    },
+    {
+      "device": "Samsung Galaxy S20",
+      "url": "Package Tracking",
+      "path": "/tracking",
+      "httpCode": "200",
+      "responseTime": 56,
+      "success": true,
+      "status": "passed",
+      "viewport": "360x800"
+    },
+    {
+      "device": "Samsung Galaxy S20",
+      "url": "Inventory",
+      "path": "/inventory",
+      "httpCode": "200",
+      "responseTime": 54,
+      "success": true,
+      "status": "passed",
+      "viewport": "360x800"
+    },
+    {
+      "device": "Samsung Galaxy S20",
+      "url": "Billing",
+      "path": "/billing",
+      "httpCode": "200",
+      "responseTime": 52,
+      "success": true,
+      "status": "passed",
+      "viewport": "360x800"
+    },
+    {
+      "device": "Samsung Galaxy S20",
+      "url": "Analytics",
+      "path": "/analytics",
+      "httpCode": "200",
+      "responseTime": 54,
+      "success": true,
+      "status": "passed",
+      "viewport": "360x800"
+    },
+    {
+      "device": "Samsung Galaxy S21",
+      "url": "Home Page",
+      "path": "/",
+      "httpCode": "200",
+      "responseTime": 50,
+      "success": true,
+      "status": "passed",
+      "viewport": "384x854"
+    },
+    {
+      "device": "Samsung Galaxy S21",
+      "url": "Authentication",
+      "path": "/auth",
+      "httpCode": "200",
+      "responseTime": 51,
+      "success": true,
+      "status": "passed",
+      "viewport": "384x854"
+    },
+    {
+      "device": "Samsung Galaxy S21",
+      "url": "Customer Dashboard",
+      "path": "/customer",
+      "httpCode": "200",
+      "responseTime": 46,
+      "success": true,
+      "status": "passed",
+      "viewport": "384x854"
+    },
+    {
+      "device": "Samsung Galaxy S21",
+      "url": "Staff Dashboard",
+      "path": "/staff",
+      "httpCode": "200",
+      "responseTime": 57,
+      "success": true,
+      "status": "passed",
+      "viewport": "384x854"
+    },
+    {
+      "device": "Samsung Galaxy S21",
+      "url": "Package Tracking",
+      "path": "/tracking",
+      "httpCode": "200",
+      "responseTime": 51,
+      "success": true,
+      "status": "passed",
+      "viewport": "384x854"
+    },
+    {
+      "device": "Samsung Galaxy S21",
+      "url": "Inventory",
+      "path": "/inventory",
+      "httpCode": "200",
+      "responseTime": 48,
+      "success": true,
+      "status": "passed",
+      "viewport": "384x854"
+    },
+    {
+      "device": "Samsung Galaxy S21",
+      "url": "Billing",
+      "path": "/billing",
+      "httpCode": "200",
+      "responseTime": 52,
+      "success": true,
+      "status": "passed",
+      "viewport": "384x854"
+    },
+    {
+      "device": "Samsung Galaxy S21",
+      "url": "Analytics",
+      "path": "/analytics",
+      "httpCode": "200",
+      "responseTime": 50,
+      "success": true,
+      "status": "passed",
+      "viewport": "384x854"
+    },
+    {
+      "device": "iPad",
+      "url": "Home Page",
+      "path": "/",
+      "httpCode": "200",
+      "responseTime": 51,
+      "success": true,
+      "status": "passed",
+      "viewport": "768x1024"
+    },
+    {
+      "device": "iPad",
+      "url": "Authentication",
+      "path": "/auth",
+      "httpCode": "200",
+      "responseTime": 67,
+      "success": true,
+      "status": "passed",
+      "viewport": "768x1024"
+    },
+    {
+      "device": "iPad",
+      "url": "Customer Dashboard",
+      "path": "/customer",
+      "httpCode": "200",
+      "responseTime": 58,
+      "success": true,
+      "status": "passed",
+      "viewport": "768x1024"
+    },
+    {
+      "device": "iPad",
+      "url": "Staff Dashboard",
+      "path": "/staff",
+      "httpCode": "200",
+      "responseTime": 49,
+      "success": true,
+      "status": "passed",
+      "viewport": "768x1024"
+    },
+    {
+      "device": "iPad",
+      "url": "Package Tracking",
+      "path": "/tracking",
+      "httpCode": "200",
+      "responseTime": 52,
+      "success": true,
+      "status": "passed",
+      "viewport": "768x1024"
+    },
+    {
+      "device": "iPad",
+      "url": "Inventory",
+      "path": "/inventory",
+      "httpCode": "200",
+      "responseTime": 52,
+      "success": true,
+      "status": "passed",
+      "viewport": "768x1024"
+    },
+    {
+      "device": "iPad",
+      "url": "Billing",
+      "path": "/billing",
+      "httpCode": "200",
+      "responseTime": 55,
+      "success": true,
+      "status": "passed",
+      "viewport": "768x1024"
+    },
+    {
+      "device": "iPad",
+      "url": "Analytics",
+      "path": "/analytics",
+      "httpCode": "200",
+      "responseTime": 57,
+      "success": true,
+      "status": "passed",
+      "viewport": "768x1024"
+    },
+    {
+      "device": "iPad Pro",
+      "url": "Home Page",
+      "path": "/",
+      "httpCode": "200",
+      "responseTime": 54,
+      "success": true,
+      "status": "passed",
+      "viewport": "1024x1366"
+    },
+    {
+      "device": "iPad Pro",
+      "url": "Authentication",
+      "path": "/auth",
+      "httpCode": "200",
+      "responseTime": 50,
+      "success": true,
+      "status": "passed",
+      "viewport": "1024x1366"
+    },
+    {
+      "device": "iPad Pro",
+      "url": "Customer Dashboard",
+      "path": "/customer",
+      "httpCode": "200",
+      "responseTime": 48,
+      "success": true,
+      "status": "passed",
+      "viewport": "1024x1366"
+    },
+    {
+      "device": "iPad Pro",
+      "url": "Staff Dashboard",
+      "path": "/staff",
+      "httpCode": "200",
+      "responseTime": 56,
+      "success": true,
+      "status": "passed",
+      "viewport": "1024x1366"
+    },
+    {
+      "device": "iPad Pro",
+      "url": "Package Tracking",
+      "path": "/tracking",
+      "httpCode": "200",
+      "responseTime": 49,
+      "success": true,
+      "status": "passed",
+      "viewport": "1024x1366"
+    },
+    {
+      "device": "iPad Pro",
+      "url": "Inventory",
+      "path": "/inventory",
+      "httpCode": "200",
+      "responseTime": 47,
+      "success": true,
+      "status": "passed",
+      "viewport": "1024x1366"
+    },
+    {
+      "device": "iPad Pro",
+      "url": "Billing",
+      "path": "/billing",
+      "httpCode": "200",
+      "responseTime": 55,
+      "success": true,
+      "status": "passed",
+      "viewport": "1024x1366"
+    },
+    {
+      "device": "iPad Pro",
+      "url": "Analytics",
+      "path": "/analytics",
+      "httpCode": "200",
+      "responseTime": 69,
+      "success": true,
+      "status": "passed",
+      "viewport": "1024x1366"
+    }
+  ],
+  "summary": {
+    "total": 56,
+    "passed": 56,
+    "failed": 0,
+    "responsive": 8,
+    "notResponsive": 0
+  },
+  "deviceResults": {
+    "iPhone SE": [
+      {
+        "device": "iPhone SE",
+        "url": "Home Page",
+        "path": "/",
+        "httpCode": "200",
+        "responseTime": 59,
+        "success": true,
+        "status": "passed",
+        "viewport": "375x667"
+      },
+      {
+        "device": "iPhone SE",
+        "url": "Authentication",
+        "path": "/auth",
+        "httpCode": "200",
+        "responseTime": 59,
+        "success": true,
+        "status": "passed",
+        "viewport": "375x667"
+      },
+      {
+        "device": "iPhone SE",
+        "url": "Customer Dashboard",
+        "path": "/customer",
+        "httpCode": "200",
+        "responseTime": 59,
+        "success": true,
+        "status": "passed",
+        "viewport": "375x667"
+      },
+      {
+        "device": "iPhone SE",
+        "url": "Staff Dashboard",
+        "path": "/staff",
+        "httpCode": "200",
+        "responseTime": 51,
+        "success": true,
+        "status": "passed",
+        "viewport": "375x667"
+      },
+      {
+        "device": "iPhone SE",
+        "url": "Package Tracking",
+        "path": "/tracking",
+        "httpCode": "200",
+        "responseTime": 49,
+        "success": true,
+        "status": "passed",
+        "viewport": "375x667"
+      },
+      {
+        "device": "iPhone SE",
+        "url": "Inventory",
+        "path": "/inventory",
+        "httpCode": "200",
+        "responseTime": 51,
+        "success": true,
+        "status": "passed",
+        "viewport": "375x667"
+      },
+      {
+        "device": "iPhone SE",
+        "url": "Billing",
+        "path": "/billing",
+        "httpCode": "200",
+        "responseTime": 50,
+        "success": true,
+        "status": "passed",
+        "viewport": "375x667"
+      },
+      {
+        "device": "iPhone SE",
+        "url": "Analytics",
+        "path": "/analytics",
+        "httpCode": "200",
+        "responseTime": 54,
+        "success": true,
+        "status": "passed",
+        "viewport": "375x667"
+      }
+    ],
+    "iPhone 12 Pro": [
+      {
+        "device": "iPhone 12 Pro",
+        "url": "Home Page",
+        "path": "/",
+        "httpCode": "200",
+        "responseTime": 51,
+        "success": true,
+        "status": "passed",
+        "viewport": "390x844"
+      },
+      {
+        "device": "iPhone 12 Pro",
+        "url": "Authentication",
+        "path": "/auth",
+        "httpCode": "200",
+        "responseTime": 53,
+        "success": true,
+        "status": "passed",
+        "viewport": "390x844"
+      },
+      {
+        "device": "iPhone 12 Pro",
+        "url": "Customer Dashboard",
+        "path": "/customer",
+        "httpCode": "200",
+        "responseTime": 52,
+        "success": true,
+        "status": "passed",
+        "viewport": "390x844"
+      },
+      {
+        "device": "iPhone 12 Pro",
+        "url": "Staff Dashboard",
+        "path": "/staff",
+        "httpCode": "200",
+        "responseTime": 49,
+        "success": true,
+        "status": "passed",
+        "viewport": "390x844"
+      },
+      {
+        "device": "iPhone 12 Pro",
+        "url": "Package Tracking",
+        "path": "/tracking",
+        "httpCode": "200",
+        "responseTime": 55,
+        "success": true,
+        "status": "passed",
+        "viewport": "390x844"
+      },
+      {
+        "device": "iPhone 12 Pro",
+        "url": "Inventory",
+        "path": "/inventory",
+        "httpCode": "200",
+        "responseTime": 51,
+        "success": true,
+        "status": "passed",
+        "viewport": "390x844"
+      },
+      {
+        "device": "iPhone 12 Pro",
+        "url": "Billing",
+        "path": "/billing",
+        "httpCode": "200",
+        "responseTime": 49,
+        "success": true,
+        "status": "passed",
+        "viewport": "390x844"
+      },
+      {
+        "device": "iPhone 12 Pro",
+        "url": "Analytics",
+        "path": "/analytics",
+        "httpCode": "200",
+        "responseTime": 47,
+        "success": true,
+        "status": "passed",
+        "viewport": "390x844"
+      }
+    ],
+    "iPhone 12 Pro Max": [
+      {
+        "device": "iPhone 12 Pro Max",
+        "url": "Home Page",
+        "path": "/",
+        "httpCode": "200",
+        "responseTime": 51,
+        "success": true,
+        "status": "passed",
+        "viewport": "428x926"
+      },
+      {
+        "device": "iPhone 12 Pro Max",
+        "url": "Authentication",
+        "path": "/auth",
+        "httpCode": "200",
+        "responseTime": 53,
+        "success": true,
+        "status": "passed",
+        "viewport": "428x926"
+      },
+      {
+        "device": "iPhone 12 Pro Max",
+        "url": "Customer Dashboard",
+        "path": "/customer",
+        "httpCode": "200",
+        "responseTime": 59,
+        "success": true,
+        "status": "passed",
+        "viewport": "428x926"
+      },
+      {
+        "device": "iPhone 12 Pro Max",
+        "url": "Staff Dashboard",
+        "path": "/staff",
+        "httpCode": "200",
+        "responseTime": 66,
+        "success": true,
+        "status": "passed",
+        "viewport": "428x926"
+      },
+      {
+        "device": "iPhone 12 Pro Max",
+        "url": "Package Tracking",
+        "path": "/tracking",
+        "httpCode": "200",
+        "responseTime": 68,
+        "success": true,
+        "status": "passed",
+        "viewport": "428x926"
+      },
+      {
+        "device": "iPhone 12 Pro Max",
+        "url": "Inventory",
+        "path": "/inventory",
+        "httpCode": "200",
+        "responseTime": 60,
+        "success": true,
+        "status": "passed",
+        "viewport": "428x926"
+      },
+      {
+        "device": "iPhone 12 Pro Max",
+        "url": "Billing",
+        "path": "/billing",
+        "httpCode": "200",
+        "responseTime": 60,
+        "success": true,
+        "status": "passed",
+        "viewport": "428x926"
+      },
+      {
+        "device": "iPhone 12 Pro Max",
+        "url": "Analytics",
+        "path": "/analytics",
+        "httpCode": "200",
+        "responseTime": 59,
+        "success": true,
+        "status": "passed",
+        "viewport": "428x926"
+      }
+    ],
+    "Samsung Galaxy S20": [
+      {
+        "device": "Samsung Galaxy S20",
+        "url": "Home Page",
+        "path": "/",
+        "httpCode": "200",
+        "responseTime": 55,
+        "success": true,
+        "status": "passed",
+        "viewport": "360x800"
+      },
+      {
+        "device": "Samsung Galaxy S20",
+        "url": "Authentication",
+        "path": "/auth",
+        "httpCode": "200",
+        "responseTime": 57,
+        "success": true,
+        "status": "passed",
+        "viewport": "360x800"
+      },
+      {
+        "device": "Samsung Galaxy S20",
+        "url": "Customer Dashboard",
+        "path": "/customer",
+        "httpCode": "200",
+        "responseTime": 54,
+        "success": true,
+        "status": "passed",
+        "viewport": "360x800"
+      },
+      {
+        "device": "Samsung Galaxy S20",
+        "url": "Staff Dashboard",
+        "path": "/staff",
+        "httpCode": "200",
+        "responseTime": 52,
+        "success": true,
+        "status": "passed",
+        "viewport": "360x800"
+      },
+      {
+        "device": "Samsung Galaxy S20",
+        "url": "Package Tracking",
+        "path": "/tracking",
+        "httpCode": "200",
+        "responseTime": 56,
+        "success": true,
+        "status": "passed",
+        "viewport": "360x800"
+      },
+      {
+        "device": "Samsung Galaxy S20",
+        "url": "Inventory",
+        "path": "/inventory",
+        "httpCode": "200",
+        "responseTime": 54,
+        "success": true,
+        "status": "passed",
+        "viewport": "360x800"
+      },
+      {
+        "device": "Samsung Galaxy S20",
+        "url": "Billing",
+        "path": "/billing",
+        "httpCode": "200",
+        "responseTime": 52,
+        "success": true,
+        "status": "passed",
+        "viewport": "360x800"
+      },
+      {
+        "device": "Samsung Galaxy S20",
+        "url": "Analytics",
+        "path": "/analytics",
+        "httpCode": "200",
+        "responseTime": 54,
+        "success": true,
+        "status": "passed",
+        "viewport": "360x800"
+      }
+    ],
+    "Samsung Galaxy S21": [
+      {
+        "device": "Samsung Galaxy S21",
+        "url": "Home Page",
+        "path": "/",
+        "httpCode": "200",
+        "responseTime": 50,
+        "success": true,
+        "status": "passed",
+        "viewport": "384x854"
+      },
+      {
+        "device": "Samsung Galaxy S21",
+        "url": "Authentication",
+        "path": "/auth",
+        "httpCode": "200",
+        "responseTime": 51,
+        "success": true,
+        "status": "passed",
+        "viewport": "384x854"
+      },
+      {
+        "device": "Samsung Galaxy S21",
+        "url": "Customer Dashboard",
+        "path": "/customer",
+        "httpCode": "200",
+        "responseTime": 46,
+        "success": true,
+        "status": "passed",
+        "viewport": "384x854"
+      },
+      {
+        "device": "Samsung Galaxy S21",
+        "url": "Staff Dashboard",
+        "path": "/staff",
+        "httpCode": "200",
+        "responseTime": 57,
+        "success": true,
+        "status": "passed",
+        "viewport": "384x854"
+      },
+      {
+        "device": "Samsung Galaxy S21",
+        "url": "Package Tracking",
+        "path": "/tracking",
+        "httpCode": "200",
+        "responseTime": 51,
+        "success": true,
+        "status": "passed",
+        "viewport": "384x854"
+      },
+      {
+        "device": "Samsung Galaxy S21",
+        "url": "Inventory",
+        "path": "/inventory",
+        "httpCode": "200",
+        "responseTime": 48,
+        "success": true,
+        "status": "passed",
+        "viewport": "384x854"
+      },
+      {
+        "device": "Samsung Galaxy S21",
+        "url": "Billing",
+        "path": "/billing",
+        "httpCode": "200",
+        "responseTime": 52,
+        "success": true,
+        "status": "passed",
+        "viewport": "384x854"
+      },
+      {
+        "device": "Samsung Galaxy S21",
+        "url": "Analytics",
+        "path": "/analytics",
+        "httpCode": "200",
+        "responseTime": 50,
+        "success": true,
+        "status": "passed",
+        "viewport": "384x854"
+      }
+    ],
+    "iPad": [
+      {
+        "device": "iPad",
+        "url": "Home Page",
+        "path": "/",
+        "httpCode": "200",
+        "responseTime": 51,
+        "success": true,
+        "status": "passed",
+        "viewport": "768x1024"
+      },
+      {
+        "device": "iPad",
+        "url": "Authentication",
+        "path": "/auth",
+        "httpCode": "200",
+        "responseTime": 67,
+        "success": true,
+        "status": "passed",
+        "viewport": "768x1024"
+      },
+      {
+        "device": "iPad",
+        "url": "Customer Dashboard",
+        "path": "/customer",
+        "httpCode": "200",
+        "responseTime": 58,
+        "success": true,
+        "status": "passed",
+        "viewport": "768x1024"
+      },
+      {
+        "device": "iPad",
+        "url": "Staff Dashboard",
+        "path": "/staff",
+        "httpCode": "200",
+        "responseTime": 49,
+        "success": true,
+        "status": "passed",
+        "viewport": "768x1024"
+      },
+      {
+        "device": "iPad",
+        "url": "Package Tracking",
+        "path": "/tracking",
+        "httpCode": "200",
+        "responseTime": 52,
+        "success": true,
+        "status": "passed",
+        "viewport": "768x1024"
+      },
+      {
+        "device": "iPad",
+        "url": "Inventory",
+        "path": "/inventory",
+        "httpCode": "200",
+        "responseTime": 52,
+        "success": true,
+        "status": "passed",
+        "viewport": "768x1024"
+      },
+      {
+        "device": "iPad",
+        "url": "Billing",
+        "path": "/billing",
+        "httpCode": "200",
+        "responseTime": 55,
+        "success": true,
+        "status": "passed",
+        "viewport": "768x1024"
+      },
+      {
+        "device": "iPad",
+        "url": "Analytics",
+        "path": "/analytics",
+        "httpCode": "200",
+        "responseTime": 57,
+        "success": true,
+        "status": "passed",
+        "viewport": "768x1024"
+      }
+    ],
+    "iPad Pro": [
+      {
+        "device": "iPad Pro",
+        "url": "Home Page",
+        "path": "/",
+        "httpCode": "200",
+        "responseTime": 54,
+        "success": true,
+        "status": "passed",
+        "viewport": "1024x1366"
+      },
+      {
+        "device": "iPad Pro",
+        "url": "Authentication",
+        "path": "/auth",
+        "httpCode": "200",
+        "responseTime": 50,
+        "success": true,
+        "status": "passed",
+        "viewport": "1024x1366"
+      },
+      {
+        "device": "iPad Pro",
+        "url": "Customer Dashboard",
+        "path": "/customer",
+        "httpCode": "200",
+        "responseTime": 48,
+        "success": true,
+        "status": "passed",
+        "viewport": "1024x1366"
+      },
+      {
+        "device": "iPad Pro",
+        "url": "Staff Dashboard",
+        "path": "/staff",
+        "httpCode": "200",
+        "responseTime": 56,
+        "success": true,
+        "status": "passed",
+        "viewport": "1024x1366"
+      },
+      {
+        "device": "iPad Pro",
+        "url": "Package Tracking",
+        "path": "/tracking",
+        "httpCode": "200",
+        "responseTime": 49,
+        "success": true,
+        "status": "passed",
+        "viewport": "1024x1366"
+      },
+      {
+        "device": "iPad Pro",
+        "url": "Inventory",
+        "path": "/inventory",
+        "httpCode": "200",
+        "responseTime": 47,
+        "success": true,
+        "status": "passed",
+        "viewport": "1024x1366"
+      },
+      {
+        "device": "iPad Pro",
+        "url": "Billing",
+        "path": "/billing",
+        "httpCode": "200",
+        "responseTime": 55,
+        "success": true,
+        "status": "passed",
+        "viewport": "1024x1366"
+      },
+      {
+        "device": "iPad Pro",
+        "url": "Analytics",
+        "path": "/analytics",
+        "httpCode": "200",
+        "responseTime": 69,
+        "success": true,
+        "status": "passed",
+        "viewport": "1024x1366"
+      }
+    ]
+  }
+}

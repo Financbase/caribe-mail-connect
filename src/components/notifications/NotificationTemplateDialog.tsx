@@ -13,10 +13,25 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useNotificationSystem } from '@/hooks/useNotificationSystem';
 import { Eye, Code, Palette } from 'lucide-react';
 
+interface NotificationTemplate {
+  id: string;
+  name: string;
+  description: string;
+  type: 'email' | 'sms' | 'whatsapp' | 'push';
+  language: 'en' | 'es';
+  subject: string;
+  content: string;
+  variables: string[];
+  variant_name: string;
+  test_percentage: number;
+  is_default: boolean;
+  category: string;
+}
+
 interface NotificationTemplateDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  template?: any;
+  template?: NotificationTemplate;
   onSuccess: () => void;
 }
 
@@ -95,7 +110,7 @@ export function NotificationTemplateDialog({
     if (template) {
       updateTemplate({ id: template.id, updates: formData });
     } else {
-      createTemplate(formData as any);
+      createTemplate(formData);
     }
     onSuccess();
   };
@@ -368,7 +383,7 @@ export function NotificationTemplateDialog({
                       <Label htmlFor="type">Tipo de mensaje *</Label>
                       <Select 
                         value={formData.type}
-                        onValueChange={(value: any) => setFormData(prev => ({ ...prev, type: value }))}
+                        onValueChange={(value: string) => setFormData(prev => ({ ...prev, type: value }))}
                         required
                       >
                         <SelectTrigger>
@@ -387,7 +402,7 @@ export function NotificationTemplateDialog({
                       <Label htmlFor="language">Idioma</Label>
                       <Select 
                         value={formData.language}
-                        onValueChange={(value: any) => setFormData(prev => ({ ...prev, language: value }))}
+                        onValueChange={(value: string) => setFormData(prev => ({ ...prev, language: value }))}
                       >
                         <SelectTrigger>
                           <SelectValue />

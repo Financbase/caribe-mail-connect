@@ -97,7 +97,7 @@ export default function CustomerAuth({ onNavigate }: CustomerAuthProps) {
       } else {
         onNavigate('dashboard'); // Customer dashboard
       }
-    } catch (error: any) {
+    } catch (error) {
       setError('Error de conexión. Intente nuevamente.');
       console.error('Login error:', error);
     } finally {
@@ -168,7 +168,7 @@ export default function CustomerAuth({ onNavigate }: CustomerAuthProps) {
         mailboxNumber: '',
         licenseNumber: ''
       });
-    } catch (error: any) {
+    } catch (error) {
       setError('Error de conexión. Intente nuevamente.');
       console.error('Signup error:', error);
     } finally {
@@ -256,7 +256,7 @@ export default function CustomerAuth({ onNavigate }: CustomerAuthProps) {
               )}
 
               <TabsContent value="login">
-                <form onSubmit={handleLogin} className="space-y-4">
+                <form onSubmit={handleLogin} className="space-y-4" data-testid="customer-login-form">
                   <div>
                     <Label htmlFor="email">Email</Label>
                     <div className="relative">
@@ -269,6 +269,7 @@ export default function CustomerAuth({ onNavigate }: CustomerAuthProps) {
                         onChange={(e) => setLoginForm({...loginForm, email: e.target.value})}
                         className="pl-10"
                         required
+                        data-testid="customer-email-input"
                       />
                     </div>
                   </div>
@@ -285,27 +286,32 @@ export default function CustomerAuth({ onNavigate }: CustomerAuthProps) {
                         onChange={(e) => setLoginForm({...loginForm, password: e.target.value})}
                         className="pl-10 pr-10"
                         required
+                        data-testid="customer-password-input"
                       />
-                      <Button
+                      <button
                         type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="absolute right-0 top-0 h-full px-3"
                         onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                        data-testid="customer-password-toggle"
                       >
                         {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                      </Button>
+                      </button>
                     </div>
                   </div>
 
-                  <Button type="submit" className="w-full" disabled={loading}>
+                  <Button 
+                    type="submit" 
+                    className="w-full h-12" 
+                    disabled={loading}
+                    data-testid="customer-login-submit"
+                  >
                     {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
                   </Button>
                 </form>
               </TabsContent>
 
               <TabsContent value="signup">
-                <form onSubmit={handleSignup} className="space-y-4">
+                <form onSubmit={handleSignup} className="space-y-4" data-testid="customer-signup-form">
                   <div className="grid grid-cols-2 gap-2">
                     <div>
                       <Label htmlFor="firstName">Nombre</Label>
@@ -318,6 +324,7 @@ export default function CustomerAuth({ onNavigate }: CustomerAuthProps) {
                           onChange={(e) => setSignupForm({...signupForm, firstName: e.target.value})}
                           className="pl-10"
                           required
+                          data-testid="customer-firstname-input"
                         />
                       </div>
                     </div>
@@ -329,6 +336,7 @@ export default function CustomerAuth({ onNavigate }: CustomerAuthProps) {
                         value={signupForm.lastName}
                         onChange={(e) => setSignupForm({...signupForm, lastName: e.target.value})}
                         required
+                        data-testid="customer-lastname-input"
                       />
                     </div>
                   </div>
@@ -345,6 +353,7 @@ export default function CustomerAuth({ onNavigate }: CustomerAuthProps) {
                         onChange={(e) => setSignupForm({...signupForm, email: e.target.value})}
                         className="pl-10"
                         required
+                        data-testid="customer-signup-email-input"
                       />
                     </div>
                   </div>

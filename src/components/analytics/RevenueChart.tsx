@@ -31,17 +31,17 @@ export function RevenueChart({ data }: RevenueChartProps) {
     }).format(value);
   };
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: Array<{ color: string; name: string; value: number }>; label?: string }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-background border border-border rounded-lg p-3 shadow-lg">
+        <div className="bg-background border border-gray-200 rounded-lg p-3 shadow-lg">
           <p className="font-medium mb-2">{formatMonth(label)}</p>
-          {payload.map((entry: any, index: number) => (
+          {payload.map((entry, index: number) => (
             <p key={index} style={{ color: entry.color }} className="text-sm">
               {entry.name}: {formatCurrency(entry.value)}
             </p>
           ))}
-          <div className="border-t border-border pt-2 mt-2">
+          <div className="border-t border-gray-200 pt-2 mt-2">
             <p className="font-medium text-sm">
               {t('Total')}: {formatCurrency(payload[0].payload.total)}
             </p>

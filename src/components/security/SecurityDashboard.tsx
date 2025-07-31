@@ -13,7 +13,12 @@ import {
   TrendingDown,
   CheckCircle,
   XCircle,
-  Clock
+  Clock,
+  Target,
+  Zap,
+  Database,
+  Settings,
+  BarChart3
 } from 'lucide-react';
 import { useSecurity } from '@/hooks/useSecurity';
 
@@ -62,6 +67,18 @@ export function SecurityDashboard() {
                 className="flex-1" 
               />
               <TrendingUp className="h-4 w-4 text-green-600" />
+            </div>
+            <div className="mt-2">
+              <Badge 
+                variant={
+                  securityScorecard?.threat_level === 'critical' ? 'destructive' :
+                  securityScorecard?.threat_level === 'high' ? 'default' :
+                  securityScorecard?.threat_level === 'medium' ? 'secondary' : 'outline'
+                }
+                className="text-xs"
+              >
+                Nivel de Amenaza: {securityScorecard?.threat_level?.toUpperCase() || 'LOW'}
+              </Badge>
             </div>
           </CardContent>
         </Card>
@@ -124,6 +141,55 @@ export function SecurityDashboard() {
         </Card>
       </div>
 
+      {/* Threat Indicators */}
+      {securityScorecard?.threat_indicators && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2">
+              <Target className="h-5 w-5" />
+              <span>Indicadores de Amenaza</span>
+            </CardTitle>
+            <CardDescription>
+              Monitoreo en tiempo real de amenazas de seguridad
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-red-600">
+                  {securityScorecard.threat_indicators.failed_logins}
+                </div>
+                <p className="text-sm text-muted-foreground">Intentos Fallidos</p>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-orange-600">
+                  {securityScorecard.threat_indicators.suspicious_ips}
+                </div>
+                <p className="text-sm text-muted-foreground">IPs Sospechosas</p>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-yellow-600">
+                  {securityScorecard.threat_indicators.data_access_anomalies}
+                </div>
+                <p className="text-sm text-muted-foreground">Anomalías de Datos</p>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-purple-600">
+                  {securityScorecard.threat_indicators.privilege_escalations}
+                </div>
+                <p className="text-sm text-muted-foreground">Escalación Privilegios</p>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-red-600">
+                  {securityScorecard.threat_indicators.malware_detections}
+                </div>
+                <p className="text-sm text-muted-foreground">Detección Malware</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Security Metrics Breakdown */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
@@ -182,6 +248,16 @@ export function SecurityDashboard() {
                 </span>
               </div>
               <Progress value={securityScorecard?.compliance_score || 0} />
+            </div>
+
+            <div className="space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-medium">Respuesta a Incidentes</span>
+                <span className={`text-sm font-bold ${getScoreColor(securityScorecard?.incident_response_score || 0)}`}>
+                  {securityScorecard?.incident_response_score || 0}%
+                </span>
+              </div>
+              <Progress value={securityScorecard?.incident_response_score || 0} />
             </div>
           </CardContent>
         </Card>

@@ -13,7 +13,12 @@ export function LoadingSpinner({ size = 'md', text }: LoadingSpinnerProps) {
   };
 
   return (
-    <div className="flex items-center justify-center gap-2">
+    <div 
+      className="flex items-center justify-center gap-2"
+      role="status"
+      aria-live="polite"
+      aria-label={text || "Loading"}
+    >
       <Loader2 className={`${sizeClasses[size]} animate-spin text-primary`} />
       {text && <span className="text-sm text-muted-foreground">{text}</span>}
     </div>

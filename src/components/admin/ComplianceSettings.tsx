@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -25,11 +25,11 @@ interface CompliancePolicy {
   id: string;
   policy_name: string;
   policy_type: string;
-  policy_rules: any;
+  policy_rules: Record<string, unknown>;
   retention_period_days?: number;
-  geographic_restrictions: any;
-  encryption_requirements: any;
-  audit_requirements: any;
+  geographic_restrictions: string[];
+  encryption_requirements: { algorithm?: string; keyLength?: number; enabled?: boolean };
+  audit_requirements: { enabled?: boolean; frequency?: string; retentionDays?: number };
   is_mandatory: boolean;
   compliance_framework?: string;
   effective_date: string;
@@ -64,11 +64,7 @@ export const ComplianceSettings: React.FC = () => {
     policy_rules: {}
   });
 
-  useEffect(() => {
-    fetchPolicies();
-  }, []);
-
-  const fetchPolicies = async () => {
+  const fetchPolicies = useCallback(async () => {
     try {
       setLoading(true);
       const { data, error } = await supabase
@@ -88,7 +84,11 @@ export const ComplianceSettings: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
+
+  useEffect(() => {
+    fetchPolicies();
+  }, [fetchPolicies]);
 
   const handleCreatePolicy = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -365,7 +365,7 @@ export const ComplianceSettings: React.FC = () => {
                 <Label htmlFor="policy_type">Policy Type</Label>
                 <Select 
                   value={formData.policy_type} 
-                  onValueChange={(value: any) => setFormData(prev => ({ ...prev, policy_type: value }))}
+                  onValueChange={(value: string) => setFormData(prev => ({ ...prev, policy_type: value }))}
                 >
                   <SelectTrigger>
                     <SelectValue />

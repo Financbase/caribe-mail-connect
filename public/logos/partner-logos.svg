@@ -1,0 +1,190 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" style="display: none;">
+  <!-- Partner Logo Definitions -->
+  <defs>
+    <!-- TechCorp Solutions -->
+    <symbol id="techcorp-logo" viewBox="0 0 100 100">
+      <rect width="100" height="100" rx="20" fill="#0B5394"/>
+      <text x="50" y="35" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold">TECH</text>
+      <text x="50" y="55" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold">CORP</text>
+      <circle cx="50" cy="75" r="8" fill="#FF6B35"/>
+    </symbol>
+
+    <!-- Global Logistics -->
+    <symbol id="global-logistics-logo" viewBox="0 0 100 100">
+      <rect width="100" height="100" rx="20" fill="#2ECC71"/>
+      <circle cx="30" cy="30" r="15" fill="white" opacity="0.2"/>
+      <circle cx="70" cy="70" r="15" fill="white" opacity="0.2"/>
+      <path d="M20 50 L80 50 M50 20 L50 80" stroke="white" stroke-width="3" stroke-linecap="round"/>
+      <text x="50" y="90" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8">LOGISTICS</text>
+    </symbol>
+
+    <!-- Digital Marketing Pro -->
+    <symbol id="digital-marketing-pro-logo" viewBox="0 0 100 100">
+      <rect width="100" height="100" rx="20" fill="#9B59B6"/>
+      <path d="M25 40 L50 25 L75 40 L75 75 L25 75 Z" fill="white" opacity="0.2"/>
+      <circle cx="50" cy="45" r="8" fill="white"/>
+      <text x="50" y="90" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8">DIGITAL</text>
+    </symbol>
+
+    <!-- CloudConnect -->
+    <symbol id="cloudconnect-logo" viewBox="0 0 100 100">
+      <rect width="100" height="100" rx="20" fill="#3498DB"/>
+      <path d="M30 45 Q50 25 70 45 Q80 45 80 55 Q80 65 70 65 L30 65 Q20 65 20 55 Q20 45 30 45" fill="white" opacity="0.3"/>
+      <circle cx="35" cy="50" r="3" fill="white"/>
+      <circle cx="50" cy="50" r="3" fill="white"/>
+      <circle cx="65" cy="50" r="3" fill="white"/>
+    </symbol>
+
+    <!-- Universal Partners -->
+    <symbol id="universal-logo" viewBox="0 0 100 100">
+      <rect width="100" height="100" rx="20" fill="#E74C3C"/>
+      <circle cx="50" cy="35" r="12" fill="white" opacity="0.2"/>
+      <circle cx="30" cy="65" r="8" fill="white" opacity="0.2"/>
+      <circle cx="70" cy="65" r="8" fill="white" opacity="0.2"/>
+      <text x="50" y="90" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8">UNIVERSAL</text>
+    </symbol>
+
+    <!-- Caribbean Shipping -->
+    <symbol id="caribbean-shipping-logo" viewBox="0 0 100 100">
+      <rect width="100" height="100" rx="20" fill="#F39C12"/>
+      <path d="M20 70 L50 30 L80 70 L80 80 L20 80 Z" fill="white" opacity="0.3"/>
+      <circle cx="50" cy="45" r="5" fill="white"/>
+      <text x="50" y="95" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="7">CARIBBEAN</text>
+    </symbol>
+
+    <!-- Puerto Rico Express -->
+    <symbol id="pr-express-logo" viewBox="0 0 100 100">
+      <rect width="100" height="100" rx="20" fill="#E67E22"/>
+      <path d="M25 60 L50 25 L75 60 L75 75 L25 75 Z" fill="white" opacity="0.2"/>
+      <text x="50" y="45" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="10" font-weight="bold">PR</text>
+      <text x="50" y="90" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8">EXPRESS</text>
+    </symbol>
+
+    <!-- Island Logistics -->
+    <symbol id="island-logistics-logo" viewBox="0 0 100 100">
+      <rect width="100" height="100" rx="20" fill="#16A085"/>
+      <path d="M20 75 L50 25 L80 75 L80 85 L20 85 Z" fill="white" opacity="0.3"/>
+      <circle cx="50" cy="35" r="8" fill="white"/>
+      <text x="50" y="95" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8">ISLAND</text>
+    </symbol>
+
+    <!-- Tech Solutions PR -->
+    <symbol id="tech-solutions-pr-logo" viewBox="0 0 100 100">
+      <rect width="100" height="100" rx="20" fill="#8E44AD"/>
+      <rect x="30" y="30" width="40" height="40" rx="5" fill="white" opacity="0.2"/>
+      <circle cx="40" cy="40" r="3" fill="white"/>
+      <circle cx="60" cy="40" r="3" fill="white"/>
+      <circle cx="40" cy="60" r="3" fill="white"/>
+      <circle cx="60" cy="60" r="3" fill="white"/>
+      <text x="50" y="85" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8">TECH PR</text>
+    </symbol>
+
+    <!-- Caribbean Connect -->
+    <symbol id="caribbean-connect-logo" viewBox="0 0 100 100">
+      <rect width="100" height="100" rx="20" fill="#27AE60"/>
+      <path d="M25 50 Q50 25 75 50 Q85 50 85 60 Q85 70 75 70 L25 70 Q15 70 15 60 Q15 50 25 50" fill="white" opacity="0.3"/>
+      <circle cx="35" cy="55" r="4" fill="white"/>
+      <circle cx="50" cy="55" r="4" fill="white"/>
+      <circle cx="65" cy="55" r="4" fill="white"/>
+      <text x="50" y="90" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="7">CARIBBEAN</text>
+    </symbol>
+
+    <!-- San Juan Partners -->
+    <symbol id="san-juan-partners-logo" viewBox="0 0 100 100">
+      <rect width="100" height="100" rx="20" fill="#C0392B"/>
+      <path d="M30 70 L50 30 L70 70 L70 80 L30 80 Z" fill="white" opacity="0.3"/>
+      <text x="50" y="45" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8" font-weight="bold">SJ</text>
+      <text x="50" y="95" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="7">PARTNERS</text>
+    </symbol>
+
+    <!-- Bayamon Business -->
+    <symbol id="bayamon-business-logo" viewBox="0 0 100 100">
+      <rect width="100" height="100" rx="20" fill="#2980B9"/>
+      <rect x="25" y="35" width="50" height="30" rx="5" fill="white" opacity="0.2"/>
+      <text x="50" y="55" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="10" font-weight="bold">B</text>
+      <text x="50" y="85" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8">BAYAMON</text>
+    </symbol>
+
+    <!-- Ponce Express -->
+    <symbol id="ponce-express-logo" viewBox="0 0 100 100">
+      <rect width="100" height="100" rx="20" fill="#D35400"/>
+      <path d="M20 60 L50 25 L80 60 L80 75 L20 75 Z" fill="white" opacity="0.3"/>
+      <text x="50" y="45" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="10" font-weight="bold">P</text>
+      <text x="50" y="90" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8">PONCE</text>
+    </symbol>
+
+    <!-- Mayaguez Maritime -->
+    <symbol id="mayaguez-maritime-logo" viewBox="0 0 100 100">
+      <rect width="100" height="100" rx="20" fill="#1ABC9C"/>
+      <path d="M20 70 L50 30 L80 70 L80 80 L20 80 Z" fill="white" opacity="0.3"/>
+      <circle cx="50" cy="45" r="6" fill="white"/>
+      <text x="50" y="95" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="7">MAYAGUEZ</text>
+    </symbol>
+
+    <!-- Caguas Commerce -->
+    <symbol id="caguas-commerce-logo" viewBox="0 0 100 100">
+      <rect width="100" height="100" rx="20" fill="#E91E63"/>
+      <rect x="30" y="35" width="40" height="30" rx="5" fill="white" opacity="0.2"/>
+      <text x="50" y="55" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="10" font-weight="bold">C</text>
+      <text x="50" y="85" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8">CAGUAS</text>
+    </symbol>
+
+    <!-- Arecibo Alliance -->
+    <symbol id="arecibo-alliance-logo" viewBox="0 0 100 100">
+      <rect width="100" height="100" rx="20" fill="#673AB7"/>
+      <circle cx="50" cy="40" r="15" fill="white" opacity="0.2"/>
+      <text x="50" y="45" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="10" font-weight="bold">A</text>
+      <text x="50" y="85" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8">ARECIBO</text>
+    </symbol>
+
+    <!-- Guaynabo Group -->
+    <symbol id="guaynabo-group-logo" viewBox="0 0 100 100">
+      <rect width="100" height="100" rx="20" fill="#FF5722"/>
+      <rect x="25" y="35" width="50" height="30" rx="5" fill="white" opacity="0.2"/>
+      <text x="50" y="55" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="10" font-weight="bold">G</text>
+      <text x="50" y="85" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8">GUAYNABO</text>
+    </symbol>
+
+    <!-- Carolina Connect -->
+    <symbol id="carolina-connect-logo" viewBox="0 0 100 100">
+      <rect width="100" height="100" rx="20" fill="#4CAF50"/>
+      <path d="M25 50 Q50 25 75 50 Q85 50 85 60 Q85 70 75 70 L25 70 Q15 70 15 60 Q15 50 25 50" fill="white" opacity="0.3"/>
+      <circle cx="35" cy="55" r="4" fill="white"/>
+      <circle cx="50" cy="55" r="4" fill="white"/>
+      <circle cx="65" cy="55" r="4" fill="white"/>
+      <text x="50" y="90" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="7">CAROLINA</text>
+    </symbol>
+
+    <!-- Humacao Hub -->
+    <symbol id="humacao-hub-logo" viewBox="0 0 100 100">
+      <rect width="100" height="100" rx="20" fill="#795548"/>
+      <rect x="30" y="35" width="40" height="30" rx="5" fill="white" opacity="0.2"/>
+      <text x="50" y="55" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="10" font-weight="bold">H</text>
+      <text x="50" y="85" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8">HUMACAO</text>
+    </symbol>
+
+    <!-- Fajardo Freight -->
+    <symbol id="fajardo-freight-logo" viewBox="0 0 100 100">
+      <rect width="100" height="100" rx="20" fill="#607D8B"/>
+      <path d="M20 70 L50 30 L80 70 L80 80 L20 80 Z" fill="white" opacity="0.3"/>
+      <text x="50" y="45" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="10" font-weight="bold">F</text>
+      <text x="50" y="90" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8">FAJARDO</text>
+    </symbol>
+
+    <!-- Vega Baja Ventures -->
+    <symbol id="vega-baja-ventures-logo" viewBox="0 0 100 100">
+      <rect width="100" height="100" rx="20" fill="#9C27B0"/>
+      <rect x="25" y="35" width="50" height="30" rx="5" fill="white" opacity="0.2"/>
+      <text x="50" y="55" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="10" font-weight="bold">VB</text>
+      <text x="50" y="85" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="7">VEGA BAJA</text>
+    </symbol>
+
+    <!-- Toa Baja Trading -->
+    <symbol id="toa-baja-trading-logo" viewBox="0 0 100 100">
+      <rect width="100" height="100" rx="20" fill="#FF9800"/>
+      <rect x="30" y="35" width="50" height="30" rx="5" fill="white" opacity="0.2"/>
+      <text x="50" y="55" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="10" font-weight="bold">TB</text>
+      <text x="50" y="85" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="7">TOA BAJA</text>
+    </symbol>
+  </defs>
+</svg> 

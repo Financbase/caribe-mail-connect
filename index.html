@@ -6,6 +6,13 @@
     <title>PRMCMS - Puerto Rico Mail Carrier System</title>
     <meta name="description" content="Mobile-first mail carrier management system for Puerto Rico private mail centers" />
     <meta name="author" content="PRMCMS Team" />
+    
+    <!-- Preconnect to external domains for faster loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- DNS Prefetch for Supabase -->
+    <link rel="dns-prefetch" href="https://supabase.co">
 
     <meta property="og:title" content="PRMCMS - Puerto Rico Mail Carrier System" />
     <meta property="og:description" content="Mobile-first mail carrier management system for Puerto Rico private mail centers" />
@@ -19,13 +26,39 @@
     <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#0B5394">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="PRMCMS">
   </head>
 
   <body>
-    <div id="root"></div>
+    <!-- Loading screen for better perceived performance -->
+    <div id="root">
+      <style>
+        .app-loader {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 100vh;
+          background: linear-gradient(135deg, #0B5394 0%, #FF6B35 100%);
+        }
+        .app-loader-spinner {
+          width: 50px;
+          height: 50px;
+          border: 3px solid rgba(255, 255, 255, 0.3);
+          border-radius: 50%;
+          border-top-color: white;
+          animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+      </style>
+      <div class="app-loader">
+        <div class="app-loader-spinner"></div>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

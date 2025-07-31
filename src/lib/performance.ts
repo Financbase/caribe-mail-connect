@@ -39,7 +39,7 @@ export class APIPerformanceInterceptor {
       }
 
       try {
-        let response = await originalFetch(input, init);
+        const response = await originalFetch(input, init);
         const responseTime = performance.now() - startTime;
 
         // Track performance

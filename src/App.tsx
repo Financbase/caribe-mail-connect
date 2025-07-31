@@ -1,25 +1,49 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { LanguageProvider } from "@/contexts/LanguageContext";
-import { AuthProvider } from "@/contexts/AuthContext";
-import AppRouter from "./pages/AppRouter";
+import React, { useEffect } from 'react';
+import { AuthProvider } from './contexts/AuthContext';
+import { LanguageProvider } from './contexts/LanguageContext';
+import { EmergencyProvider } from './contexts/EmergencyContext';
+import AppRouter from './pages/AppRouter';
+import { ErrorBoundary } from './utils/errorMonitoring';
+import { ErrorMonitor } from './utils/errorMonitoring';
+import { PerformanceMonitor, preloadCriticalResources } from './utils/performance';
+import './App.css';
 
-const queryClient = new QueryClient();
+function App() {
+  useEffect(() => {
+    // Initialize error monitoring
+    ErrorMonitor.getInstance().initialize();
+    
+    // Initialize performance monitoring
+    const performanceMonitor = new PerformanceMonitor();
+    performanceMonitor.startMonitoring();
+    
+    // Preload critical resources
+    preloadCriticalResources();
+    
+    // Log performance metrics after page load
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        performanceMonitor.logMetrics();
+      }, 1000);
+    });
+    
+    // Cleanup on unmount
+    return () => {
+      // Any cleanup needed
+    };
+  }, []);
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <LanguageProvider>
-      <AuthProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <AppRouter />
-        </TooltipProvider>
-      </AuthProvider>
-    </LanguageProvider>
-  </QueryClientProvider>
-);
+  return (
+    <ErrorBoundary>
+      <LanguageProvider>
+        <AuthProvider>
+          <EmergencyProvider>
+            <AppRouter />
+          </EmergencyProvider>
+        </AuthProvider>
+      </LanguageProvider>
+    </ErrorBoundary>
+  );
+}
 
 export default App;

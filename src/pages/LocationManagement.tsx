@@ -25,6 +25,26 @@ import {
 import { useLocations, type LocationFormData } from '@/hooks/useLocations';
 import { toast } from '@/hooks/use-toast';
 
+interface Location {
+  id: string;
+  name: string;
+  code: string;
+  address_line1: string;
+  address_line2?: string;
+  city: string;
+  state: string;
+  zip_code: string;
+  country: string;
+  phone?: string;
+  email?: string;
+  is_primary: boolean;
+  status: string;
+  operating_hours?: Record<string, { open?: string; close?: string; closed?: boolean }>;
+  services_offered?: string[];
+  pricing_tier?: string;
+  notes?: string;
+}
+
 interface LocationManagementProps {
   onNavigate: (page: string) => void;
 }
@@ -91,7 +111,7 @@ export default function LocationManagement({ onNavigate }: LocationManagementPro
     });
   };
 
-  const handleEdit = (location: any) => {
+  const handleEdit = (location: Location) => {
     setFormData({
       name: location.name,
       code: location.code,
@@ -146,11 +166,11 @@ export default function LocationManagement({ onNavigate }: LocationManagementPro
     }
   };
 
-  const updateFormData = (field: string, value: any) => {
+  const updateFormData = (field: string, value: string | boolean | string[] | Record<string, unknown>) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const formatOperatingHours = (hours: any) => {
+  const formatOperatingHours = (hours: Record<string, { open?: string; close?: string; closed?: boolean }>) => {
     if (!hours) return 'Not set';
     
     const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];

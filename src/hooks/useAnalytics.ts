@@ -1,6 +1,13 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { 
+  Package, 
+  Customer, 
+  Mailbox, 
+  ComplianceRecord, 
+  DateRange as ApiDateRange 
+} from '@/types/api';
 
 export interface DateRange {
   from: Date;
@@ -143,10 +150,10 @@ export function useAnalytics(dateRange: DateRange) {
   };
 
   const calculateAnalytics = (
-    packages: any[],
-    customers: any[],
-    mailboxes: any[],
-    compliance: any[],
+    packages: Package[],
+    customers: Customer[],
+    mailboxes: Mailbox[],
+    compliance: ComplianceRecord[],
     dateRange: DateRange
   ): AnalyticsData => {
     // Key metrics
@@ -217,7 +224,7 @@ export function useAnalytics(dateRange: DateRange) {
     };
   };
 
-  const calculateDailyVolume = (packages: any[], dateRange: DateRange) => {
+  const calculateDailyVolume = (packages: Package[], dateRange: DateRange) => {
     const days = Math.ceil((dateRange.to.getTime() - dateRange.from.getTime()) / (1000 * 60 * 60 * 24));
     const volume = [];
 
@@ -240,7 +247,7 @@ export function useAnalytics(dateRange: DateRange) {
     return volume;
   };
 
-  const calculateCarrierBreakdown = (packages: any[]) => {
+  const calculateCarrierBreakdown = (packages: Package[]) => {
     const carriers = packages.reduce((acc, pkg) => {
       const carrier = pkg.carrier || 'Unknown';
       acc[carrier] = (acc[carrier] || 0) + 1;
@@ -255,7 +262,7 @@ export function useAnalytics(dateRange: DateRange) {
     }));
   };
 
-  const calculatePeakHours = (packages: any[]) => {
+  const calculatePeakHours = (packages: Package[]) => {
     const hours = Array.from({ length: 24 }, (_, i) => ({ hour: i, count: 0 }));
     
     packages.forEach(pkg => {
@@ -266,7 +273,7 @@ export function useAnalytics(dateRange: DateRange) {
     return hours;
   };
 
-  const calculateNewCustomers = (customers: any[], dateRange: DateRange) => {
+  const calculateNewCustomers = (customers: Customer[], dateRange: DateRange) => {
     const days = Math.ceil((dateRange.to.getTime() - dateRange.from.getTime()) / (1000 * 60 * 60 * 24));
     const newCustomers = [];
 
@@ -288,7 +295,7 @@ export function useAnalytics(dateRange: DateRange) {
     return newCustomers;
   };
 
-  const calculateTopCustomers = (customers: any[], packages: any[]) => {
+  const calculateTopCustomers = (customers: Customer[], packages: Package[]) => {
     return customers
       .map(customer => {
         const customerPackages = packages.filter(p => p.customer_id === customer.id);
@@ -304,7 +311,7 @@ export function useAnalytics(dateRange: DateRange) {
       .slice(0, 10);
   };
 
-  const calculateInactiveCustomers = (customers: any[], packages: any[]) => {
+  const calculateInactiveCustomers = (customers: Customer[], packages: Package[]) => {
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
@@ -349,12 +356,12 @@ export function useAnalytics(dateRange: DateRange) {
     return months;
   };
 
-  const exportToCSV = (data: any[], filename: string) => {
+  const exportToCSV = (data: Record<string, unknown>[], filename: string) => {
     const csvContent = convertToCSV(data);
     downloadFile(csvContent, `${filename}.csv`, 'text/csv');
   };
 
-  const convertToCSV = (data: any[]) => {
+  const convertToCSV = (data: Record<string, unknown>[]) => {
     if (!data.length) return '';
     
     const headers = Object.keys(data[0]);

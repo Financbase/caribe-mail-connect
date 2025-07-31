@@ -1,24 +1,73 @@
 # Welcome to your Lovable project
 
-## Project info
+## Project Information
 
-**URL**: https://lovable.dev/projects/ac8297d1-7da1-4672-b42f-263b1dc5dd96
+### Project URL
+
+[Lovable Project](https://lovable.dev/projects/ac8297d1-7da1-4672-b42f-263b1dc5dd96)
 
 ## How can I edit this code?
 
 There are several ways of editing your application.
 
-**Use Lovable**
+### Using Lovable
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/ac8297d1-7da1-4672-b42f-263b1dc5dd96) and start prompting.
+1. Visit the [Lovable Project](https://lovable.dev/projects/ac8297d1-7da1-4672-b42f-263b1dc5dd96)
+2. Start prompting to make changes
 
 Changes made via Lovable will be committed automatically to this repo.
 
-**Use your preferred IDE**
+### Using Your Preferred IDE
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+1. Clone this repository
+2. Make your changes locally
+3. Push changes to the repository
+4. Changes will be reflected in Lovable
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## Load Testing
+
+This project includes load testing using [k6](https://k6.io/). To run the load tests:
+
+1. Install k6: <https://k6.io/docs/get-started/installation/>
+
+2. Copy the example environment file and update with your test credentials:
+
+   ```bash
+   cp load-testing/.env.example load-testing/.env
+   ```
+
+   Edit the `.env` file and add your test user credentials.
+
+3. Run the load tests:
+
+   ```bash
+   cd load-testing
+   k6 run k6-load-test.js
+   ```
+
+4. For running with specific environment variables:
+
+   ```bash
+   k6 run -e TEST_USER_1_EMAIL=user@example.com -e TEST_USER_1_PASSWORD=yourpassword k6-load-test.js
+   ```
+
+## Security Notes
+
+### Environment Variables
+
+- Never commit the `.env` file
+- Always add `.env` to your `.gitignore`
+
+### Test Accounts
+
+- Use dedicated test accounts only
+- Grant minimal required permissions
+- Rotate credentials regularly
+
+## Prerequisites
+
+- [Node.js](https://nodejs.org/) and [npm](https://www.npmjs.com/)
+- Recommended: Install using [nvm](https://github.com/nvm-sh/nvm) (Node Version Manager)
 
 Follow these steps:
 
@@ -36,13 +85,13 @@ npm i
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+**Edit a file directly in GitHub
 
 - Navigate to the desired file(s).
 - Click the "Edit" button (pencil icon) at the top right of the file view.
 - Make your changes and commit the changes.
 
-**Use GitHub Codespaces**
+**Use GitHub Codespaces
 
 - Navigate to the main page of your repository.
 - Click on the "Code" button (green button) near the top right.

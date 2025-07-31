@@ -25,10 +25,37 @@ import { NotificationTemplateDialog } from '@/components/notifications/Notificat
 import { NotificationAnalyticsDashboard } from '@/components/notifications/NotificationAnalyticsDashboard';
 import { WhatsAppSetup } from '@/components/notifications/WhatsAppSetup';
 
+interface NotificationTemplate {
+  id: string;
+  name: string;
+  type: string;
+  content: string;
+  is_default: boolean;
+  created_at: string;
+}
+
+interface NotificationRule {
+  id: string;
+  name: string;
+  description: string;
+  conditions: Record<string, unknown>;
+  actions: string[];
+  is_active: boolean;
+  priority: number;
+  created_at: string;
+}
+
+interface WorkflowStep {
+  step: string;
+  trigger: string;
+  delay: number;
+  channels?: string[];
+}
+
 export function NotificationSettings() {
   const [activeTab, setActiveTab] = useState('rules');
-  const [selectedRule, setSelectedRule] = useState<any>(null);
-  const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
+  const [selectedRule, setSelectedRule] = useState<NotificationRule | null>(null);
+  const [selectedTemplate, setSelectedTemplate] = useState<NotificationTemplate | null>(null);
   const [showRuleDialog, setShowRuleDialog] = useState(false);
   const [showTemplateDialog, setShowTemplateDialog] = useState(false);
 
@@ -55,7 +82,7 @@ export function NotificationSettings() {
     updateRule({ id: ruleId, updates: { is_active: !isActive } });
   };
 
-  const duplicateTemplate = (template: any) => {
+  const duplicateTemplate = (template: NotificationTemplate) => {
     setSelectedTemplate({
       ...template,
       id: undefined,
@@ -354,7 +381,7 @@ export function NotificationSettings() {
                       <div>
                         <span className="text-sm font-medium">Pasos del flujo:</span>
                         <div className="mt-2 space-y-2">
-                          {workflow.steps.map((step: any, index: number) => (
+                          {workflow.steps.map((step: WorkflowStep, index: number) => (
                             <div key={index} className="flex items-center gap-2 text-sm">
                               <Badge variant="outline">{step.step}</Badge>
                               <span>{step.trigger}</span>

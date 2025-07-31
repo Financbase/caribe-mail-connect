@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { Invoice as ApiInvoice, PaymentMethod } from '@/types/api';
 
 export interface BillingSummary {
   monthlyRevenue: number;
@@ -167,7 +168,22 @@ export function useBilling() {
   };
 
   // Create new invoice
-  const createInvoice = async (invoiceData: any) => {
+  const createInvoice = async (invoiceData: {
+    customer_id: string;
+    location_id: string;
+    amount: number;
+    tax_amount: number;
+    total_amount: number;
+    due_date: string;
+    items: Array<{
+      description: string;
+      quantity: number;
+      unit_price: number;
+      total: number;
+      service_type: string;
+    }>;
+    notes?: string;
+  }) => {
     try {
       setLoading(true);
       
@@ -221,7 +237,14 @@ export function useBilling() {
   };
 
   // Record payment
-  const recordPayment = async (paymentData: any) => {
+  const recordPayment = async (paymentData: {
+    customer_id: string;
+    invoice_id?: string;
+    amount: number;
+    payment_method: string;
+    reference_number?: string;
+    notes?: string;
+  }) => {
     try {
       setLoading(true);
       

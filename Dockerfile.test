@@ -1,0 +1,45 @@
+# Test Dockerfile for React/Vite application with full test suite
+FROM node:18-alpine
+
+# Install dependencies for testing (including Playwright browsers)
+RUN apk add --no-cache \
+    libc6-compat \
+    chromium \
+    nss \
+    freetype \
+    freetype-dev \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont \
+    && rm -rf /var/cache/apk/*
+
+# Tell Playwright to use the installed Chromium
+ENV PLAYWRIGHT_BROWSERS_PATH=/usr/bin/chromium-browser
+ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+
+# Increase Node.js memory limit for tests
+ENV NODE_OPTIONS="--max-old-space-size=8192"
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package.json package-lock.json* ./
+
+# Install all dependencies (including dev dependencies)
+RUN npm ci
+
+# Install Playwright dependencies
+RUN npx playwright install-deps
+
+# Copy source code
+COPY . .
+
+# Create test results and coverage directories
+RUN mkdir -p test-results coverage
+
+# Set permissions
+RUN chmod -R 755 test-results coverage
+
+# Run tests by default
+CMD ["npm", "run", "test:unit:coverage"] 

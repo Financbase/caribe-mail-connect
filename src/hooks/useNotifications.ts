@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase, isSupabaseAvailable } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from '@/hooks/use-toast';
 
@@ -15,6 +15,12 @@ export function useNotifications(): NotificationHookResult {
 
   useEffect(() => {
     if (!user) return;
+
+    // If Supabase is not available, don't set up real-time subscriptions
+    if (!isSupabaseAvailable()) {
+      console.log('Notifications running in demo mode - no real-time updates');
+      return;
+    }
 
     // Set up real-time subscriptions for package events
     const packagesChannel = supabase

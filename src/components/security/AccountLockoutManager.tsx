@@ -57,7 +57,7 @@ export function AccountLockoutManager() {
     },
   ]);
 
-  const updatePolicy = (field: keyof LockoutPolicy, value: any) => {
+  const updatePolicy = (field: keyof LockoutPolicy, value: boolean | number) => {
     setPolicy(prev => ({ ...prev, [field]: value }));
   };
 

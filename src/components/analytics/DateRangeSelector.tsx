@@ -98,7 +98,7 @@ export function DateRangeSelector({ dateRange, onDateRangeChange }: DateRangeSel
       <PopoverContent className="w-auto p-0" align="start">
         <div className="flex">
           {/* Preset ranges */}
-          <div className="border-r border-border p-3 space-y-2">
+          <div className="border-r border-gray-200 p-3 space-y-2">
             <div className="text-sm font-medium text-muted-foreground mb-2">
               {t('Quick ranges')}
             </div>

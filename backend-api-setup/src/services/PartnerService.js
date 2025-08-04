@@ -1,18 +1,12 @@
-const { Pool } = require('pg');
 const { logger } = require('../utils/logger');
+const { isEmail } = require('validator');
+const { URL } = require('url');
+const { pool } = require('../config/database');
 
 class PartnerService {
   constructor() {
-    this.pool = new Pool({
-      host: process.env.DB_HOST || 'localhost',
-      port: process.env.DB_PORT || 5432,
-      database: process.env.DB_NAME || 'partner_management',
-      user: process.env.DB_USER || 'postgres',
-      password: process.env.DB_PASSWORD,
-      max: 20,
-      idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 2000,
-    });
+    // Database connection is now managed by the database.js config
+    this.pool = pool;
   }
 
   async getPartners(filters = {}) {
@@ -146,27 +140,109 @@ class PartnerService {
     }
   }
 
+  /**
+   * Validates partner data before updating
+   * @param {Object} data - The data to validate
+   * @throws {Error} If validation fails
+   */
+  validatePartnerData(data) {
+    const errors = [];
+    const unknownFields = [];
+    const validStatuses = ['pending', 'active', 'inactive', 'suspended'];
+    
+    // Check for unknown fields
+    const allowedFields = [
+      'name', 'type', 'logo_url', 'website', 'email', 'phone', 
+      'address', 'contact_person', 'status', 'rating', 'join_date', 
+      'last_activity', 'description', 'tax_id'
+    ];
+
+    Object.keys(data).forEach(key => {
+      if (!allowedFields.includes(key)) {
+        unknownFields.push(key);
+      }
+    });
+
+    // Log unknown fields for security monitoring
+    if (unknownFields.length > 0) {
+      logger.warn(`Attempted to update with unknown fields: ${unknownFields.join(', ')}`, {
+        service: 'PartnerService',
+        method: 'updatePartner',
+        unknownFields
+      });
+    }
+
+    // Validate email format if provided
+    if (data.email && !isEmail(data.email)) {
+      errors.push('Invalid email format');
+    }
+
+    // Validate URL format if provided
+    if (data.website) {
+      try {
+        // This will throw if URL is invalid
+        new URL(data.website);
+      } catch (e) {
+        errors.push('Invalid website URL');
+      }
+    }
+
+    // Validate status if provided
+    if (data.status && !validStatuses.includes(data.status)) {
+      errors.push(`Status must be one of: ${validStatuses.join(', ')}`);
+    }
+
+    // Validate rating if provided
+    if (data.rating !== undefined) {
+      const rating = parseFloat(data.rating);
+      if (isNaN(rating) || rating < 0 || rating > 5) {
+        errors.push('Rating must be a number between 0 and 5');
+      }
+    }
+
+    if (errors.length > 0) {
+      throw new Error(`Validation failed: ${errors.join('; ')}`);
+    }
+  }
+
   async updatePartner(id, updateData) {
+    const client = await this.pool.connect();
+    
     try {
+      await client.query('BEGIN');
+      
       const existingPartner = await this.getPartnerById(id);
       if (!existingPartner) {
         return null;
       }
 
+      // Validate input data
+      this.validatePartnerData(updateData);
+
+      // Define allowed fields that can be updated
+      const allowedFields = [
+        'name', 'type', 'logo_url', 'website', 'email', 'phone', 
+        'address', 'contact_person', 'status', 'rating', 'join_date', 
+        'last_activity', 'description', 'tax_id'
+      ];
+
       const fields = [];
       const values = [];
       let paramIndex = 1;
+      const updatedFields = [];
 
-      // Build dynamic update query
-      Object.keys(updateData).forEach(key => {
-        if (updateData[key] !== undefined) {
-          fields.push(`${key} = $${paramIndex}`);
+      // Build dynamic update query with validation
+      Object.entries(updateData).forEach(([key, value]) => {
+        // Only process allowed fields
+        if (value !== undefined && allowedFields.includes(key)) {
+          fields.push(`"${key}" = $${paramIndex}`);
+          updatedFields.push(key);
           
           // Handle JSON fields
           if (key === 'address' || key === 'contact_person') {
-            values.push(JSON.stringify(updateData[key]));
+            values.push(JSON.stringify(value));
           } else {
-            values.push(updateData[key]);
+            values.push(value);
           }
           
           paramIndex++;
@@ -174,10 +250,16 @@ class PartnerService {
       });
 
       if (fields.length === 0) {
+        logger.info('No valid fields to update', {
+          service: 'PartnerService',
+          method: 'updatePartner',
+          partnerId: id
+        });
         return existingPartner;
       }
 
-      fields.push(`updated_at = $${paramIndex}`);
+      // Always update the updated_at timestamp
+      fields.push('updated_at = $' + paramIndex);
       values.push(new Date());
       values.push(id);
 
@@ -188,11 +270,41 @@ class PartnerService {
         RETURNING *
       `;
 
-      const result = await this.pool.query(query, values);
+      logger.debug('Executing partner update query', {
+        service: 'PartnerService',
+        method: 'updatePartner',
+        query: query.replace(/\s+/g, ' ').trim(),
+        updatedFields,
+        partnerId: id
+      });
+
+      const result = await client.query(query, values);
+      await client.query('COMMIT');
+      
+      logger.info('Successfully updated partner', {
+        service: 'PartnerService',
+        method: 'updatePartner',
+        partnerId: id,
+        updatedFields
+      });
+      
       return result.rows[0];
     } catch (error) {
-      logger.error('Error updating partner:', error);
+      await client.query('ROLLBACK');
+      
+      logger.error('Error updating partner', {
+        service: 'PartnerService',
+        method: 'updatePartner',
+        error: error.message,
+        stack: error.stack,
+        partnerId: id,
+        updateData: JSON.stringify(updateData)
+      });
+      
+      // Rethrow the error for the route handler to handle
       throw error;
+    } finally {
+      client.release();
     }
   }
 

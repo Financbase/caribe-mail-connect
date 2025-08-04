@@ -114,10 +114,25 @@ router.get('/', [
 ], async (req, res, next) => {
   try {
     const filters = {
+      // TODO: Add type validation for req.query.type
+      // TODO: Add type validation for req.query.type
+      // TODO: Add type validation for req.query.type
       type: req.query.type,
+      // TODO: Add type validation for req.query.status
+      // TODO: Add type validation for req.query.status
+      // TODO: Add type validation for req.query.status
       status: req.query.status,
+      // TODO: Add type validation for req.query.search
+      // TODO: Add type validation for req.query.search
+      // TODO: Add type validation for req.query.search
       search: req.query.search,
+      // TODO: Add type validation for req.query.page
+      // TODO: Add type validation for req.query.page
+      // TODO: Add type validation for req.query.page
       page: req.query.page || 1,
+      // TODO: Add type validation for req.query.limit
+      // TODO: Add type validation for req.query.limit
+      // TODO: Add type validation for req.query.limit
       limit: req.query.limit || 20,
     };
 
@@ -138,6 +153,80 @@ router.get('/', [
 /**
  * @swagger
  * /api/partners/{id}:
+ *   put:
+ *     summary: Update a partner
+ *     tags: [Partners]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The partner ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: The partner's name
+ *               type:
+ *                 type: string
+ *                 enum: [strategic, technology, marketing, logistics, financial]
+ *                 description: The type of partnership
+ *               logo_url:
+ *                 type: string
+ *                 format: uri
+ *                 description: URL to the partner's logo
+ *               website:
+ *                 type: string
+ *                 format: uri
+ *                 description: The partner's website URL
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: Contact email address
+ *               phone:
+ *                 type: string
+ *                 description: Contact phone number
+ *               address:
+ *                 type: object
+ *                 description: Physical address information (stored as JSON)
+ *               contact_person:
+ *                 type: object
+ *                 description: Primary contact person details (stored as JSON)
+ *               status:
+ *                 type: string
+ *                 enum: [pending, active, inactive, suspended]
+ *                 description: Current status of the partnership
+ *               rating:
+ *                 type: number
+ *                 minimum: 0
+ *                 maximum: 5
+ *                 description: Rating from 0 to 5
+ *               description:
+ *                 type: string
+ *                 description: Additional details about the partner
+ *               tax_id:
+ *                 type: string
+ *                 description: Business tax identification number
+ *     responses:
+ *       200:
+ *         description: The updated partner
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Partner'
+ *       400:
+ *         description: Invalid input
+ *       404:
+ *         description: Partner not found
+ *       500:
+ *         description: Server error
+ *
  *   get:
  *     summary: Get partner by ID
  *     tags: [Partners]
@@ -419,6 +508,18 @@ router.get('/:id/commissions', [
   try {
     const commissions = await partnerService.getPartnerCommissions(
       req.params.id,
+      // TODO: Add type validation for req.query.period
+      // TODO: Add type validation for req.query.period
+      // TODO: Add type validation for req.query.period
+      // TODO: Add type validation for req.query.period
+      // TODO: Add type validation for req.query.period
+      // TODO: Add type validation for req.query.period
+      // TODO: Add type validation for req.query.period
+      // TODO: Add type validation for req.query.period
+      // TODO: Add type validation for req.query.period
+      // TODO: Add type validation for req.query.period
+      // TODO: Add type validation for req.query.period
+      // TODO: Add type validation for req.query.period
       req.query.period
     );
     

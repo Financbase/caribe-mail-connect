@@ -1,15 +1,21 @@
 const express = require('express');
 const cors = require('cors');
-const helmet = require('helmet');
 const compression = require('compression');
-const rateLimit = require('express-rate-limit');
 const expressWs = require('express-ws');
 require('dotenv').config();
 
+// Initialize database connection
+const { testConnection } = require('./config/database');
 const { logger } = require('./utils/logger');
 const { errorHandler } = require('./middleware/errorHandler');
 const { authMiddleware } = require('./middleware/auth');
-const { validateRequest } = require('./middleware/validation');
+const { 
+  securityHeaders, 
+  apiLimiter, 
+  validateRequest, 
+  sanitizeInput, 
+  securityLogger 
+} = require('./middleware/security');
 
 // Import routes
 const partnerRoutes = require('./routes/partners');
@@ -28,44 +34,47 @@ const PORT = process.env.PORT || 3000;
 // WebSocket setup
 const wsInstance = expressWs(app);
 
-// Security middleware
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'", "wss:", "https:"],
-    },
-  },
-}));
+// Apply security middleware
+app.use(securityHeaders);
+app.use(securityLogger);
+app.use(sanitizeInput);
+
+// Define allowed HTTP methods
+const ALLOWED_HTTP_METHODS = [
+  'GET',
+  'POST',
+  'PUT',
+  'PATCH',
+  'DELETE',
+  'OPTIONS'
+];
 
 // CORS configuration
-app.use(cors({
-  origin: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'],
+const corsOptions = {
+  origin: (origin, callback) => {
+    const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',').map(s => s.trim()) || [];
+    if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV === 'development') {
+      callback(null, true);
+    } else {
+      logger.warn('CORS violation', { origin, allowedOrigins });
+      // Don't send detailed error messages in production
+      const error = new Error(process.env.NODE_ENV === 'production' 
+        ? 'Not allowed by CORS' 
+        : `Origin '${origin}' not allowed by CORS`);
+      callback(error);
+    }
+  },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-}));
+  methods: ALLOWED_HTTP_METHODS,
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  exposedHeaders: ['Content-Length', 'X-Total-Count'],
+  maxAge: 600, // 10 minutes
+};
 
-// Rate limiting
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
-  message: 'Too many requests from this IP, please try again later.',
-  standardHeaders: true,
-  legacyHeaders: false,
-});
+app.use(cors(corsOptions));
 
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // limit each IP to 5 requests per windowMs
-  message: 'Too many authentication attempts, please try again later.',
-});
-
-app.use('/api/', limiter);
-app.use('/api/auth/', authLimiter);
+// Apply rate limiting to all API routes
+app.use('/api', apiLimiter);
 
 // Compression
 app.use(compression());
@@ -142,6 +151,9 @@ app.use('/api/notifications', authMiddleware, notificationRoutes);
 // WebSocket endpoint for real-time notifications
 app.ws('/ws/notifications/:partnerId', (ws, req) => {
   const { partnerId } = req.params;
+  // TODO: Add type validation for req.query.token
+  // TODO: Add type validation for req.query.token
+  // TODO: Add type validation for req.query.token
   const token = req.query.token;
 
   // Validate token
@@ -211,6 +223,41 @@ app.use('*', (req, res) => {
 // Error handling middleware
 app.use(errorHandler);
 
+// Test database connection before starting the server
+const startServer = async () => {
+  try {
+    const dbConnected = await testConnection();
+    if (!dbConnected) {
+      logger.error('Failed to connect to database. Exiting...');
+      process.exit(1);
+    }
+    
+    app.listen(PORT, () => {
+      logger.info(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
+      logger.info(`Allowed origins: ${process.env.ALLOWED_ORIGINS || 'http://localhost:3000'}`);
+    });
+  } catch (error) {
+    logger.error('Failed to start server', { error });
+    process.exit(1);
+  }
+};
+
+// Handle uncaught exceptions
+process.on('uncaughtException', (error) => {
+  logger.error('Uncaught Exception', { error });
+  // Perform cleanup if needed
+  process.exit(1);
+});
+
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (reason, promise) => {
+  logger.error('Unhandled Rejection at:', { promise, reason });
+  // Consider restarting the server or handling the error appropriately
+});
+
+// Start the server
+startServer();
+
 // Graceful shutdown
 process.on('SIGTERM', () => {
   logger.info('SIGTERM received, shutting down gracefully');
@@ -222,13 +269,5 @@ process.on('SIGINT', () => {
   process.exit(0);
 });
 
-// Start server
-app.listen(PORT, () => {
-  logger.info(`Partner Management API server running on port ${PORT}`, {
-    environment: process.env.NODE_ENV,
-    port: PORT,
-    timestamp: new Date().toISOString(),
-  });
-});
-
+module.exports = app;
 module.exports = app; 

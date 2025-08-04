@@ -18,14 +18,59 @@ dist-ssr
 # Environment variables
 .env
 .env.local
+.env.local.*
+.env.*.local
 .env.development
 .env.test
 .env.production
+.env.backup
+.env.*.backup
+
+# Security files
+*.key
+*.pem
+*.p12
+*.pfx
+secrets.json
+config.json
+
+# Test configuration files with credentials
+testsprite_tests/tmp/
+testsprite_tests/config.json
+**/tmp/config.json
+
+# Test results
+test-results/
+*.png
+*.webm
+*.md
+**/error-context.md
+**/test-failed-*.png
+**/video.webm
+
+# Test reports
+coverage/
+.nyc_output/
+
+# Playwright
+playwright-report/
+playwright/.cache/
+
+# Jest
+jest-junit.xml
+
+# Cypress
+cypress/videos/
+cypress/screenshots/
+
+# Vitest
+coverage/
+html-report/
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
 .DS_Store
 *.suo
 *.ntvs*
@@ -36,3 +81,15 @@ dist-ssr
 # Agent OS documentation (keep this in version control)
 !.agent-os/
 !.agent-os/product/
+
+# Vault files
+.vault-data/
+vault-data/
+.vault-initialized
+vault-keys.txt
+
+# Environment files
+.env
+.env.*
+!.env.example
+!.env.vault.example

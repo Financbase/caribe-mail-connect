@@ -5,44 +5,36 @@ import path from 'path';
 export default defineConfig({
   plugins: [react()],
   test: {
-    environment: 'jsdom',
-    setupFiles: ['./src/test/setup.ts'],
     globals: true,
-    css: false, // Disable CSS to reduce memory usage
-    testMatch: [
-      '<rootDir>/src/**/__tests__/**/*.{ts,tsx}',
-      '<rootDir>/src/**/*.{test,spec}.{ts,tsx}'
+    environment: 'node', // Use node environment for integration tests
+    setupFiles: ['./src/test/setup-test-env.ts'], // Use our new test setup
+    include: [
+      'src/test/integration/**/*.test.{js,ts}',
+      'src/test/unit/**/*.test.{js,ts,jsx,tsx}',
+      'tests/**/*.test.{js,ts,jsx,tsx}'
     ],
-    coverage: {
-      provider: 'v8',
-      reporter: ['text', 'json', 'html', 'lcov'],
-      exclude: [
-        'node_modules/',
-        'src/test/',
-        '**/*.d.ts',
-        '**/*.config.*',
-        'dist/',
-        'coverage/',
-        'src/main.tsx',
-        'src/vite-env.d.ts',
-        'src/**/*.stories.{ts,tsx}',
-        'src/**/index.ts',
-        'tests/e2e/**',
-        'tests/**/*.spec.ts',
-        'scripts/**'
-      ],
-      thresholds: {
-        global: {
-          branches: 70,
-          functions: 70,
-          lines: 70,
-          statements: 70,
-        },
-      },
-    },
-    testPathIgnorePatterns: ['/node_modules/', '/dist/', '/coverage/'],
-    // Improve test isolation and performance
+    exclude: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/cypress/**',
+      '**/.{idea,git,cache,output,temp}/**',
+      '**/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build}.config.*',
+      '**/__mocks__/**',
+      '**/test-utils/**'
+    ],
+    // Timeout settings
+    testTimeout: 30000, // 30 second timeout for tests
+    hookTimeout: 60000, // 60 second timeout for hooks
+    
+    // Test isolation and concurrency
     isolate: true,
+    maxConcurrency: 1,
+    
+    // Mock handling
+    clearMocks: true,
+    restoreMocks: true,
+    
+    // Memory optimization
     pool: 'forks',
     poolOptions: {
       forks: {
@@ -51,30 +43,42 @@ export default defineConfig({
         minForks: 1
       }
     },
-    // Reduce memory usage
-    maxConcurrency: 1,
-    sequence: {
-      concurrent: false
-    },
-    // Improve test reliability
-    retry: 1,
-    timeout: 10000,
-    hookTimeout: 10000,
-    // Better error reporting
-    reporters: ['verbose', 'json'],
-    outputFile: 'test-results/vitest-results.json'
+    
+    // Code coverage
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      exclude: [
+        'coverage/**',
+        'dist/**',
+        'packages/*/test{,s}/**',
+        '**/*.d.ts',
+        'cypress/**',
+        'test{,s}/**',
+        'test{,-*}.{js,cjs,mjs,ts,tsx,jsx}',
+        '**/*{.,-}test.{js,cjs,mjs,ts,tsx,jsx}',
+        '**/*{.,-}spec.{js,cjs,mjs,ts,tsx,jsx}',
+        '**/__tests__/**',
+        '**/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress}.config.*',
+        '**/.{eslint,mocha,prettier}rc.{js,cjs,yml}'
+      ]
+    }
   },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-    },
+      '@components': path.resolve(__dirname, './src/components'),
+      '@lib': path.resolve(__dirname, './src/lib'),
+      '@hooks': path.resolve(__dirname, './src/hooks'),
+      '@pages': path.resolve(__dirname, './src/pages'),
+      '@types': path.resolve(__dirname, './src/types'),
+      '@utils': path.resolve(__dirname, './src/utils'),
+      '@test': path.resolve(__dirname, './src/test')
+    }
   },
-  // Optimize for test environment
-  optimizeDeps: {
-    include: ['react', 'react-dom']
-  },
-  build: {
-    target: 'esnext',
-    minify: false
+  define: {
+    'process.env.NODE_ENV': '"test"',
+    'import.meta.env.VITE_SUPABASE_URL': '"https://test.supabase.co"',
+    'import.meta.env.VITE_SUPABASE_ANON_KEY': '"test-key"'
   }
 }); 

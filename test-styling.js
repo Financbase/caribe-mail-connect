@@ -1,7 +1,7 @@
-import http from 'http';
+import http from 'https';
 
 // Test development server
-const devReq = http.request('http://localhost:5173', (res) => {
+const devReq = https.request('http://localhost:5173', (res) => {
   let data = '';
   res.on('data', chunk => data += chunk);
   res.on('end', () => {
@@ -21,7 +21,7 @@ devReq.end();
 
 // Test production preview server
 setTimeout(() => {
-  const prodReq = http.request('http://localhost:4173', (res) => {
+  const prodReq = https.request('http://localhost:4173', (res) => {
     let data = '';
     res.on('data', chunk => data += chunk);
     res.on('end', () => {

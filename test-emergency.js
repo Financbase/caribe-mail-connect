@@ -1,11 +1,11 @@
-const http = require('http');
+const http = require('https');
 
 console.log('🧪 Testing Emergency Management System...\n');
 
 // Test 1: Check if server is running
 function testServer() {
   return new Promise((resolve) => {
-    const req = http.get('http://localhost:5173/', (res) => {
+    const req = https.get('http://localhost:5173/', (res) => {
       console.log('✅ Server Status:', res.statusCode);
       resolve(res.statusCode === 200);
     });
@@ -25,7 +25,7 @@ function testServer() {
 // Test 2: Check emergency page
 function testEmergencyPage() {
   return new Promise((resolve) => {
-    const req = http.get('http://localhost:5173/#/emergency', (res) => {
+    const req = https.get('http://localhost:5173/#/emergency', (res) => {
       console.log('✅ Emergency Page Status:', res.statusCode);
       resolve(res.statusCode === 200);
     });

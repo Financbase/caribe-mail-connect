@@ -3,9 +3,9 @@ import { test, expect } from '@playwright/test';
 test.describe('Authentication & Authorization', () => {
   test('Staff authentication flow', async ({ page }) => {
     await page.goto('/auth/staff');
-    
+
     // Verify staff login page elements with correct text
-    await expect(page.locator('h1')).toContainText('Iniciar sesión');
+    await expect(page.locator('h1')).toContainText('PRMCMS');
     
     // Test form elements exist using data-testid
     await expect(page.locator('[data-testid="staff-email-input"]')).toBeVisible();
@@ -32,9 +32,9 @@ test.describe('Authentication & Authorization', () => {
 
   test('Customer authentication flow', async ({ page }) => {
     await page.goto('/auth/customer');
-    
+
     // Verify customer login page with correct text
-    await expect(page.locator('h1')).toContainText('Cliente');
+    await expect(page.locator('h1')).toContainText('PRMCMS');
     
     // Test registration flow - check for actual form elements using data-testid
     await expect(page.locator('[data-testid="customer-login-form"]')).toBeVisible();

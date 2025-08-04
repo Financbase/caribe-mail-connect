@@ -1,13 +1,10 @@
 import { test, expect } from '@playwright/test';
+import { loginAsAdmin } from './test-utils';
 
 test.describe('IoT & Device Management', () => {
   test.beforeEach(async ({ page }) => {
-    // Login as admin
-    await page.goto('/auth/staff');
-    await page.fill('input[type="email"]', 'admin@test.com');
-    await page.fill('input[type="password"]', 'adminpass123');
-    await page.click('button[type="submit"]');
-    await page.waitForURL('**/dashboard');
+    // Login as admin using helper function
+    await loginAsAdmin(page);
   });
 
   test('IoT device registration', async ({ page }) => {

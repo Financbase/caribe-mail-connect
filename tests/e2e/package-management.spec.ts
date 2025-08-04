@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { loginAsStaff } from './auth.spec';
+import { loginAsStaff } from './test-utils';
 
 test.describe('Package Management', () => {
   test.beforeEach(async ({ page }) => {

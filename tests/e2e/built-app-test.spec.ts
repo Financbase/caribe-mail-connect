@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { createServer } from 'http';
+import { createServer } from 'https';
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 import { fileURLToPath } from 'url';
@@ -20,7 +20,7 @@ test('Built React app test', async ({ page }) => {
     // Handle absolute paths by removing the leading slash
     const url = req.url || '/';
     const cleanUrl = url.startsWith('/') ? url.substring(1) : url;
-    let filePath = join(distPath, cleanUrl === '' ? 'index.html' : cleanUrl);
+    const filePath = join(distPath, cleanUrl === '' ? 'index.html' : cleanUrl);
     
     // Security: prevent directory traversal
     if (!filePath.startsWith(distPath)) {

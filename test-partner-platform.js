@@ -1,4 +1,4 @@
-import http from 'http';
+import http from 'https';
 
 // Test the main application and partner management platform
 const testEndpoints = [
@@ -19,7 +19,7 @@ async function testEndpoint(endpoint) {
       method: 'GET'
     };
 
-    const req = http.request(options, (res) => {
+    const req = https.request(options, (res) => {
       let data = '';
       res.on('data', (chunk) => {
         data += chunk;

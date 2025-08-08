@@ -160,6 +160,56 @@ export type Database = {
           },
         ]
       }
+      affiliate_programs: {
+        Row: {
+          commission_structure: Json
+          created_at: string | null
+          description: string | null
+          id: string
+          marketing_materials: Json | null
+          partner_id: string | null
+          performance_metrics: Json | null
+          program_name: string
+          referral_tracking_code: string | null
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          commission_structure?: Json
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          marketing_materials?: Json | null
+          partner_id?: string | null
+          performance_metrics?: Json | null
+          program_name: string
+          referral_tracking_code?: string | null
+          status?: string
+          updated_at?: string | null
+        }
+        Update: {
+          commission_structure?: Json
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          marketing_materials?: Json | null
+          partner_id?: string | null
+          performance_metrics?: Json | null
+          program_name?: string
+          referral_tracking_code?: string | null
+          status?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "affiliate_programs_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "business_partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       api_keys: {
         Row: {
           api_key: string
@@ -212,6 +262,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      audit_logs: {
+        Row: {
+          action: string
+          created_at: string | null
+          id: string
+          ip_address: unknown | null
+          new_data: Json | null
+          old_data: Json | null
+          record_id: string | null
+          table_name: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          new_data?: Json | null
+          old_data?: Json | null
+          record_id?: string | null
+          table_name: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          new_data?: Json | null
+          old_data?: Json | null
+          record_id?: string | null
+          table_name?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
       }
       automated_test_runs: {
         Row: {
@@ -487,6 +576,141 @@ export type Database = {
           },
         ]
       }
+      business_partners: {
+        Row: {
+          address: Json | null
+          commission_rate: number | null
+          contact_person: Json
+          created_at: string | null
+          description: string | null
+          id: string
+          logo_url: string | null
+          name: string
+          performance_score: number | null
+          rating: number | null
+          revenue_generated: number | null
+          status: string
+          type: string
+          updated_at: string | null
+          website: string | null
+        }
+        Insert: {
+          address?: Json | null
+          commission_rate?: number | null
+          contact_person?: Json
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          logo_url?: string | null
+          name: string
+          performance_score?: number | null
+          rating?: number | null
+          revenue_generated?: number | null
+          status?: string
+          type: string
+          updated_at?: string | null
+          website?: string | null
+        }
+        Update: {
+          address?: Json | null
+          commission_rate?: number | null
+          contact_person?: Json
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          logo_url?: string | null
+          name?: string
+          performance_score?: number | null
+          rating?: number | null
+          revenue_generated?: number | null
+          status?: string
+          type?: string
+          updated_at?: string | null
+          website?: string | null
+        }
+        Relationships: []
+      }
+      carbon_footprint: {
+        Row: {
+          carbon_offset: number | null
+          created_at: string | null
+          date: string
+          description: string | null
+          id: string
+          net_footprint: number | null
+          source: string
+          unit: string
+          updated_at: string | null
+          value: number
+        }
+        Insert: {
+          carbon_offset?: number | null
+          created_at?: string | null
+          date: string
+          description?: string | null
+          id?: string
+          net_footprint?: number | null
+          source: string
+          unit?: string
+          updated_at?: string | null
+          value: number
+        }
+        Update: {
+          carbon_offset?: number | null
+          created_at?: string | null
+          date?: string
+          description?: string | null
+          id?: string
+          net_footprint?: number | null
+          source?: string
+          unit?: string
+          updated_at?: string | null
+          value?: number
+        }
+        Relationships: []
+      }
+      carbon_offset_programs: {
+        Row: {
+          cost_per_kg: number | null
+          created_at: string | null
+          description: string | null
+          end_date: string | null
+          id: string
+          name: string
+          offset_amount_kg: number | null
+          start_date: string | null
+          status: string | null
+          total_cost: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          cost_per_kg?: number | null
+          created_at?: string | null
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          name: string
+          offset_amount_kg?: number | null
+          start_date?: string | null
+          status?: string | null
+          total_cost?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          cost_per_kg?: number | null
+          created_at?: string | null
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          name?: string
+          offset_amount_kg?: number | null
+          start_date?: string | null
+          status?: string | null
+          total_cost?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       check_deposits: {
         Row: {
           amount: number
@@ -558,6 +782,102 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      collaboration_workflows: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          documents: Json | null
+          end_date: string | null
+          id: string
+          milestones: Json | null
+          name: string
+          participants: Json
+          progress: number | null
+          start_date: string
+          status: string
+          tasks: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          documents?: Json | null
+          end_date?: string | null
+          id?: string
+          milestones?: Json | null
+          name: string
+          participants?: Json
+          progress?: number | null
+          start_date: string
+          status?: string
+          tasks?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          documents?: Json | null
+          end_date?: string | null
+          id?: string
+          milestones?: Json | null
+          name?: string
+          participants?: Json
+          progress?: number | null
+          start_date?: string
+          status?: string
+          tasks?: Json | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      community_goals: {
+        Row: {
+          created_at: string | null
+          current_progress: number
+          description: string | null
+          end_date: string
+          id: string
+          is_active: boolean | null
+          name: string
+          reward_description: string | null
+          reward_type: string
+          reward_value: number
+          start_date: string
+          target: number
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          current_progress?: number
+          description?: string | null
+          end_date: string
+          id?: string
+          is_active?: boolean | null
+          name: string
+          reward_description?: string | null
+          reward_type: string
+          reward_value: number
+          start_date: string
+          target: number
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          current_progress?: number
+          description?: string | null
+          end_date?: string
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          reward_description?: string | null
+          reward_type?: string
+          reward_value?: number
+          start_date?: string
+          target?: number
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       compliance_audit_log: {
         Row: {
@@ -652,6 +972,48 @@ export type Database = {
           retention_period_days?: number | null
           updated_at?: string
           updated_by?: string | null
+        }
+        Relationships: []
+      }
+      consolidated_shipping: {
+        Row: {
+          carbon_saved_kg: number | null
+          cost_savings: number | null
+          created_at: string | null
+          delivery_date: string | null
+          destination: string | null
+          id: string
+          origin: string | null
+          packages_consolidated: number | null
+          shipment_id: string
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          carbon_saved_kg?: number | null
+          cost_savings?: number | null
+          created_at?: string | null
+          delivery_date?: string | null
+          destination?: string | null
+          id?: string
+          origin?: string | null
+          packages_consolidated?: number | null
+          shipment_id: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          carbon_saved_kg?: number | null
+          cost_savings?: number | null
+          created_at?: string | null
+          delivery_date?: string | null
+          destination?: string | null
+          id?: string
+          origin?: string | null
+          packages_consolidated?: number | null
+          shipment_id?: string
+          status?: string | null
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -861,6 +1223,45 @@ export type Database = {
           },
         ]
       }
+      customer_participation: {
+        Row: {
+          carbon_saved_kg: number | null
+          created_at: string | null
+          customer_id: string | null
+          feedback_rating: number | null
+          feedback_text: string | null
+          id: string
+          initiative_name: string
+          participation_date: string | null
+          participation_type: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          carbon_saved_kg?: number | null
+          created_at?: string | null
+          customer_id?: string | null
+          feedback_rating?: number | null
+          feedback_text?: string | null
+          id?: string
+          initiative_name: string
+          participation_date?: string | null
+          participation_type?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          carbon_saved_kg?: number | null
+          created_at?: string | null
+          customer_id?: string | null
+          feedback_rating?: number | null
+          feedback_text?: string | null
+          id?: string
+          initiative_name?: string
+          participation_date?: string | null
+          participation_type?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       customers: {
         Row: {
           act_60_decree_number: string | null
@@ -881,6 +1282,7 @@ export type Database = {
           id: string
           last_name: string
           location_id: string | null
+          loyalty_points: number | null
           mailbox_number: string
           notes: string | null
           phone: string | null
@@ -913,6 +1315,7 @@ export type Database = {
           id?: string
           last_name: string
           location_id?: string | null
+          loyalty_points?: number | null
           mailbox_number: string
           notes?: string | null
           phone?: string | null
@@ -945,6 +1348,7 @@ export type Database = {
           id?: string
           last_name?: string
           location_id?: string | null
+          loyalty_points?: number | null
           mailbox_number?: string
           notes?: string | null
           phone?: string | null
@@ -1816,6 +2220,285 @@ export type Database = {
         }
         Relationships: []
       }
+      eco_friendly_packaging: {
+        Row: {
+          carbon_saved_kg: number | null
+          cost_savings: number | null
+          created_at: string | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          material_type: string | null
+          name: string
+          updated_at: string | null
+          usage_count: number | null
+        }
+        Insert: {
+          carbon_saved_kg?: number | null
+          cost_savings?: number | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          material_type?: string | null
+          name: string
+          updated_at?: string | null
+          usage_count?: number | null
+        }
+        Update: {
+          carbon_saved_kg?: number | null
+          cost_savings?: number | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          material_type?: string | null
+          name?: string
+          updated_at?: string | null
+          usage_count?: number | null
+        }
+        Relationships: []
+      }
+      efficiency_improvements: {
+        Row: {
+          carbon_saved_kg: number | null
+          cost_savings: number | null
+          created_at: string | null
+          description: string | null
+          energy_saved_kwh: number | null
+          id: string
+          implementation_date: string | null
+          improvement_type: string
+          is_active: boolean | null
+          payback_period_months: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          carbon_saved_kg?: number | null
+          cost_savings?: number | null
+          created_at?: string | null
+          description?: string | null
+          energy_saved_kwh?: number | null
+          id?: string
+          implementation_date?: string | null
+          improvement_type: string
+          is_active?: boolean | null
+          payback_period_months?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          carbon_saved_kg?: number | null
+          cost_savings?: number | null
+          created_at?: string | null
+          description?: string | null
+          energy_saved_kwh?: number | null
+          id?: string
+          implementation_date?: string | null
+          improvement_type?: string
+          is_active?: boolean | null
+          payback_period_months?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      electric_vehicles: {
+        Row: {
+          battery_capacity_kwh: number | null
+          carbon_saved_kg: number | null
+          charging_sessions: number | null
+          created_at: string | null
+          distance_traveled_km: number | null
+          id: string
+          is_active: boolean | null
+          model: string | null
+          range_km: number | null
+          updated_at: string | null
+          vehicle_id: string
+          vehicle_type: string | null
+        }
+        Insert: {
+          battery_capacity_kwh?: number | null
+          carbon_saved_kg?: number | null
+          charging_sessions?: number | null
+          created_at?: string | null
+          distance_traveled_km?: number | null
+          id?: string
+          is_active?: boolean | null
+          model?: string | null
+          range_km?: number | null
+          updated_at?: string | null
+          vehicle_id: string
+          vehicle_type?: string | null
+        }
+        Update: {
+          battery_capacity_kwh?: number | null
+          carbon_saved_kg?: number | null
+          charging_sessions?: number | null
+          created_at?: string | null
+          distance_traveled_km?: number | null
+          id?: string
+          is_active?: boolean | null
+          model?: string | null
+          range_km?: number | null
+          updated_at?: string | null
+          vehicle_id?: string
+          vehicle_type?: string | null
+        }
+        Relationships: []
+      }
+      energy_consumption: {
+        Row: {
+          carbon_footprint: number | null
+          consumption: number
+          cost: number | null
+          created_at: string | null
+          date: string
+          id: string
+          location: string | null
+          source: string
+          unit: string
+        }
+        Insert: {
+          carbon_footprint?: number | null
+          consumption: number
+          cost?: number | null
+          created_at?: string | null
+          date: string
+          id?: string
+          location?: string | null
+          source: string
+          unit?: string
+        }
+        Update: {
+          carbon_footprint?: number | null
+          consumption?: number
+          cost?: number | null
+          created_at?: string | null
+          date?: string
+          id?: string
+          location?: string | null
+          source?: string
+          unit?: string
+        }
+        Relationships: []
+      }
+      energy_usage_trends: {
+        Row: {
+          carbon_emissions_kg: number | null
+          cost: number | null
+          created_at: string | null
+          date: string
+          id: string
+          non_renewable_usage_kwh: number | null
+          renewable_usage_kwh: number | null
+          total_usage_kwh: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          carbon_emissions_kg?: number | null
+          cost?: number | null
+          created_at?: string | null
+          date: string
+          id?: string
+          non_renewable_usage_kwh?: number | null
+          renewable_usage_kwh?: number | null
+          total_usage_kwh?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          carbon_emissions_kg?: number | null
+          cost?: number | null
+          created_at?: string | null
+          date?: string
+          id?: string
+          non_renewable_usage_kwh?: number | null
+          renewable_usage_kwh?: number | null
+          total_usage_kwh?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      environmental_education: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          end_date: string | null
+          id: string
+          impact_score: number | null
+          is_active: boolean | null
+          materials_created: number | null
+          participants_count: number | null
+          program_name: string
+          sessions_conducted: number | null
+          start_date: string | null
+          target_audience: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          impact_score?: number | null
+          is_active?: boolean | null
+          materials_created?: number | null
+          participants_count?: number | null
+          program_name: string
+          sessions_conducted?: number | null
+          start_date?: string | null
+          target_audience?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          impact_score?: number | null
+          is_active?: boolean | null
+          materials_created?: number | null
+          participants_count?: number | null
+          program_name?: string
+          sessions_conducted?: number | null
+          start_date?: string | null
+          target_audience?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      environmental_visualizations: {
+        Row: {
+          config: Json | null
+          created_at: string | null
+          data: Json
+          id: string
+          is_active: boolean | null
+          title: string
+          updated_at: string | null
+          visualization_type: string
+        }
+        Insert: {
+          config?: Json | null
+          created_at?: string | null
+          data: Json
+          id?: string
+          is_active?: boolean | null
+          title: string
+          updated_at?: string | null
+          visualization_type: string
+        }
+        Update: {
+          config?: Json | null
+          created_at?: string | null
+          data?: Json
+          id?: string
+          is_active?: boolean | null
+          title?: string
+          updated_at?: string | null
+          visualization_type?: string
+        }
+        Relationships: []
+      }
       failed_processes: {
         Row: {
           created_at: string
@@ -1875,6 +2558,227 @@ export type Database = {
           },
         ]
       }
+      green_badges: {
+        Row: {
+          category: string
+          created_at: string | null
+          criteria: Json | null
+          description: string | null
+          earned_date: string
+          icon: string | null
+          id: string
+          impact: number | null
+          level: string
+          name: string
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          criteria?: Json | null
+          description?: string | null
+          earned_date: string
+          icon?: string | null
+          id?: string
+          impact?: number | null
+          level: string
+          name: string
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          criteria?: Json | null
+          description?: string | null
+          earned_date?: string
+          icon?: string | null
+          id?: string
+          impact?: number | null
+          level?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      green_certifications: {
+        Row: {
+          certification_date: string | null
+          certification_level: string | null
+          certification_name: string
+          created_at: string | null
+          description: string | null
+          expiry_date: string | null
+          id: string
+          is_active: boolean | null
+          issuing_organization: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          certification_date?: string | null
+          certification_level?: string | null
+          certification_name: string
+          created_at?: string | null
+          description?: string | null
+          expiry_date?: string | null
+          id?: string
+          is_active?: boolean | null
+          issuing_organization?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          certification_date?: string | null
+          certification_level?: string | null
+          certification_name?: string
+          created_at?: string | null
+          description?: string | null
+          expiry_date?: string | null
+          id?: string
+          is_active?: boolean | null
+          issuing_organization?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      green_initiatives: {
+        Row: {
+          budget: number | null
+          carbon_reduction: number | null
+          category: string
+          cost_savings: number | null
+          created_at: string | null
+          description: string | null
+          end_date: string | null
+          energy_savings: number | null
+          id: string
+          name: string
+          participants: Json | null
+          spent: number | null
+          start_date: string
+          status: string
+          updated_at: string | null
+          waste_reduction: number | null
+        }
+        Insert: {
+          budget?: number | null
+          carbon_reduction?: number | null
+          category: string
+          cost_savings?: number | null
+          created_at?: string | null
+          description?: string | null
+          end_date?: string | null
+          energy_savings?: number | null
+          id?: string
+          name: string
+          participants?: Json | null
+          spent?: number | null
+          start_date: string
+          status?: string
+          updated_at?: string | null
+          waste_reduction?: number | null
+        }
+        Update: {
+          budget?: number | null
+          carbon_reduction?: number | null
+          category?: string
+          cost_savings?: number | null
+          created_at?: string | null
+          description?: string | null
+          end_date?: string | null
+          energy_savings?: number | null
+          id?: string
+          name?: string
+          participants?: Json | null
+          spent?: number | null
+          start_date?: string
+          status?: string
+          updated_at?: string | null
+          waste_reduction?: number | null
+        }
+        Relationships: []
+      }
+      impact_report: {
+        Row: {
+          challenges: string | null
+          created_at: string | null
+          highlights: string | null
+          id: string
+          next_steps: string | null
+          report_date: string | null
+          report_period: string
+          sustainability_score: number | null
+          total_carbon_saved_kg: number | null
+          total_cost_savings: number | null
+          total_people_reached: number | null
+          total_trees_planted: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          challenges?: string | null
+          created_at?: string | null
+          highlights?: string | null
+          id?: string
+          next_steps?: string | null
+          report_date?: string | null
+          report_period: string
+          sustainability_score?: number | null
+          total_carbon_saved_kg?: number | null
+          total_cost_savings?: number | null
+          total_people_reached?: number | null
+          total_trees_planted?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          challenges?: string | null
+          created_at?: string | null
+          highlights?: string | null
+          id?: string
+          next_steps?: string | null
+          report_date?: string | null
+          report_period?: string
+          sustainability_score?: number | null
+          total_carbon_saved_kg?: number | null
+          total_cost_savings?: number | null
+          total_people_reached?: number | null
+          total_trees_planted?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      initiative_milestones: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          due_date: string | null
+          id: string
+          initiative_id: string | null
+          status: string
+          title: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          initiative_id?: string | null
+          status?: string
+          title: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          initiative_id?: string | null
+          status?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "initiative_milestones_initiative_id_fkey"
+            columns: ["initiative_id"]
+            isOneToOne: false
+            referencedRelation: "green_initiatives"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       integration_logs: {
         Row: {
           created_at: string
@@ -1921,6 +2825,62 @@ export type Database = {
             columns: ["integration_id"]
             isOneToOne: false
             referencedRelation: "integrations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      integration_partners: {
+        Row: {
+          api_key: string | null
+          api_secret: string | null
+          api_status: string
+          created_at: string | null
+          current_usage: Json | null
+          documentation_url: string | null
+          id: string
+          partner_id: string | null
+          sla_terms: Json | null
+          support_tickets: Json | null
+          updated_at: string | null
+          usage_limits: Json | null
+          webhook_url: string | null
+        }
+        Insert: {
+          api_key?: string | null
+          api_secret?: string | null
+          api_status?: string
+          created_at?: string | null
+          current_usage?: Json | null
+          documentation_url?: string | null
+          id?: string
+          partner_id?: string | null
+          sla_terms?: Json | null
+          support_tickets?: Json | null
+          updated_at?: string | null
+          usage_limits?: Json | null
+          webhook_url?: string | null
+        }
+        Update: {
+          api_key?: string | null
+          api_secret?: string | null
+          api_status?: string
+          created_at?: string | null
+          current_usage?: Json | null
+          documentation_url?: string | null
+          id?: string
+          partner_id?: string | null
+          sla_terms?: Json | null
+          support_tickets?: Json | null
+          updated_at?: string | null
+          usage_limits?: Json | null
+          webhook_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "integration_partners_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "business_partners"
             referencedColumns: ["id"]
           },
         ]
@@ -2545,6 +3505,51 @@ export type Database = {
           },
         ]
       }
+      local_initiatives: {
+        Row: {
+          carbon_saved_kg: number | null
+          cost_invested: number | null
+          created_at: string | null
+          description: string | null
+          end_date: string | null
+          id: string
+          location: string | null
+          name: string
+          participants_count: number | null
+          start_date: string | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          carbon_saved_kg?: number | null
+          cost_invested?: number | null
+          created_at?: string | null
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          location?: string | null
+          name: string
+          participants_count?: number | null
+          start_date?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          carbon_saved_kg?: number | null
+          cost_invested?: number | null
+          created_at?: string | null
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          location?: string | null
+          name?: string
+          participants_count?: number | null
+          start_date?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       location_staff: {
         Row: {
           assigned_at: string | null
@@ -2661,6 +3666,321 @@ export type Database = {
           updated_at?: string
           updated_by?: string | null
           zip_code?: string
+        }
+        Relationships: []
+      }
+      loyalty_achievements: {
+        Row: {
+          badge_image_url: string | null
+          category: string
+          created_at: string | null
+          description: string | null
+          icon: string
+          id: string
+          is_active: boolean | null
+          max_progress: number
+          name: string
+          points_reward: number
+          rarity: string
+          updated_at: string | null
+        }
+        Insert: {
+          badge_image_url?: string | null
+          category: string
+          created_at?: string | null
+          description?: string | null
+          icon: string
+          id?: string
+          is_active?: boolean | null
+          max_progress?: number
+          name: string
+          points_reward?: number
+          rarity?: string
+          updated_at?: string | null
+        }
+        Update: {
+          badge_image_url?: string | null
+          category?: string
+          created_at?: string | null
+          description?: string | null
+          icon?: string
+          id?: string
+          is_active?: boolean | null
+          max_progress?: number
+          name?: string
+          points_reward?: number
+          rarity?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      loyalty_challenges: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          end_date: string
+          goal: number
+          id: string
+          is_active: boolean | null
+          max_participants: number | null
+          name: string
+          points_reward: number
+          start_date: string
+          type: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          end_date: string
+          goal: number
+          id?: string
+          is_active?: boolean | null
+          max_participants?: number | null
+          name: string
+          points_reward: number
+          start_date: string
+          type: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          end_date?: string
+          goal?: number
+          id?: string
+          is_active?: boolean | null
+          max_participants?: number | null
+          name?: string
+          points_reward?: number
+          start_date?: string
+          type?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      loyalty_points: {
+        Row: {
+          balance: number
+          created_at: string | null
+          expires_at: string | null
+          id: string
+          last_updated: string | null
+          total_earned: number
+          total_redeemed: number
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          balance?: number
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          last_updated?: string | null
+          total_earned?: number
+          total_redeemed?: number
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          balance?: number
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          last_updated?: string | null
+          total_earned?: number
+          total_redeemed?: number
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      loyalty_rewards: {
+        Row: {
+          category: string
+          created_at: string | null
+          current_redemptions: number | null
+          current_value: number
+          description: string | null
+          id: string
+          image_url: string | null
+          is_available: boolean | null
+          is_limited: boolean | null
+          max_redemptions: number | null
+          name: string
+          original_value: number
+          partner_id: string | null
+          partner_name: string | null
+          points_cost: number
+          updated_at: string | null
+          valid_from: string | null
+          valid_until: string | null
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          current_redemptions?: number | null
+          current_value: number
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_available?: boolean | null
+          is_limited?: boolean | null
+          max_redemptions?: number | null
+          name: string
+          original_value: number
+          partner_id?: string | null
+          partner_name?: string | null
+          points_cost: number
+          updated_at?: string | null
+          valid_from?: string | null
+          valid_until?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          current_redemptions?: number | null
+          current_value?: number
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_available?: boolean | null
+          is_limited?: boolean | null
+          max_redemptions?: number | null
+          name?: string
+          original_value?: number
+          partner_id?: string | null
+          partner_name?: string | null
+          points_cost?: number
+          updated_at?: string | null
+          valid_from?: string | null
+          valid_until?: string | null
+        }
+        Relationships: []
+      }
+      loyalty_settings: {
+        Row: {
+          achievement_alerts: boolean | null
+          allow_referrals: boolean | null
+          birthday_reminders: boolean | null
+          challenge_reminders: boolean | null
+          created_at: string | null
+          email_notifications: boolean | null
+          id: string
+          public_profile: boolean | null
+          push_notifications: boolean | null
+          share_achievements: boolean | null
+          show_on_leaderboard: boolean | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          achievement_alerts?: boolean | null
+          allow_referrals?: boolean | null
+          birthday_reminders?: boolean | null
+          challenge_reminders?: boolean | null
+          created_at?: string | null
+          email_notifications?: boolean | null
+          id?: string
+          public_profile?: boolean | null
+          push_notifications?: boolean | null
+          share_achievements?: boolean | null
+          show_on_leaderboard?: boolean | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          achievement_alerts?: boolean | null
+          allow_referrals?: boolean | null
+          birthday_reminders?: boolean | null
+          challenge_reminders?: boolean | null
+          created_at?: string | null
+          email_notifications?: boolean | null
+          id?: string
+          public_profile?: boolean | null
+          push_notifications?: boolean | null
+          share_achievements?: boolean | null
+          show_on_leaderboard?: boolean | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      loyalty_streaks: {
+        Row: {
+          created_at: string | null
+          current_streak: number
+          id: string
+          last_activity: string | null
+          longest_streak: number
+          milestone_reward: number
+          next_milestone: number
+          type: string
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          current_streak?: number
+          id?: string
+          last_activity?: string | null
+          longest_streak?: number
+          milestone_reward?: number
+          next_milestone?: number
+          type: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          current_streak?: number
+          id?: string
+          last_activity?: string | null
+          longest_streak?: number
+          milestone_reward?: number
+          next_milestone?: number
+          type?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      loyalty_tiers: {
+        Row: {
+          color: string
+          created_at: string | null
+          description: string | null
+          display_name: string
+          icon: string
+          id: string
+          max_points: number | null
+          min_points: number
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          color: string
+          created_at?: string | null
+          description?: string | null
+          display_name: string
+          icon: string
+          id?: string
+          max_points?: number | null
+          min_points: number
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          color?: string
+          created_at?: string | null
+          description?: string | null
+          display_name?: string
+          icon?: string
+          id?: string
+          max_points?: number | null
+          min_points?: number
+          name?: string
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -3054,6 +4374,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      material_tracking: {
+        Row: {
+          carbon_saved_kg: number | null
+          created_at: string | null
+          id: string
+          material_type: string
+          quantity_kg: number | null
+          recycled_amount_kg: number | null
+          tracking_date: string | null
+          updated_at: string | null
+          waste_amount_kg: number | null
+        }
+        Insert: {
+          carbon_saved_kg?: number | null
+          created_at?: string | null
+          id?: string
+          material_type: string
+          quantity_kg?: number | null
+          recycled_amount_kg?: number | null
+          tracking_date?: string | null
+          updated_at?: string | null
+          waste_amount_kg?: number | null
+        }
+        Update: {
+          carbon_saved_kg?: number | null
+          created_at?: string | null
+          id?: string
+          material_type?: string
+          quantity_kg?: number | null
+          recycled_amount_kg?: number | null
+          tracking_date?: string | null
+          updated_at?: string | null
+          waste_amount_kg?: number | null
+        }
+        Relationships: []
       }
       notification_analytics: {
         Row: {
@@ -3543,6 +4899,42 @@ export type Database = {
           },
         ]
       }
+      package_reuse_program: {
+        Row: {
+          carbon_saved_kg: number | null
+          cost_savings: number | null
+          created_at: string | null
+          id: string
+          original_use_date: string | null
+          package_id: string
+          reuse_count: number | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          carbon_saved_kg?: number | null
+          cost_savings?: number | null
+          created_at?: string | null
+          id?: string
+          original_use_date?: string | null
+          package_id: string
+          reuse_count?: number | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          carbon_saved_kg?: number | null
+          cost_savings?: number | null
+          created_at?: string | null
+          id?: string
+          original_use_date?: string | null
+          package_id?: string
+          reuse_count?: number | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       package_transfers: {
         Row: {
           completed_at: string | null
@@ -3693,6 +5085,303 @@ export type Database = {
             columns: ["location_id"]
             isOneToOne: false
             referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      paperless_initiatives: {
+        Row: {
+          carbon_saved_kg: number | null
+          cost_savings: number | null
+          created_at: string | null
+          description: string | null
+          id: string
+          implementation_date: string | null
+          is_active: boolean | null
+          name: string
+          paper_saved_sheets: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          carbon_saved_kg?: number | null
+          cost_savings?: number | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          implementation_date?: string | null
+          is_active?: boolean | null
+          name: string
+          paper_saved_sheets?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          carbon_saved_kg?: number | null
+          cost_savings?: number | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          implementation_date?: string | null
+          is_active?: boolean | null
+          name?: string
+          paper_saved_sheets?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      partner_analytics: {
+        Row: {
+          created_at: string | null
+          customer_count: number | null
+          growth_rate: number | null
+          id: string
+          opportunities: Json | null
+          orders_count: number | null
+          partner_id: string | null
+          performance_score: number | null
+          period: string
+          relationship_score: number | null
+          revenue: number | null
+          risk_assessment: Json | null
+        }
+        Insert: {
+          created_at?: string | null
+          customer_count?: number | null
+          growth_rate?: number | null
+          id?: string
+          opportunities?: Json | null
+          orders_count?: number | null
+          partner_id?: string | null
+          performance_score?: number | null
+          period: string
+          relationship_score?: number | null
+          revenue?: number | null
+          risk_assessment?: Json | null
+        }
+        Update: {
+          created_at?: string | null
+          customer_count?: number | null
+          growth_rate?: number | null
+          id?: string
+          opportunities?: Json | null
+          orders_count?: number | null
+          partner_id?: string | null
+          performance_score?: number | null
+          period?: string
+          relationship_score?: number | null
+          revenue?: number | null
+          risk_assessment?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_analytics_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "business_partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_commissions: {
+        Row: {
+          amount: number
+          commission_amount: number | null
+          commission_rate: number
+          contract_id: string | null
+          created_at: string | null
+          id: string
+          notes: string | null
+          partner_id: string | null
+          payment_date: string | null
+          reference: string | null
+          status: string
+        }
+        Insert: {
+          amount: number
+          commission_amount?: number | null
+          commission_rate: number
+          contract_id?: string | null
+          created_at?: string | null
+          id?: string
+          notes?: string | null
+          partner_id?: string | null
+          payment_date?: string | null
+          reference?: string | null
+          status?: string
+        }
+        Update: {
+          amount?: number
+          commission_amount?: number | null
+          commission_rate?: number
+          contract_id?: string | null
+          created_at?: string | null
+          id?: string
+          notes?: string | null
+          partner_id?: string | null
+          payment_date?: string | null
+          reference?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_commissions_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "partner_contracts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_commissions_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "business_partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_contracts: {
+        Row: {
+          commission_structure: Json | null
+          contract_number: string
+          created_at: string | null
+          description: string | null
+          end_date: string | null
+          id: string
+          partner_id: string | null
+          payment_terms: string | null
+          start_date: string
+          status: string
+          terms: Json | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          commission_structure?: Json | null
+          contract_number: string
+          created_at?: string | null
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          partner_id?: string | null
+          payment_terms?: string | null
+          start_date: string
+          status?: string
+          terms?: Json | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          commission_structure?: Json | null
+          contract_number?: string
+          created_at?: string | null
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          partner_id?: string | null
+          payment_terms?: string | null
+          start_date?: string
+          status?: string
+          terms?: Json | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_contracts_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "business_partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_programs: {
+        Row: {
+          carbon_saved_kg: number | null
+          cost_invested: number | null
+          created_at: string | null
+          description: string | null
+          end_date: string | null
+          id: string
+          partner_name: string
+          partnership_type: string | null
+          program_name: string
+          start_date: string | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          carbon_saved_kg?: number | null
+          cost_invested?: number | null
+          created_at?: string | null
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          partner_name: string
+          partnership_type?: string | null
+          program_name: string
+          start_date?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          carbon_saved_kg?: number | null
+          cost_invested?: number | null
+          created_at?: string | null
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          partner_name?: string
+          partnership_type?: string | null
+          program_name?: string
+          start_date?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      partner_vendors: {
+        Row: {
+          approval_status: string
+          certifications: Json | null
+          compliance_score: number | null
+          created_at: string | null
+          id: string
+          insurance_info: Json | null
+          partner_id: string | null
+          quality_rating: number | null
+          updated_at: string | null
+          vendor_type: string
+        }
+        Insert: {
+          approval_status?: string
+          certifications?: Json | null
+          compliance_score?: number | null
+          created_at?: string | null
+          id?: string
+          insurance_info?: Json | null
+          partner_id?: string | null
+          quality_rating?: number | null
+          updated_at?: string | null
+          vendor_type: string
+        }
+        Update: {
+          approval_status?: string
+          certifications?: Json | null
+          compliance_score?: number | null
+          created_at?: string | null
+          id?: string
+          insurance_info?: Json | null
+          partner_id?: string | null
+          quality_rating?: number | null
+          updated_at?: string | null
+          vendor_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_vendors_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "business_partners"
             referencedColumns: ["id"]
           },
         ]
@@ -3888,6 +5577,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      points_transactions: {
+        Row: {
+          amount: number
+          balance: number
+          created_at: string | null
+          description: string
+          expires_at: string | null
+          id: string
+          metadata: Json | null
+          type: string
+          user_id: string | null
+        }
+        Insert: {
+          amount: number
+          balance: number
+          created_at?: string | null
+          description: string
+          expires_at?: string | null
+          id?: string
+          metadata?: Json | null
+          type: string
+          user_id?: string | null
+        }
+        Update: {
+          amount?: number
+          balance?: number
+          created_at?: string | null
+          description?: string
+          expires_at?: string | null
+          id?: string
+          metadata?: Json | null
+          type?: string
+          user_id?: string | null
+        }
+        Relationships: []
       }
       profiles: {
         Row: {
@@ -4208,6 +5933,159 @@ export type Database = {
         }
         Relationships: []
       }
+      recycling_locations: {
+        Row: {
+          address: string | null
+          contact_info: string | null
+          created_at: string | null
+          hours_of_operation: string | null
+          id: string
+          is_active: boolean | null
+          latitude: number | null
+          longitude: number | null
+          materials_accepted: string[] | null
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          address?: string | null
+          contact_info?: string | null
+          created_at?: string | null
+          hours_of_operation?: string | null
+          id?: string
+          is_active?: boolean | null
+          latitude?: number | null
+          longitude?: number | null
+          materials_accepted?: string[] | null
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          address?: string | null
+          contact_info?: string | null
+          created_at?: string | null
+          hours_of_operation?: string | null
+          id?: string
+          is_active?: boolean | null
+          latitude?: number | null
+          longitude?: number | null
+          materials_accepted?: string[] | null
+          name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      recycling_metrics: {
+        Row: {
+          carbon_offset: number | null
+          cost_savings: number | null
+          created_at: string | null
+          date: string
+          id: string
+          location: string | null
+          material_type: string
+          quantity: number
+          unit: string
+        }
+        Insert: {
+          carbon_offset?: number | null
+          cost_savings?: number | null
+          created_at?: string | null
+          date: string
+          id?: string
+          location?: string | null
+          material_type: string
+          quantity: number
+          unit?: string
+        }
+        Update: {
+          carbon_offset?: number | null
+          cost_savings?: number | null
+          created_at?: string | null
+          date?: string
+          id?: string
+          location?: string | null
+          material_type?: string
+          quantity?: number
+          unit?: string
+        }
+        Relationships: []
+      }
+      reduction_goals: {
+        Row: {
+          created_at: string | null
+          current_amount: number | null
+          description: string | null
+          goal_type: string
+          id: string
+          status: string | null
+          target_amount: number
+          target_date: string | null
+          unit: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          current_amount?: number | null
+          description?: string | null
+          goal_type: string
+          id?: string
+          status?: string | null
+          target_amount: number
+          target_date?: string | null
+          unit?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          current_amount?: number | null
+          description?: string | null
+          goal_type?: string
+          id?: string
+          status?: string | null
+          target_amount?: number
+          target_date?: string | null
+          unit?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      referral_program: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          id: string
+          points_earned: number | null
+          referral_code: string
+          referred_email: string
+          referrer_id: string | null
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          points_earned?: number | null
+          referral_code: string
+          referred_email: string
+          referrer_id?: string | null
+          status?: string
+          updated_at?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          points_earned?: number | null
+          referral_code?: string
+          referred_email?: string
+          referrer_id?: string | null
+          status?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       report_executions: {
         Row: {
           completed_at: string | null
@@ -4477,6 +6355,92 @@ export type Database = {
         }
         Relationships: []
       }
+      review_incentives: {
+        Row: {
+          created_at: string | null
+          id: string
+          platform: string
+          points_earned: number
+          rating: number
+          review: string | null
+          submitted_at: string | null
+          user_id: string | null
+          verified: boolean | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          platform: string
+          points_earned?: number
+          rating: number
+          review?: string | null
+          submitted_at?: string | null
+          user_id?: string | null
+          verified?: boolean | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          platform?: string
+          points_earned?: number
+          rating?: number
+          review?: string | null
+          submitted_at?: string | null
+          user_id?: string | null
+          verified?: boolean | null
+        }
+        Relationships: []
+      }
+      reward_redemptions: {
+        Row: {
+          activation_code: string | null
+          created_at: string | null
+          expires_at: string | null
+          id: string
+          points_spent: number
+          redeemed_at: string | null
+          reward_id: string | null
+          status: string
+          updated_at: string | null
+          used_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          activation_code?: string | null
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          points_spent: number
+          redeemed_at?: string | null
+          reward_id?: string | null
+          status?: string
+          updated_at?: string | null
+          used_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          activation_code?: string | null
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          points_spent?: number
+          redeemed_at?: string | null
+          reward_id?: string | null
+          status?: string
+          updated_at?: string | null
+          used_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reward_redemptions_reward_id_fkey"
+            columns: ["reward_id"]
+            isOneToOne: false
+            referencedRelation: "loyalty_rewards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       scanning_queue: {
         Row: {
           assigned_to: string | null
@@ -4549,6 +6513,84 @@ export type Database = {
           },
         ]
       }
+      social_shares: {
+        Row: {
+          content: string | null
+          created_at: string | null
+          engagement_count: number | null
+          id: string
+          platform: string
+          points_earned: number
+          shared_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string | null
+          engagement_count?: number | null
+          id?: string
+          platform: string
+          points_earned?: number
+          shared_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          content?: string | null
+          created_at?: string | null
+          engagement_count?: number | null
+          id?: string
+          platform?: string
+          points_earned?: number
+          shared_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      solar_panels: {
+        Row: {
+          capacity_kw: number | null
+          carbon_saved_kg: number | null
+          cost_savings: number | null
+          created_at: string | null
+          efficiency_percentage: number | null
+          energy_generated_kwh: number | null
+          id: string
+          installation_date: string | null
+          is_active: boolean | null
+          location: string | null
+          panel_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          capacity_kw?: number | null
+          carbon_saved_kg?: number | null
+          cost_savings?: number | null
+          created_at?: string | null
+          efficiency_percentage?: number | null
+          energy_generated_kwh?: number | null
+          id?: string
+          installation_date?: string | null
+          is_active?: boolean | null
+          location?: string | null
+          panel_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          capacity_kw?: number | null
+          carbon_saved_kg?: number | null
+          cost_savings?: number | null
+          created_at?: string | null
+          efficiency_percentage?: number | null
+          energy_generated_kwh?: number | null
+          id?: string
+          installation_date?: string | null
+          is_active?: boolean | null
+          location?: string | null
+          panel_id?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       staff_members: {
         Row: {
           created_at: string
@@ -4601,6 +6643,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      sustainability_score: {
+        Row: {
+          community_score: number | null
+          created_at: string | null
+          date: string
+          energy_score: number | null
+          id: string
+          notes: string | null
+          overall_score: number
+          transportation_score: number | null
+          waste_score: number | null
+        }
+        Insert: {
+          community_score?: number | null
+          created_at?: string | null
+          date: string
+          energy_score?: number | null
+          id?: string
+          notes?: string | null
+          overall_score: number
+          transportation_score?: number | null
+          waste_score?: number | null
+        }
+        Update: {
+          community_score?: number | null
+          created_at?: string | null
+          date?: string
+          energy_score?: number | null
+          id?: string
+          notes?: string | null
+          overall_score?: number
+          transportation_score?: number | null
+          waste_score?: number | null
+        }
+        Relationships: []
       }
       system_health_metrics: {
         Row: {
@@ -4821,6 +6899,230 @@ export type Database = {
           },
         ]
       }
+      tier_benefits: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          icon: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          tier_id: string | null
+          type: string
+          updated_at: string | null
+          value: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          tier_id?: string | null
+          type: string
+          updated_at?: string | null
+          value?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          tier_id?: string | null
+          type?: string
+          updated_at?: string | null
+          value?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tier_benefits_tier_id_fkey"
+            columns: ["tier_id"]
+            isOneToOne: false
+            referencedRelation: "loyalty_tiers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tree_planting_counter: {
+        Row: {
+          goal: number
+          id: string
+          progress: number | null
+          total_carbon_offset: number | null
+          total_planted: number
+          updated_at: string | null
+        }
+        Insert: {
+          goal?: number
+          id?: string
+          progress?: number | null
+          total_carbon_offset?: number | null
+          total_planted?: number
+          updated_at?: string | null
+        }
+        Update: {
+          goal?: number
+          id?: string
+          progress?: number | null
+          total_carbon_offset?: number | null
+          total_planted?: number
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      tree_plantings: {
+        Row: {
+          carbon_offset: number | null
+          created_at: string | null
+          date: string
+          id: string
+          location: string
+          notes: string | null
+          quantity: number
+          species: string
+        }
+        Insert: {
+          carbon_offset?: number | null
+          created_at?: string | null
+          date: string
+          id?: string
+          location: string
+          notes?: string | null
+          quantity?: number
+          species: string
+        }
+        Update: {
+          carbon_offset?: number | null
+          created_at?: string | null
+          date?: string
+          id?: string
+          location?: string
+          notes?: string | null
+          quantity?: number
+          species?: string
+        }
+        Relationships: []
+      }
+      user_achievements: {
+        Row: {
+          achievement_id: string | null
+          created_at: string | null
+          id: string
+          is_unlocked: boolean | null
+          progress: number
+          unlocked_at: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          achievement_id?: string | null
+          created_at?: string | null
+          id?: string
+          is_unlocked?: boolean | null
+          progress?: number
+          unlocked_at?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          achievement_id?: string | null
+          created_at?: string | null
+          id?: string
+          is_unlocked?: boolean | null
+          progress?: number
+          unlocked_at?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_achievements_achievement_id_fkey"
+            columns: ["achievement_id"]
+            isOneToOne: false
+            referencedRelation: "loyalty_achievements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_challenge_progress: {
+        Row: {
+          challenge_id: string | null
+          completed_at: string | null
+          created_at: string | null
+          current_progress: number
+          id: string
+          is_completed: boolean | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          challenge_id?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          current_progress?: number
+          id?: string
+          is_completed?: boolean | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          challenge_id?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          current_progress?: number
+          id?: string
+          is_completed?: boolean | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_challenge_progress_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "loyalty_challenges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_community_contributions: {
+        Row: {
+          contribution: number
+          created_at: string | null
+          goal_id: string | null
+          id: string
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          contribution?: number
+          created_at?: string | null
+          goal_id?: string | null
+          id?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          contribution?: number
+          created_at?: string | null
+          goal_id?: string | null
+          id?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_community_contributions_goal_id_fkey"
+            columns: ["goal_id"]
+            isOneToOne: false
+            referencedRelation: "community_goals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_error_reports: {
         Row: {
           actual_behavior: string | null
@@ -4995,6 +7297,38 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      user_tiers: {
+        Row: {
+          assigned_at: string | null
+          expires_at: string | null
+          id: string
+          tier_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          assigned_at?: string | null
+          expires_at?: string | null
+          id?: string
+          tier_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          assigned_at?: string | null
+          expires_at?: string | null
+          id?: string
+          tier_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_tiers_tier_id_fkey"
+            columns: ["tier_id"]
+            isOneToOne: false
+            referencedRelation: "loyalty_tiers"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       vendors: {
         Row: {
@@ -5364,6 +7698,45 @@ export type Database = {
           },
         ]
       }
+      waste_audit: {
+        Row: {
+          audit_date: string
+          auditor: string | null
+          created_at: string | null
+          id: string
+          non_recyclable_waste_kg: number | null
+          recommendations: string | null
+          recyclable_waste_kg: number | null
+          total_waste_kg: number | null
+          updated_at: string | null
+          waste_reduction_percentage: number | null
+        }
+        Insert: {
+          audit_date: string
+          auditor?: string | null
+          created_at?: string | null
+          id?: string
+          non_recyclable_waste_kg?: number | null
+          recommendations?: string | null
+          recyclable_waste_kg?: number | null
+          total_waste_kg?: number | null
+          updated_at?: string | null
+          waste_reduction_percentage?: number | null
+        }
+        Update: {
+          audit_date?: string
+          auditor?: string | null
+          created_at?: string | null
+          id?: string
+          non_recyclable_waste_kg?: number | null
+          recommendations?: string | null
+          recyclable_waste_kg?: number | null
+          total_waste_kg?: number | null
+          updated_at?: string | null
+          waste_reduction_percentage?: number | null
+        }
+        Relationships: []
+      }
       webhook_endpoints: {
         Row: {
           created_at: string
@@ -5473,7 +7846,30 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      performance_dashboard: {
+        Row: {
+          details: Json | null
+          metric: string | null
+          status: string | null
+        }
+        Relationships: []
+      }
+      security_dashboard: {
+        Row: {
+          details: Json | null
+          metric: string | null
+          status: string | null
+        }
+        Relationships: []
+      }
+      system_health: {
+        Row: {
+          details: Json | null
+          metric: string | null
+          status: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       calculate_virtual_mailbox_usage: {
@@ -5489,6 +7885,14 @@ export type Database = {
           forward_actions: number
           shred_actions: number
         }[]
+      }
+      check_security_health: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
+      decrement_loyalty_points: {
+        Args: { user_id: string; points_to_subtract: number }
+        Returns: number
       }
       generate_adjustment_number: {
         Args: { location_code: string }
@@ -5537,6 +7941,10 @@ export type Database = {
           compliance_score: number
         }[]
       }
+      get_system_status: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
       get_user_profile: {
         Args: { _user_id?: string }
         Returns: {
@@ -5552,13 +7960,33 @@ export type Database = {
           email: string
         }[]
       }
+      get_user_tier: {
+        Args: { user_uuid: string }
+        Returns: {
+          tier_name: string
+          tier_display_name: string
+          tier_description: string
+          tier_color: string
+          tier_icon: string
+          min_points: number
+          max_points: number
+        }[]
+      }
       has_role: {
         Args: { _user_id: string; _role: string }
         Returns: boolean
       }
+      increment_loyalty_points: {
+        Args: { user_id: string; points_to_add: number }
+        Returns: number
+      }
       schedule_backup: {
         Args: { p_configuration_id: string; p_job_type?: string }
         Returns: string
+      }
+      test_input_validation: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
       }
       validate_api_key: {
         Args: { key: string }
@@ -5568,6 +7996,22 @@ export type Database = {
           permissions: Json
           rate_limit_per_minute: number
         }[]
+      }
+      validate_email: {
+        Args: { email: string }
+        Returns: boolean
+      }
+      validate_name: {
+        Args: { name: string }
+        Returns: boolean
+      }
+      validate_phone: {
+        Args: { phone: string }
+        Returns: boolean
+      }
+      validate_user_input: {
+        Args: { email: string; phone?: string; name?: string }
+        Returns: boolean
       }
     }
     Enums: {

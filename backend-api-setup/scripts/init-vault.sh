@@ -54,7 +54,6 @@ else
     echo "Vault already initialized. Starting server..."
     vault login $(grep VAULT_TOKEN .env.vault | cut -d '=' -f2)
     vault operator unseal $(grep VAULT_UNSEAL_KEY .env.vault | cut -d '=' -f2)
-fibin/bash
 
 # Start Vault server in development mode
 vault server -config=vault-config.hcl &

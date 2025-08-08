@@ -152,8 +152,6 @@ app.use('/api/notifications', authMiddleware, notificationRoutes);
 app.ws('/ws/notifications/:partnerId', (ws, req) => {
   const { partnerId } = req.params;
   // TODO: Add type validation for req.query.token
-  // TODO: Add type validation for req.query.token
-  // TODO: Add type validation for req.query.token
   const token = req.query.token;
 
   // Validate token

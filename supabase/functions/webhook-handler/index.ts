@@ -4,7 +4,7 @@ import { createHmac } from "https://deno.land/std@0.119.0/node/crypto.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, stripe-signature, x-hub-signature-256',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, stripe-signature, x-hub-signature-256, x-twilio-signature',
 };
 
 serve(async (req) => {
@@ -15,12 +15,11 @@ serve(async (req) => {
   try {
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
     );
 
     const url = new URL(req.url);
     const serviceName = url.searchParams.get('service');
-    const webhookSecret = url.searchParams.get('secret');
 
     if (!serviceName) {
       return new Response(JSON.stringify({ error: 'Service name required' }), {
@@ -35,7 +34,7 @@ serve(async (req) => {
     console.log(`Processing webhook for service: ${serviceName}`);
 
     // Verify webhook signature
-    const isValid = await verifyWebhookSignature(serviceName, body, headers, webhookSecret);
+    const isValid = await verifyWebhookSignature(serviceName, body, headers);
     if (!isValid) {
       console.log('Invalid webhook signature');
       return new Response(JSON.stringify({ error: 'Invalid signature' }), {
@@ -108,16 +107,20 @@ serve(async (req) => {
   }
 });
 
-async function verifyWebhookSignature(service: string, body: string, headers: any, secret?: string): Promise<boolean> {
+async function verifyWebhookSignature(service: string, body: string, headers: any): Promise<boolean> {
   switch (service) {
-    case 'stripe':
+    case 'stripe': {
+      const secret = Deno.env.get('STRIPE_WEBHOOK_SECRET');
+      if (!secret) return false;
       return verifyStripeSignature(body, headers['stripe-signature'], secret);
-    case 'paypal':
-      return verifyPayPalSignature(body, headers, secret);
-    case 'github':
+    }
+    case 'github': {
+      const secret = Deno.env.get('GITHUB_WEBHOOK_SECRET');
+      if (!secret) return false;
       return verifyGitHubSignature(body, headers['x-hub-signature-256'], secret);
+    }
     default:
-      return true; // For services without signature verification
+      return false; // Reject unknown/unverified services by default
   }
 }
 

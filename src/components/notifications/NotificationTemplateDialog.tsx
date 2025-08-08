@@ -12,6 +12,7 @@ import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useNotificationSystem } from '@/hooks/useNotificationSystem';
 import { Eye, Code, Palette } from 'lucide-react';
+import DOMPurify from 'dompurify';
 
 interface NotificationTemplateDialogProps {
   open: boolean;
@@ -437,7 +438,7 @@ export function NotificationTemplateDialog({
                     
                     <div className="whitespace-pre-wrap">
                       {formData.type === 'email' ? (
-                        <div dangerouslySetInnerHTML={{ __html: renderPreview() }} />
+                        <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(renderPreview(), { ALLOWED_TAGS: ['br','strong','em','b','i','p','ul','ol','li','a'], ALLOWED_ATTR: ['href','target','rel'] }) }} />
                       ) : (
                         <p className="text-sm">{renderPreview()}</p>
                       )}

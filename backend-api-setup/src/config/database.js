@@ -147,7 +147,8 @@ module.exports = {
   
   // Get a client from the pool
   getClient: async () => {
-    const client = await pool.connect();
+    const poolInstance = await getPool();
+    const client = await poolInstance.connect();
     const query = client.query;
     const release = client.release;
     

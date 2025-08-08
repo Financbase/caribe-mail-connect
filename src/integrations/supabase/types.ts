@@ -783,6 +783,88 @@ export type Database = {
           },
         ]
       }
+      collaboration_chat: {
+        Row: {
+          created_at: string | null
+          id: string
+          message_content: string
+          session_id: string
+          user_id: string
+          user_name: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          message_content: string
+          session_id: string
+          user_id: string
+          user_name: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          message_content?: string
+          session_id?: string
+          user_id?: string
+          user_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "collaboration_chat_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "collaboration_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      collaboration_sessions: {
+        Row: {
+          created_at: string | null
+          current_participants: number | null
+          ended_at: string | null
+          host_user_id: string
+          id: string
+          max_participants: number | null
+          project_id: string
+          session_name: string | null
+          session_type: string | null
+          status: string
+        }
+        Insert: {
+          created_at?: string | null
+          current_participants?: number | null
+          ended_at?: string | null
+          host_user_id: string
+          id?: string
+          max_participants?: number | null
+          project_id: string
+          session_name?: string | null
+          session_type?: string | null
+          status?: string
+        }
+        Update: {
+          created_at?: string | null
+          current_participants?: number | null
+          ended_at?: string | null
+          host_user_id?: string
+          id?: string
+          max_participants?: number | null
+          project_id?: string
+          session_name?: string | null
+          session_type?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "collaboration_sessions_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       collaboration_workflows: {
         Row: {
           created_at: string | null
@@ -5656,6 +5738,39 @@ export type Database = {
         }
         Relationships: []
       }
+      projects: {
+        Row: {
+          created_at: string | null
+          cultural_style: string | null
+          description: string | null
+          id: string
+          name: string
+          owner_id: string
+          tags: string[] | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          cultural_style?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          owner_id: string
+          tags?: string[] | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          cultural_style?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          owner_id?: string
+          tags?: string[] | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       purchase_order_items: {
         Row: {
           created_at: string
@@ -6441,6 +6556,62 @@ export type Database = {
           },
         ]
       }
+      samples: {
+        Row: {
+          bpm: number | null
+          confidence: number | null
+          created_at: string | null
+          filename: string
+          genre: string | null
+          id: string
+          mime_type: string | null
+          owner_id: string
+          path: string
+          patterns: string[] | null
+          project_id: string | null
+          size_bytes: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          bpm?: number | null
+          confidence?: number | null
+          created_at?: string | null
+          filename: string
+          genre?: string | null
+          id?: string
+          mime_type?: string | null
+          owner_id: string
+          path: string
+          patterns?: string[] | null
+          project_id?: string | null
+          size_bytes?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          bpm?: number | null
+          confidence?: number | null
+          created_at?: string | null
+          filename?: string
+          genre?: string | null
+          id?: string
+          mime_type?: string | null
+          owner_id?: string
+          path?: string
+          patterns?: string[] | null
+          project_id?: string | null
+          size_bytes?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "samples_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       scanning_queue: {
         Row: {
           assigned_to: string | null
@@ -6509,6 +6680,53 @@ export type Database = {
             columns: ["mail_piece_id"]
             isOneToOne: false
             referencedRelation: "mail_pieces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      session_participants: {
+        Row: {
+          id: string
+          joined_at: string | null
+          left_at: string | null
+          permissions: Json | null
+          role: string | null
+          session_id: string
+          status: string | null
+          user_avatar_url: string | null
+          user_id: string
+          user_name: string | null
+        }
+        Insert: {
+          id?: string
+          joined_at?: string | null
+          left_at?: string | null
+          permissions?: Json | null
+          role?: string | null
+          session_id: string
+          status?: string | null
+          user_avatar_url?: string | null
+          user_id: string
+          user_name?: string | null
+        }
+        Update: {
+          id?: string
+          joined_at?: string | null
+          left_at?: string | null
+          permissions?: Json | null
+          role?: string | null
+          session_id?: string
+          status?: string | null
+          user_avatar_url?: string | null
+          user_id?: string
+          user_name?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "session_participants_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "collaboration_sessions"
             referencedColumns: ["id"]
           },
         ]
@@ -7274,6 +7492,48 @@ export type Database = {
           },
         ]
       }
+      user_profiles: {
+        Row: {
+          avatar_url: string | null
+          collaboration_preferences: Json | null
+          created_at: string | null
+          email: string
+          experience_level: string | null
+          full_name: string | null
+          id: string
+          music_genre: string | null
+          preferred_language: string | null
+          region: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          collaboration_preferences?: Json | null
+          created_at?: string | null
+          email: string
+          experience_level?: string | null
+          full_name?: string | null
+          id: string
+          music_genre?: string | null
+          preferred_language?: string | null
+          region?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          collaboration_preferences?: Json | null
+          created_at?: string | null
+          email?: string
+          experience_level?: string | null
+          full_name?: string | null
+          id?: string
+          music_genre?: string | null
+          preferred_language?: string | null
+          region?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           granted_at: string
@@ -7972,6 +8232,26 @@ export type Database = {
           max_points: number
         }[]
       }
+      gtrgm_compress: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      gtrgm_decompress: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      gtrgm_in: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      gtrgm_options: {
+        Args: { "": unknown }
+        Returns: undefined
+      }
+      gtrgm_out: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
       has_role: {
         Args: { _user_id: string; _role: string }
         Returns: boolean
@@ -7983,6 +8263,18 @@ export type Database = {
       schedule_backup: {
         Args: { p_configuration_id: string; p_job_type?: string }
         Returns: string
+      }
+      set_limit: {
+        Args: { "": number }
+        Returns: number
+      }
+      show_limit: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      show_trgm: {
+        Args: { "": string }
+        Returns: string[]
       }
       test_input_validation: {
         Args: Record<PropertyKey, never>

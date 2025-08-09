@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-import { createHmac } from "https://deno.land/std@0.119.0/node/crypto.ts";
+import { createHmac, createHash } from "https://deno.land/std@0.119.0/node/crypto.ts";
 import nacl from "npm:tweetnacl@1.0.3";
 import { decode as base64Decode, encode as base64Encode } from "https://deno.land/std@0.224.0/encoding/base64.ts";
 
@@ -46,6 +46,19 @@ serve(async (req) => {
       });
     }
 
+    // Timestamp freshness checks (5-minute window) for supported providers
+    if (serviceName === 'sendgrid') {
+      const ts = parseInt(headers['x-twilio-email-event-webhook-timestamp'] || '0', 10);
+      const nowSec = Math.floor(Date.now() / 1000);
+      if (!ts || Math.abs(nowSec - ts) > 300) {
+        console.warn('SendGrid webhook timestamp outside tolerance window');
+        return new Response(JSON.stringify({ error: 'Stale webhook timestamp' }), {
+          status: 408,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+    }
+
     let webhookData: any;
     try {
       if (serviceName === 'twilio' && contentType.includes('application/x-www-form-urlencoded')) {
@@ -61,6 +74,55 @@ serve(async (req) => {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
+
+    // Replay protection: pre-log event with unique constraints
+    const sigHeader = headers['stripe-signature'] || headers['x-hub-signature-256'] || headers['x-twilio-signature'] || headers['x-twilio-email-event-webhook-signature'];
+    const bodyHash = createHash('sha256').update(bodyText).digest('hex');
+
+    let externalId: string | null = null;
+    try {
+      switch (serviceName) {
+        case 'stripe':
+          externalId = webhookData?.id || null;
+          break;
+        case 'twilio':
+          externalId = webhookData?.MessageSid || null;
+          break;
+        case 'sendgrid':
+          externalId = null; // batched events; rely on body hash
+          break;
+        default:
+          externalId = null;
+      }
+    } catch (_) {
+      externalId = null;
+    }
+
+    const preLog = await supabaseClient
+      .from('webhook_event_log')
+      .insert({
+        service: serviceName,
+        external_event_id: externalId,
+        body_hash: bodyHash,
+        signature: sigHeader,
+        headers,
+        status: 'received'
+      })
+      .select('id')
+      .maybeSingle();
+
+    if (preLog.error) {
+      const dup = String(preLog.error.message || '').toLowerCase().includes('duplicate key value');
+      if (dup) {
+        return new Response(JSON.stringify({ success: true, message: 'Duplicate webhook ignored' }), {
+          status: 409,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+      console.error('Failed to record webhook pre-log:', preLog.error);
+    }
+
+    const webhookLogId = preLog.data?.id as string | undefined;
 
     // Process webhook based on service
     let result;
@@ -100,6 +162,17 @@ serve(async (req) => {
         status_code: result.success ? 200 : 400,
         error_message: result.success ? null : result.message
       });
+
+    // Mark webhook log as processed
+    if (webhookLogId) {
+      await supabaseClient
+        .from('webhook_event_log')
+        .update({
+          status: result.success ? 'processed' : 'error',
+          error_message: result.success ? null : (result.message || 'Unknown error')
+        })
+        .eq('id', webhookLogId);
+    }
 
     return new Response(JSON.stringify(result), {
       status: result.success ? 200 : 400,
@@ -153,12 +226,20 @@ async function verifyStripeSignature(body: string, signature: string, secret?: s
 
   try {
     const elements = signature.split(',');
-    const timestamp = elements.find(el => el.startsWith('t='))?.split('=')[1];
+    const timestampStr = elements.find(el => el.startsWith('t='))?.split('=')[1];
     const sig = elements.find(el => el.startsWith('v1='))?.split('=')[1];
 
-    if (!timestamp || !sig) return false;
+    if (!timestampStr || !sig) return false;
 
-    const payload = `${timestamp}.${body}`;
+    const toleranceSec = 300; // 5 minutes
+    const nowSec = Math.floor(Date.now() / 1000);
+    const timestamp = parseInt(timestampStr, 10);
+    if (!timestamp || Math.abs(nowSec - timestamp) > toleranceSec) {
+      console.warn('Stripe webhook timestamp outside tolerance window');
+      return false;
+    }
+
+    const payload = `${timestampStr}.${body}`;
     const expectedSig = createHmac('sha256', secret).update(payload).digest('hex');
 
     return sig === expectedSig;

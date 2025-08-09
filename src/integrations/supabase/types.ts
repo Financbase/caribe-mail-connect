@@ -8047,6 +8047,42 @@ export type Database = {
           },
         ]
       }
+      webhook_event_log: {
+        Row: {
+          body_hash: string
+          error_message: string | null
+          external_event_id: string | null
+          headers: Json | null
+          id: string
+          received_at: string
+          service: string
+          signature: string | null
+          status: string
+        }
+        Insert: {
+          body_hash: string
+          error_message?: string | null
+          external_event_id?: string | null
+          headers?: Json | null
+          id?: string
+          received_at?: string
+          service: string
+          signature?: string | null
+          status?: string
+        }
+        Update: {
+          body_hash?: string
+          error_message?: string | null
+          external_event_id?: string | null
+          headers?: Json | null
+          id?: string
+          received_at?: string
+          service?: string
+          signature?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
       whatsapp_templates: {
         Row: {
           body_content: string

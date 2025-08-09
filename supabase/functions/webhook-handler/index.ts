@@ -1,10 +1,12 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { createHmac } from "https://deno.land/std@0.119.0/node/crypto.ts";
+import nacl from "npm:tweetnacl@1.0.3";
+import { decode as base64Decode, encode as base64Encode } from "https://deno.land/std@0.224.0/encoding/base64.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, stripe-signature, x-hub-signature-256, x-twilio-signature',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, stripe-signature, x-hub-signature-256, x-twilio-signature, x-twilio-email-event-webhook-signature, x-twilio-email-event-webhook-timestamp',
 };
 
 serve(async (req) => {
@@ -28,13 +30,14 @@ serve(async (req) => {
       });
     }
 
-    const body = await req.text();
+    const bodyText = await req.text();
     const headers = Object.fromEntries(req.headers.entries());
+    const contentType = req.headers.get('content-type') || '';
 
     console.log(`Processing webhook for service: ${serviceName}`);
 
     // Verify webhook signature
-    const isValid = await verifyWebhookSignature(serviceName, body, headers);
+    const isValid = await verifyWebhookSignature(serviceName, bodyText, headers, url.toString(), contentType);
     if (!isValid) {
       console.log('Invalid webhook signature');
       return new Response(JSON.stringify({ error: 'Invalid signature' }), {
@@ -43,12 +46,17 @@ serve(async (req) => {
       });
     }
 
-    let webhookData;
+    let webhookData: any;
     try {
-      webhookData = JSON.parse(body);
+      if (serviceName === 'twilio' && contentType.includes('application/x-www-form-urlencoded')) {
+        const params = new URLSearchParams(bodyText);
+        webhookData = Object.fromEntries(params.entries());
+      } else {
+        webhookData = JSON.parse(bodyText);
+      }
     } catch (error) {
-      console.log('Invalid JSON payload');
-      return new Response(JSON.stringify({ error: 'Invalid JSON' }), {
+      console.log('Invalid payload');
+      return new Response(JSON.stringify({ error: 'Invalid payload' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
@@ -107,7 +115,7 @@ serve(async (req) => {
   }
 });
 
-async function verifyWebhookSignature(service: string, body: string, headers: any): Promise<boolean> {
+async function verifyWebhookSignature(service: string, body: string, headers: any, requestUrl: string, contentType: string): Promise<boolean> {
   switch (service) {
     case 'stripe': {
       const secret = Deno.env.get('STRIPE_WEBHOOK_SECRET');
@@ -118,6 +126,22 @@ async function verifyWebhookSignature(service: string, body: string, headers: an
       const secret = Deno.env.get('GITHUB_WEBHOOK_SECRET');
       if (!secret) return false;
       return verifyGitHubSignature(body, headers['x-hub-signature-256'], secret);
+    }
+    case 'twilio': {
+      const authToken = Deno.env.get('TWILIO_AUTH_TOKEN');
+      if (!authToken) return false;
+      const signature = headers['x-twilio-signature'];
+      return verifyTwilioSignature(requestUrl, body, signature, authToken, contentType);
+    }
+    case 'sendgrid': {
+      const publicKey = Deno.env.get('SENDGRID_WEBHOOK_PUBLIC_KEY');
+      if (!publicKey) return false;
+      const signature = headers['x-twilio-email-event-webhook-signature'];
+      const timestamp = headers['x-twilio-email-event-webhook-timestamp'];
+      return verifySendGridSignature(body, timestamp, signature, publicKey);
+    }
+    case 'paypal': {
+      return false; // Disabled until certificate verification is implemented
     }
     default:
       return false; // Reject unknown/unverified services by default
@@ -147,7 +171,7 @@ async function verifyStripeSignature(body: string, signature: string, secret?: s
 async function verifyPayPalSignature(body: string, headers: any, secret?: string): Promise<boolean> {
   // PayPal webhook verification would go here
   // This is more complex and involves certificate validation
-  return true; // Simplified for demo
+  return false; // Disabled until implemented securely
 }
 
 async function verifyGitHubSignature(body: string, signature: string, secret?: string): Promise<boolean> {
@@ -158,6 +182,39 @@ async function verifyGitHubSignature(body: string, signature: string, secret?: s
     return signature === expectedSig;
   } catch (error) {
     console.error('GitHub signature verification failed:', error);
+    return false;
+  }
+}
+
+function verifyTwilioSignature(requestUrl: string, body: string, signature: string, authToken: string, contentType: string): boolean {
+  if (!signature || !authToken) return false;
+  try {
+    // Only support standard Twilio form-encoded webhooks
+    if (!contentType.includes('application/x-www-form-urlencoded')) return false;
+    const params = new URLSearchParams(body);
+    const sortedKeys = Array.from(params.keys()).sort();
+    let data = requestUrl;
+    for (const key of sortedKeys) {
+      data += key + params.get(key);
+    }
+    const mac = createHmac('sha1', authToken).update(data).digest();
+    const expected = base64Encode(mac);
+    return expected === signature;
+  } catch (e) {
+    console.error('Twilio signature verification failed:', e);
+    return false;
+  }
+}
+
+function verifySendGridSignature(body: string, timestamp: string, signature: string, publicKeyBase64: string): boolean {
+  if (!timestamp || !signature || !publicKeyBase64) return false;
+  try {
+    const message = new TextEncoder().encode(timestamp + body);
+    const sig = base64Decode(signature);
+    const pub = base64Decode(publicKeyBase64);
+    return nacl.sign.detached.verify(message, sig, pub);
+  } catch (e) {
+    console.error('SendGrid signature verification failed:', e);
     return false;
   }
 }

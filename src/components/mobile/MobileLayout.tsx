@@ -135,10 +135,19 @@ function getTitleForPage(page: string): string {
     analytics: 'Análisis y Reportes',
     routes: 'Rutas de Entrega',
     billing: 'Facturación',
+    documents: 'Documentos',
+    integrations: 'Integraciones',
+    inventory: 'Inventario',
+    admin: 'Administración',
+    'virtual-mail': 'Buzón Virtual',
+    reports: 'Informes',
+    qa: 'Calidad (QA)',
+    security: 'Seguridad',
     'profile-settings': 'Configuración',
     'location-management': 'Ubicaciones',
     'act60-dashboard': 'Dashboard Act 60',
     'driver-route': 'Ruta del Conductor',
+    search: 'Buscar',
   };
   
   return titles[page] || 'PRMCMS';

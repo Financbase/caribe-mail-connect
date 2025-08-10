@@ -9,7 +9,15 @@ import {
   Search,
   Camera,
   DollarSign,
-  BarChart3
+  BarChart3,
+  Settings,
+  FileText,
+  Plug,
+  Box,
+  Mail,
+  ClipboardList,
+  Shield,
+  Bug
 } from 'lucide-react';
 import { useMobile } from '@/hooks/useMobile';
 
@@ -29,8 +37,17 @@ const navigationItems = [
 const moreItems = [
   { id: 'mailboxes', label: 'Buzones', icon: Package },
   { id: 'billing', label: 'Facturación', icon: DollarSign },
-  { id: 'analytics', label: 'Reportes', icon: BarChart3 },
+  { id: 'analytics', label: 'Análisis', icon: BarChart3 },
   { id: 'routes', label: 'Rutas', icon: Search },
+  { id: 'documents', label: 'Documentos', icon: FileText },
+  { id: 'integrations', label: 'Integraciones', icon: Plug },
+  { id: 'inventory', label: 'Inventario', icon: Box },
+  { id: 'virtual-mail', label: 'Buzón Virtual', icon: Mail },
+  { id: 'reports', label: 'Informes', icon: ClipboardList },
+  { id: 'admin', label: 'Admin', icon: Settings },
+  { id: 'security', label: 'Seguridad', icon: Shield },
+  { id: 'qa', label: 'QA', icon: Bug },
+  { id: 'search', label: 'Buscar', icon: Search },
   { id: 'camera', label: 'Cámara', icon: Camera },
 ];
 

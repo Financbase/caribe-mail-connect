@@ -1,0 +1,215 @@
+# OpenAPI definition for Caribe Mail Connect functions
+# Generated on 2024-08-30
+openapi: 3.1.0
+info:
+  title: Caribe Mail Connect API
+  description: Public Supabase Edge Functions for PRMCE services
+  version: 1.0.0
+  x-generated-at: "2024-08-30"
+servers:
+  - url: https://{project_ref}.functions.supabase.co
+    description: Supabase Edge Functions endpoint
+    variables:
+      project_ref:
+        default: your-project-ref
+paths:
+  /execute-report:
+    post:
+      summary: Execute a configured report.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reportId:
+                  type: string
+                parameters:
+                  type: object
+                format:
+                  type: string
+                  enum: [json, csv, pdf, excel]
+              required: [reportId]
+      responses:
+        '200':
+          description: Report execution details.
+  /export-report:
+    post:
+      summary: Export a completed report execution.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                executionId:
+                  type: string
+                format:
+                  type: string
+                  enum: [csv, excel, pdf]
+              required: [executionId, format]
+      responses:
+        '200':
+          description: Exported report data.
+  /generate-health-report:
+    post:
+      summary: Generate a health report for system diagnostics.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Health report generation status.
+  /generate-payment-link:
+    post:
+      summary: Create a payment link for a customer.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                currency:
+                  type: string
+                  default: USD
+                customerId:
+                  type: string
+                description:
+                  type: string
+                paymentMethod:
+                  type: string
+                  default: stripe
+                metadata:
+                  type: object
+                expiresIn:
+                  type: integer
+              required: [amount, customerId]
+      responses:
+        '200':
+          description: Payment link details.
+  /process-report-schedules:
+    post:
+      summary: Trigger processing of scheduled reports.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Schedule processing summary.
+  /run-automated-tests:
+    post:
+      summary: Execute the automated test suite.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Test run results.
+  /run-billing-cycle:
+    post:
+      summary: Run the periodic billing cycle.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Billing cycle run status.
+  /send-scheduled-report:
+    post:
+      summary: Send reports that are scheduled for delivery.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Report dispatch status.
+  /sync-accounting-data:
+    post:
+      summary: Synchronize accounting data with external systems.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Accounting sync status.
+  /sync-carrier-tracking:
+    post:
+      summary: Synchronize carrier tracking information.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Carrier tracking sync status.
+  /sync-integration:
+    post:
+      summary: Synchronize integration data with partners.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Integration sync status.
+  /test-integration:
+    post:
+      summary: Test integration connectivity and credentials.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Integration test results.
+  /webhook-handler:
+    post:
+      summary: Receive and validate incoming webhooks.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Webhook processed.

@@ -6,109 +6,131 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-serve(async (req) => {
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
-  }
-
-  try {
-    const supabaseClient = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-    );
-
-    const { 
-      amount, 
-      currency = 'USD', 
-      customerId, 
-      description, 
-      paymentMethod = 'stripe',
-      metadata = {},
-      expiresIn = 24 * 60 * 60 // 24 hours in seconds
-    } = await req.json();
-
-    console.log('Generating payment link:', { amount, currency, customerId, paymentMethod });
-
-    if (!amount || amount <= 0) {
-      return new Response(JSON.stringify({ error: 'Valid amount required' }), {
-        status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+// 2025-02-14: Wrap server in import.meta.main for testability and add entitlement checks
+if (import.meta.main) {
+  serve(async (req) => {
+    if (req.method === 'OPTIONS') {
+      return new Response(null, { headers: corsHeaders });
     }
 
-    let paymentLink;
-    let linkId;
+    try {
+      const supabaseClient = createClient(
+        Deno.env.get('SUPABASE_URL') ?? '',
+        Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+      );
 
-    switch (paymentMethod) {
-      case 'stripe':
-        const stripeResult = await generateStripePaymentLink(amount, currency, description, metadata, expiresIn);
-        paymentLink = stripeResult.url;
-        linkId = stripeResult.id;
-        break;
-      case 'paypal':
-        const paypalResult = await generatePayPalPaymentLink(amount, currency, description, metadata);
-        paymentLink = paypalResult.url;
-        linkId = paypalResult.id;
-        break;
-      case 'ath_movil':
-        const athResult = await generateATHMovilPaymentLink(amount, description, metadata);
-        paymentLink = athResult.url;
-        linkId = athResult.id;
-        break;
-      default:
-        return new Response(JSON.stringify({ error: 'Unsupported payment method' }), {
+      const {
+        amount,
+        currency = 'USD',
+        customerId,
+        description,
+        paymentMethod = 'stripe',
+        metadata = {},
+        expiresIn = 24 * 60 * 60 // 24 hours in seconds
+      } = await req.json();
+
+      console.log('Generating payment link:', { amount, currency, customerId, paymentMethod });
+
+      if (!amount || amount <= 0) {
+        return new Response(JSON.stringify({ error: 'Valid amount required' }), {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
-    }
+      }
 
-    // Store payment link in database
-    const expiresAt = new Date(Date.now() + expiresIn * 1000).toISOString();
-    
-    const { data: savedLink, error: saveError } = await supabaseClient
-      .from('payment_links')
-      .insert({
-        external_id: linkId,
-        customer_id: customerId,
+      // 2025-02-14: Verify existing entitlements before creating payment link
+      try {
+        await ensureEntitlement(supabaseClient, customerId, metadata.entitlement);
+      } catch (entitlementError) {
+        return new Response(JSON.stringify({ error: entitlementError.message }), {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      let paymentLink;
+      let linkId;
+
+      switch (paymentMethod) {
+        case 'stripe':
+          const stripeResult = await generateStripePaymentLink(amount, currency, description, metadata, expiresIn);
+          paymentLink = stripeResult.url;
+          linkId = stripeResult.id;
+          break;
+        case 'paypal':
+          const paypalResult = await generatePayPalPaymentLink(amount, currency, description, metadata);
+          paymentLink = paypalResult.url;
+          linkId = paypalResult.id;
+          break;
+        case 'ath_movil':
+          const athResult = await generateATHMovilPaymentLink(amount, description, metadata);
+          paymentLink = athResult.url;
+          linkId = athResult.id;
+          break;
+        default:
+          return new Response(JSON.stringify({ error: 'Unsupported payment method' }), {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+      }
+
+      // Store payment link in database
+      const expiresAt = new Date(Date.now() + expiresIn * 1000).toISOString();
+
+      const { data: savedLink, error: saveError } = await supabaseClient
+        .from('payment_links')
+        .insert({
+          external_id: linkId,
+          customer_id: customerId,
+          amount,
+          currency,
+          payment_method: paymentMethod,
+          description,
+          url: paymentLink,
+          status: 'active',
+          expires_at: expiresAt,
+          metadata
+        })
+        .select()
+        .single();
+
+      if (saveError) {
+        console.error('Error saving payment link:', saveError);
+        return new Response(JSON.stringify({ error: 'Failed to save payment link' }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      // 2025-02-14: Link entitlement to payment for later activation
+      if (metadata.entitlement) {
+        try {
+          await ensureEntitlement(supabaseClient, customerId, metadata.entitlement, savedLink.id);
+        } catch (linkError) {
+          console.error('Error linking entitlement:', linkError);
+        }
+      }
+
+      return new Response(JSON.stringify({
+        id: savedLink.id,
+        url: paymentLink,
+        expires_at: expiresAt,
         amount,
         currency,
-        payment_method: paymentMethod,
-        description,
-        url: paymentLink,
-        status: 'active',
-        expires_at: expiresAt,
-        metadata
-      })
-      .select()
-      .single();
+        payment_method: paymentMethod
+      }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
 
-    if (saveError) {
-      console.error('Error saving payment link:', saveError);
-      return new Response(JSON.stringify({ error: 'Failed to save payment link' }), {
+    } catch (error) {
+      console.error('Error generating payment link:', error);
+      return new Response(JSON.stringify({ error: error.message }), {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
-
-    return new Response(JSON.stringify({
-      id: savedLink.id,
-      url: paymentLink,
-      expires_at: expiresAt,
-      amount,
-      currency,
-      payment_method: paymentMethod
-    }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
-
-  } catch (error) {
-    console.error('Error generating payment link:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
-  }
-});
+  });
+}
 
 async function generateStripePaymentLink(amount: number, currency: string, description: string, metadata: any, expiresIn: number) {
   const stripeSecretKey = Deno.env.get('STRIPE_SECRET_KEY');
@@ -290,12 +312,115 @@ async function validateStripePaymentLink(linkId: string) {
   }
 }
 
-async function validatePayPalPaymentLink(linkId: string) {
-  // PayPal payment validation logic
-  return { valid: true, status: 'active' }; // Simplified
-}
+ async function validatePayPalPaymentLink(linkId: string) {
+   const clientId = Deno.env.get('PAYPAL_CLIENT_ID');
+   const clientSecret = Deno.env.get('PAYPAL_CLIENT_SECRET');
 
-async function validateATHMovilPaymentLink(linkId: string) {
-  // ATH Móvil payment validation logic
-  return { valid: true, status: 'active' }; // Simplified
-}
+   if (!clientId || !clientSecret) {
+     return { valid: false, status: 'configuration_error' };
+   }
+
+   try {
+     // 2025-02-14: Obtain token then query PayPal for payment status
+     const authResp = await fetch('https://api.paypal.com/v1/oauth2/token', {
+       method: 'POST',
+       headers: {
+         'Authorization': `Basic ${btoa(`${clientId}:${clientSecret}`)}`,
+         'Content-Type': 'application/x-www-form-urlencoded',
+       },
+       body: 'grant_type=client_credentials',
+     });
+
+     if (!authResp.ok) return { valid: false, status: 'auth_error' };
+     const authData = await authResp.json();
+
+     const paymentResp = await fetch(`https://api.paypal.com/v1/payments/payment/${linkId}`, {
+       headers: {
+         'Authorization': `Bearer ${authData.access_token}`,
+       },
+     });
+
+     if (!paymentResp.ok) return { valid: false, status: 'not_found' };
+     const payment = await paymentResp.json();
+     return { valid: true, status: payment.state };
+   } catch (_error) {
+     return { valid: false, status: 'error' };
+   }
+ }
+
+ async function validateATHMovilPaymentLink(linkId: string) {
+   const apiKey = Deno.env.get('ATH_MOVIL_API_KEY');
+   const merchantId = Deno.env.get('ATH_MOVIL_MERCHANT_ID');
+
+   if (!apiKey || !merchantId) {
+     return { valid: false, status: 'configuration_error' };
+   }
+
+   try {
+     // 2025-02-14: Query ATH Móvil for transaction status
+     const resp = await fetch('https://www.athmovil.com/api/business-account/ecommerce/payment-status', {
+       method: 'POST',
+       headers: {
+         'Authorization': `Bearer ${apiKey}`,
+         'Content-Type': 'application/json',
+       },
+       body: JSON.stringify({ merchantId, transactionId: linkId }),
+     });
+
+     if (!resp.ok) return { valid: false, status: 'not_found' };
+     const data = await resp.json();
+     return { valid: true, status: data.status };
+   } catch (_error) {
+     return { valid: false, status: 'error' };
+   }
+ }
+
+// 2025-02-14: Ensure entitlements exist and link to payment
+async function ensureEntitlement(
+  supabaseClient: any,
+  customerId: string,
+  entitlement?: string,
+  paymentLinkId?: string,
+) {
+   if (!entitlement) return;
+
+   const { data: existing, error } = await supabaseClient
+     .from('user_entitlements')
+     .select('id,status')
+     .eq('customer_id', customerId)
+     .eq('entitlement', entitlement)
+     .maybeSingle();
+
+   if (error && error.code !== 'PGRST116') {
+     throw new Error('Entitlement lookup failed');
+   }
+
+   if (existing && existing.status === 'active') {
+     throw new Error('Entitlement already active');
+   }
+
+   if (paymentLinkId) {
+     if (existing) {
+       await supabaseClient
+         .from('user_entitlements')
+         .update({ status: 'pending', payment_link_id: paymentLinkId })
+         .eq('id', existing.id);
+     } else {
+       await supabaseClient
+         .from('user_entitlements')
+         .insert({
+           customer_id: customerId,
+           entitlement,
+           status: 'pending',
+           payment_link_id: paymentLinkId,
+         });
+     }
+   }
+ }
+
+export {
+  ensureEntitlement,
+  validateATHMovilPaymentLink,
+  validatePayPalPaymentLink,
+  validatePaymentLinkStatus,
+};

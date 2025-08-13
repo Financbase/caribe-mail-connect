@@ -3,6 +3,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { createHmac, createHash } from "https://deno.land/std@0.119.0/node/crypto.ts";
 import nacl from "npm:tweetnacl@1.0.3";
 import { decode as base64Decode, encode as base64Encode } from "https://deno.land/std@0.224.0/encoding/base64.ts";
+import { mapUPSStatusCode, mapFedExEventType } from "./utils.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -599,23 +600,4 @@ async function handlePayPalPaymentDenied(resource: any, supabaseClient: any) {
 }
 
 // Status mapping functions
-function mapUPSStatusCode(statusCode: string): string {
-  const statusMap: { [key: string]: string } = {
-    'I': 'in_transit',
-    'D': 'delivered',
-    'X': 'exception',
-    'P': 'pickup'
-  };
-  return statusMap[statusCode] || 'unknown';
-}
-
-function mapFedExEventType(eventType: string): string {
-  const eventMap: { [key: string]: string } = {
-    'PU': 'pickup',
-    'IT': 'in_transit',
-    'OD': 'out_for_delivery',
-    'DL': 'delivered',
-    'EX': 'exception'
-  };
-  return eventMap[eventType] || 'unknown';
-}
+// Mapping functions moved to utils.ts on 2025-02-14

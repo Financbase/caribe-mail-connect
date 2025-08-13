@@ -3,6 +3,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { createHmac, createHash } from "https://deno.land/std@0.119.0/node/crypto.ts";
 import nacl from "npm:tweetnacl@1.0.3";
 import { decode as base64Decode, encode as base64Encode } from "https://deno.land/std@0.224.0/encoding/base64.ts";
+import { Sentry } from "../_shared/sentry.ts"; // 2025-08-13: error tracking
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -180,6 +181,7 @@ serve(async (req) => {
     });
 
   } catch (error) {
+    Sentry.captureException(error);
     console.error('Error processing webhook:', error);
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,

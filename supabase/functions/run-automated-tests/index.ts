@@ -1,4 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { Sentry } from "../_shared/sentry.ts"; // 2025-08-13: error tracking
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -90,6 +91,7 @@ Deno.serve(async (req) => {
     )
 
   } catch (error) {
+    Sentry.captureException(error)
     console.error('Error running tests:', error)
     return new Response(
       JSON.stringify({ error: error.message }),

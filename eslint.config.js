@@ -4,8 +4,9 @@ import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
 
+// Updated: 2025-03-04 - exclude test files from linting
 export default tseslint.config(
-  { ignores: ["dist"] },
+  { ignores: ["dist", "tests"] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ["**/*.{ts,tsx}"],

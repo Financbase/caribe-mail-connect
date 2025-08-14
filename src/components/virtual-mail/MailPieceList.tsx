@@ -10,6 +10,7 @@ import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { FixedSizeList as List } from 'react-window';
 import { formatDate } from '@/lib/utils';
 import type { MailPiece } from '@/hooks/useVirtualMailbox';
+import { CachedImage } from '@/components/offline/CachedImage';
 
 interface MailPieceListProps {
   mailPieces: MailPiece[];
@@ -127,7 +128,7 @@ export function MailPieceList({ mailPieces, loading, onActionRequest }: MailPiec
         <TableCell>
           {piece.photo_exterior_url ? (
             <div className="flex items-center gap-2">
-              <img 
+              <CachedImage
                 src={piece.photo_thumbnail_url || piece.photo_exterior_url}
                 alt="Mail exterior"
                 className="w-12 h-8 object-cover rounded border"

@@ -17,7 +17,9 @@ export default defineConfig(({ mode }) => ({
     VitePWA({
       registerType: 'autoUpdate',
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,json,woff2}'],
+  // exclude large WASM from precache to keep SW install/update fast
+  globPatterns: ['**/*.{js,css,html,ico,png,svg,json,woff2}'],
+  globIgnores: ['**/*.wasm'],
         maximumFileSizeToCacheInBytes: 5000000,
         runtimeCaching: [
           {
@@ -33,11 +35,11 @@ export default defineConfig(({ mode }) => ({
           },
           {
             urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/,
-            handler: 'CacheFirst',
+            handler: 'StaleWhileRevalidate',
             options: {
               cacheName: 'images-cache',
               expiration: {
-                maxEntries: 100,
+                maxEntries: 150,
                 maxAgeSeconds: 60 * 60 * 24 * 30 // 30 days
               }
             }

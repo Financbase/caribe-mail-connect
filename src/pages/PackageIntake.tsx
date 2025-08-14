@@ -14,6 +14,7 @@ import { usePackages, type PackageFormData } from '@/hooks/usePackages';
 import { useCustomers } from '@/hooks/useCustomers';
 import { VipBadge } from '@/components/VipBadge';
 import { toast } from '@/hooks/use-toast';
+import { BarcodeScanner } from '@/components/scan/BarcodeScanner';
 
 interface PackageIntakeProps {
   onNavigate: (page: string) => void;
@@ -156,31 +157,12 @@ export default function PackageIntake({ onNavigate }: PackageIntakeProps) {
     }
   };
 
-  const simulateBarcodeScan = () => {
-    setIsScanning(true);
-    
-    setTimeout(() => {
-      // Simulate barcode scan with random tracking number
-      const trackingNumbers = [
-        '1Z999AA1234567890',
-        '7749912345678901', 
-        '9400111202555555551',
-        '1234567890123456'
-      ];
-      const randomTracking = trackingNumbers[Math.floor(Math.random() * trackingNumbers.length)];
-      handleInputChange('tracking_number', randomTracking);
-      
-      setIsScanning(false);
-      setShowScanSuccess(true);
-      
-      toast({
-        title: 'Barcode Scanned',
-        description: `Tracking: ${randomTracking}`,
-      });
-
-      // Hide success animation after 1 second
-      setTimeout(() => setShowScanSuccess(false), 1000);
-    }, 2000);
+  const handleDetected = (code: string) => {
+    handleInputChange('tracking_number', code);
+    setIsScanning(false);
+    setShowScanSuccess(true);
+    toast({ title: 'Barcode Scanned', description: `Tracking: ${code}` });
+    setTimeout(() => setShowScanSuccess(false), 1000);
   };
 
   const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -219,8 +201,8 @@ export default function PackageIntake({ onNavigate }: PackageIntakeProps) {
 
           {/* Barcode Scanner Section */}
           <Card className="shadow-elegant">
-            <CardContent className="p-6">
-              {!isScanning && !showScanSuccess ? (
+            <CardContent className="p-6 space-y-4">
+              {!isScanning ? (
                 <div className="text-center space-y-4">
                   <div className="mx-auto w-20 h-20 bg-gradient-ocean rounded-2xl flex items-center justify-center">
                     <Camera className="h-10 w-10 text-white" />
@@ -228,68 +210,31 @@ export default function PackageIntake({ onNavigate }: PackageIntakeProps) {
                   <div>
                     <h3 className="font-semibold text-lg">{t('intake.scanBarcode')}</h3>
                     <p className="text-sm text-muted-foreground">
-                      Position barcode within the frame
+                      {t('intake.positionInFrame') || 'Position barcode within the frame'}
                     </p>
                   </div>
                   <Button
                     variant="tropical"
                     size="mobile"
-                    onClick={simulateBarcodeScan}
+                    onClick={() => setIsScanning(true)}
                     className="w-full"
                   >
                     <Scan className="h-5 w-5 mr-2" />
-                    Scan Barcode
+                    {t('intake.scan') || 'Scan Barcode'}
                   </Button>
                 </div>
               ) : (
-                <div className="relative">
-                  {/* Camera Mockup */}
-                  <div className="aspect-video bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg relative overflow-hidden border-4 border-primary/20">
-                    {/* Camera grid overlay */}
-                    <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
-                    
-                    {/* Scanning frame */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className={`w-64 h-32 border-2 rounded-lg relative ${
-                        showScanSuccess ? 'border-green-400' : 'border-primary'
-                      }`}>
-                        {/* Corner indicators */}
-                        <div className="absolute -top-1 -left-1 w-4 h-4 border-l-2 border-t-2 border-primary"></div>
-                        <div className="absolute -top-1 -right-1 w-4 h-4 border-r-2 border-t-2 border-primary"></div>
-                        <div className="absolute -bottom-1 -left-1 w-4 h-4 border-l-2 border-b-2 border-primary"></div>
-                        <div className="absolute -bottom-1 -right-1 w-4 h-4 border-r-2 border-b-2 border-primary"></div>
-                        
-                        {/* Scanning line animation */}
-                        {isScanning && (
-                          <div className="absolute top-0 left-0 w-full h-0.5 bg-green-400 shadow-[0_0_10px_#4ade80] animate-bounce"></div>
-                        )}
-                        
-                        {/* Success pulse animation */}
-                        {showScanSuccess && (
-                          <div className="absolute inset-0 bg-green-400/20 rounded animate-pulse"></div>
-                        )}
-                      </div>
-                    </div>
-                    
-                    {/* Status text */}
-                    <div className="absolute bottom-4 left-0 right-0 text-center">
-                      <p className="text-white font-medium">
-                        {isScanning ? 'Scanning...' : showScanSuccess ? 'Success!' : 'Ready to scan'}
-                      </p>
-                    </div>
-                  </div>
-                  
-                  {/* Cancel button during scanning */}
-                  {isScanning && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setIsScanning(false)}
-                      className="absolute top-2 right-2 bg-background/80"
-                    >
-                      <X className="h-4 w-4" />
+                <div className="space-y-2">
+                  <BarcodeScanner onDetected={handleDetected} onError={(e) => {
+                    console.error('Scanner error', e);
+                    toast({ title: t('common.error'), description: 'Camera unavailable' });
+                    setIsScanning(false);
+                  }} />
+                  <div className="flex justify-end">
+                    <Button variant="outline" size="sm" onClick={() => setIsScanning(false)}>
+                      <X className="h-4 w-4 mr-1" /> {t('common.cancel')}
                     </Button>
-                  )}
+                  </div>
                 </div>
               )}
             </CardContent>

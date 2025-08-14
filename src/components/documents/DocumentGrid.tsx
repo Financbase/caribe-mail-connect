@@ -6,6 +6,7 @@ import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { formatBytes, formatDate } from '@/lib/utils';
 import type { Document } from '@/hooks/useDocuments';
+import { CachedImage } from '@/components/offline/CachedImage';
 import { FixedSizeGrid as Grid } from 'react-window';
 
 interface DocumentGridProps {
@@ -50,6 +51,8 @@ export function DocumentGrid({ documents, loading, onDocumentSelect }: DocumentG
     if (contentType.includes('excel') || contentType.includes('spreadsheet')) return '📊';
     return '📁';
   };
+
+  const isImage = (contentType: string) => contentType.includes('image');
 
   const getCategoryColor = (category: string) => {
     const colors = {
@@ -104,6 +107,15 @@ export function DocumentGrid({ documents, loading, onDocumentSelect }: DocumentG
               </div>
             </div>
 
+            {isImage(document.content_type) && (
+              <div className="mb-2 w-full h-28 bg-muted/40 rounded overflow-hidden border">
+                {/* In a full impl, you’d likely have a dedicated thumbnail URL; here using storage path via backend getter is omitted for brevity */}
+                {/* Render a generic preview box if we don’t have a direct URL yet */}
+                {/* This grid component doesn’t fetch URLs; the viewer does. Optionally, connect getDocumentUrl for previews. */}
+                {/* Placeholder pattern: show icon backdrop; CachedImage reserved for when a URL is provided in future iteration. */}
+                <div className="w-full h-full flex items-center justify-center text-2xl">🖼️</div>
+              </div>
+            )}
             <h3 className="font-medium text-sm mb-2 line-clamp-2">
               {document.title}
             </h3>

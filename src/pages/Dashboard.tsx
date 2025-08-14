@@ -8,6 +8,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { usePackages } from '@/hooks/usePackages';
 import { useNotifications } from '@/hooks/useNotifications';
 import { useLocations } from '@/hooks/useLocations';
+import QuickActionsMenu from '@/components/common/QuickActionsMenu';
 
 interface DashboardProps {
   onNavigate: (page: string) => void;
@@ -156,6 +157,16 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
           </CardContent>
         </Card>
       </main>
+
+      {/* Floating quick actions (thumb-friendly) */}
+      <QuickActionsMenu
+        onAction={(a) => {
+          if (a === 'scan') onNavigate('intake');
+          if (a === 'notify') onNavigate('notifications');
+          if (a === 'customer') onNavigate('customers');
+          if (a === 'search') onNavigate('search');
+        }}
+      />
     </div>
   );
 }

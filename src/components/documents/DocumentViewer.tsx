@@ -8,6 +8,7 @@ import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { useToast } from '@/components/ui/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useDocuments } from '@/hooks/useDocuments';
+import { CachedImage } from '@/components/offline/CachedImage';
 import { supabase } from '@/integrations/supabase/client';
 import { formatBytes, formatDate } from '@/lib/utils';
 import type { Document } from '@/hooks/useDocuments';
@@ -120,6 +121,7 @@ export function DocumentViewer({ documentId, open, onOpenChange }: DocumentViewe
   const canDisplayInline = (contentType: string) => {
     return contentType.includes('pdf') || contentType.includes('image');
   };
+  const isImage = (contentType: string) => contentType.includes('image');
 
   if (loading || !document) {
     return (
@@ -170,11 +172,21 @@ export function DocumentViewer({ documentId, open, onOpenChange }: DocumentViewe
             {/* Document viewer */}
             <div className="flex-1 min-w-0">
               {fileUrl && canDisplayInline(document.content_type) ? (
-                <iframe
-                  src={fileUrl}
-                  className="w-full h-full border-0"
-                  title={document.title}
-                />
+                isImage(document.content_type) ? (
+                  <div className="w-full h-full flex items-center justify-center bg-black/5">
+                    <CachedImage
+                      src={fileUrl}
+                      alt={document.title}
+                      className="max-w-full max-h-full object-contain"
+                    />
+                  </div>
+                ) : (
+                  <iframe
+                    src={fileUrl}
+                    className="w-full h-full border-0"
+                    title={document.title}
+                  />
+                )
               ) : (
                 <div className="flex items-center justify-center h-full bg-muted/20">
                   <div className="text-center">

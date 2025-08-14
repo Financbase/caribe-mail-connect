@@ -30,6 +30,7 @@
     - Criteria: Focus trap; initial focus set; return focus on close; inert background.
   - [x] Add skip links (Owner: UX, Due: [Set])
     - Criteria: Visible on focus; targets main, nav, content regions.
+    - Implementation: `src/components/a11y/SkipLinks.tsx`
   - [ ] Screen reader test & fixes (Owner: [Name], Due: [Date])
     - Criteria: Announcements for async ops; landmarks present; headings hierarchical.
 
@@ -45,12 +46,14 @@
     - Criteria: Virtualize document lists >100 items; infinite scroll or pagination.
   - [x] Skeleton loading states (Owner: FE, Due: [Set])
     - Criteria: Replace spinners on primary async views; skeletons < 16ms mount.
+    - Implementation: `src/components/loading/route-skeleton.tsx`
   - [ ] Image optimization (Owner: [Name], Due: [Date])
     - Criteria: Serve responsive sizes; lazy=“loading”; caching headers; modern formats.
   - [ ] Code splitting & bundle hygiene (Owner: [Name], Due: [Date])
     - Criteria: Route-level chunks; vendor splitting; remove unused deps; tree shake.
   - [x] Performance telemetry (Owner: FE, Due: [Set])
     - Criteria: Capture Web Vitals; create dashboard; thresholds with alerts.
+    - Implementation: `src/lib/performance.ts`
 
 ### ⚡ Important Tasks (High Urgency, Lower Impact)
 
@@ -71,8 +74,10 @@
     - Criteria: Exponential backoff with jitter; idempotent mutation retries.
   - [x] Error boundaries (Owner: FE, Due: [Set])
     - Criteria: Route-level boundaries; fallback UIs; logging hook-in.
+    - Implementation: `src/components/error-handling/ErrorBoundary.tsx`
   - [ ] Error tracking (Owner: [Name], Due: [Date])
     - Criteria: Provider integrated (e.g., Sentry); PII scrubbers; alert rules.
+    - Wiring available: `src/integrations/monitoring/sentry.ts` (call `initSentry()` early). Enable with `VITE_SENTRY_DSN` and optional `VITE_SENTRY_TRACES_SAMPLE_RATE`.
 
 #### Mobile Responsiveness
 

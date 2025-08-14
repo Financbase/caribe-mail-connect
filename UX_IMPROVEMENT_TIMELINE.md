@@ -18,16 +18,16 @@
 - [ ] Add ARIA labels to all interactive elements
 - [ ] Implement keyboard navigation patterns
 - [ ] Enhance focus management in modals and dialogs
-- [ ] Add skip links for main content areas
+ - [x] Add skip links for main content areas (implemented in `src/components/a11y/SkipLinks.tsx`)
 - [ ] Test with screen readers and fix issues
 
 #### Performance Optimization
 
 - [ ] Implement lazy loading for document lists
-- [ ] Add skeleton loading states for async content
+ - [x] Add skeleton loading states for async content (see `src/components/loading/route-skeleton.tsx`)
 - [ ] Optimize image loading and implement caching
 - [ ] Reduce bundle size through code splitting
-- [ ] Add performance monitoring metrics
+ - [x] Add performance monitoring metrics (see `src/lib/performance.ts`)
 
 ### ⚡ Important Tasks (High Urgency, Lower Impact)
 
@@ -36,8 +36,8 @@
 - [ ] Enhance error message clarity and helpfulness
 - [ ] Implement offline support for critical features
 - [ ] Add retry mechanisms for failed operations
-- [ ] Create error boundary components
-- [ ] Add error tracking and reporting
+ - [x] Create error boundary components (see `src/components/error-handling/ErrorBoundary.tsx`)
+ - [ ] Add error tracking and reporting (wiring available in `src/integrations/monitoring/sentry.ts`; enable via `VITE_SENTRY_DSN` and optional `VITE_SENTRY_TRACES_SAMPLE_RATE`)
 
 #### Mobile Responsiveness
 

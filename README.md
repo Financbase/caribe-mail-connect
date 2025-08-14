@@ -71,3 +71,17 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+
+## Environment variables
+
+To enable monitoring and error tracking with Sentry, create a `.env.local` file in `caribe-mail-connect/` with:
+
+```env
+VITE_SENTRY_DSN=
+VITE_SENTRY_TRACES_SAMPLE_RATE=0.1
+```
+
+Notes:
+- Do not commit real secrets.
+- Initialization is handled in `src/main.tsx` via `initSentry()`; see `src/integrations/monitoring/sentry.ts`.
+- See `docs/architecture/monitoring.md` for a full enable/validate checklist.

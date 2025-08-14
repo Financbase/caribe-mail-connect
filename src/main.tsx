@@ -23,7 +23,16 @@ async function reportWebVitals() {
 
 reportWebVitals();
 
-// Initialize Sentry (no-op if DSN missing)
-initSentry();
+// Initialize Sentry (no-op if DSN missing) and send one-off test event
+initSentry().then(() => {
+  try {
+    const win = window as unknown as { Sentry?: { captureException: (e: unknown) => void } };
+    const alreadySent = localStorage.getItem('sentryTestSent');
+    if (win.Sentry && !alreadySent) {
+      win.Sentry.captureException(new Error('Sentry setup test'));
+      localStorage.setItem('sentryTestSent', '1');
+    }
+  } catch {}
+});
 
 createRoot(document.getElementById("root")!).render(<App />);

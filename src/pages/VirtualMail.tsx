@@ -18,8 +18,7 @@ import { VirtualMailReporting } from '@/components/virtual-mail/VirtualMailRepor
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 
 export function VirtualMail() {
-  const { language } = useLanguage();
-  const isSpanish = language === 'es';
+  const { t } = useLanguage();
   
   const {
     loading,
@@ -74,19 +73,12 @@ export function VirtualMail() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">
-            {isSpanish ? 'Buzón Virtual' : 'Virtual Mailbox'}
-          </h1>
-          <p className="text-muted-foreground">
-            {isSpanish 
-              ? 'Gestiona el correo virtual de tus clientes'
-              : 'Manage virtual mail for your customers'
-            }
-          </p>
+          <h1 className="text-3xl font-bold">{t('vm.title')}</h1>
+          <p className="text-muted-foreground">{t('vm.subtitle')}</p>
         </div>
         <Button onClick={() => setShowAddMailDialog(true)}>
           <Plus className="h-4 w-4 mr-2" />
-          {isSpanish ? 'Nuevo Correo' : 'New Mail'}
+          {t('vm.newMail')}
         </Button>
       </div>
 
@@ -98,9 +90,7 @@ export function VirtualMail() {
               <Mail className="h-8 w-8 text-primary" />
               <div>
                 <p className="text-2xl font-bold">{stats.totalPieces}</p>
-                <p className="text-sm text-muted-foreground">
-                  {isSpanish ? 'Total Correos' : 'Total Mail'}
-                </p>
+                <p className="text-sm text-muted-foreground">{t('vm.totalMail')}</p>
               </div>
             </div>
           </CardContent>
@@ -112,9 +102,7 @@ export function VirtualMail() {
               <Package className="h-8 w-8 text-amber-500" />
               <div>
                 <p className="text-2xl font-bold">{stats.pendingActions}</p>
-                <p className="text-sm text-muted-foreground">
-                  {isSpanish ? 'Pendientes' : 'Pending Actions'}
-                </p>
+                <p className="text-sm text-muted-foreground">{t('vm.pendingActions')}</p>
               </div>
             </div>
           </CardContent>
@@ -126,9 +114,7 @@ export function VirtualMail() {
               <Scan className="h-8 w-8 text-blue-500" />
               <div>
                 <p className="text-2xl font-bold">{stats.inScanning}</p>
-                <p className="text-sm text-muted-foreground">
-                  {isSpanish ? 'Escaneando' : 'In Scanning'}
-                </p>
+                <p className="text-sm text-muted-foreground">{t('vm.inScanning')}</p>
               </div>
             </div>
           </CardContent>
@@ -140,9 +126,7 @@ export function VirtualMail() {
               <Camera className="h-8 w-8 text-green-500" />
               <div>
                 <p className="text-2xl font-bold">{stats.checkDeposits}</p>
-                <p className="text-sm text-muted-foreground">
-                  {isSpanish ? 'Depósitos' : 'Check Deposits'}
-                </p>
+                <p className="text-sm text-muted-foreground">{t('vm.checkDeposits')}</p>
               </div>
             </div>
           </CardContent>
@@ -157,7 +141,7 @@ export function VirtualMail() {
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder={isSpanish ? 'Buscar por remitente o número...' : 'Search by sender or number...'}
+                  placeholder={t('vm.searchPlaceholder')}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10"
@@ -170,11 +154,11 @@ export function VirtualMail() {
               onChange={(e) => setStatusFilter(e.target.value)}
               className="px-3 py-2 border rounded-md"
             >
-              <option value="all">{isSpanish ? 'Todos los estados' : 'All Status'}</option>
-              <option value="received">{isSpanish ? 'Recibido' : 'Received'}</option>
-              <option value="notified">{isSpanish ? 'Notificado' : 'Notified'}</option>
-              <option value="action_pending">{isSpanish ? 'Acción Pendiente' : 'Action Pending'}</option>
-              <option value="completed">{isSpanish ? 'Completado' : 'Completed'}</option>
+              <option value="all">{t('vm.status.all')}</option>
+              <option value="received">{t('vm.status.received')}</option>
+              <option value="notified">{t('vm.status.notified')}</option>
+              <option value="action_pending">{t('vm.status.action_pending')}</option>
+              <option value="completed">{t('vm.status.completed')}</option>
             </select>
 
             <select
@@ -182,7 +166,7 @@ export function VirtualMail() {
               onChange={(e) => setSelectedVirtualMailbox(e.target.value)}
               className="px-3 py-2 border rounded-md"
             >
-              <option value="">{isSpanish ? 'Todos los buzones' : 'All Mailboxes'}</option>
+              <option value="">{t('vm.allMailboxes')}</option>
               {virtualMailboxes.map((vm) => (
                 <option key={vm.id} value={vm.id}>
                   {vm.address_line1} - {vm.city}
@@ -196,24 +180,12 @@ export function VirtualMail() {
       {/* Main Content */}
       <Tabs defaultValue="mail-pieces" className="space-y-4">
         <TabsList className="grid w-full grid-cols-6">
-          <TabsTrigger value="mail-pieces">
-            {isSpanish ? 'Correo' : 'Mail Pieces'}
-          </TabsTrigger>
-          <TabsTrigger value="scanning">
-            {isSpanish ? 'Escaneo' : 'Scanning Queue'}
-          </TabsTrigger>
-          <TabsTrigger value="deposits">
-            {isSpanish ? 'Depósitos' : 'Check Deposits'}
-          </TabsTrigger>
-          <TabsTrigger value="dashboard">
-            {isSpanish ? 'Panel' : 'Dashboard'}
-          </TabsTrigger>
-          <TabsTrigger value="analytics">
-            {isSpanish ? 'Analítica' : 'Analytics'}
-          </TabsTrigger>
-          <TabsTrigger value="billing">
-            {isSpanish ? 'Facturación' : 'Billing'}
-          </TabsTrigger>
+          <TabsTrigger value="mail-pieces">{t('vm.tab.mailPieces')}</TabsTrigger>
+          <TabsTrigger value="scanning">{t('vm.tab.scanning')}</TabsTrigger>
+          <TabsTrigger value="deposits">{t('vm.tab.deposits')}</TabsTrigger>
+          <TabsTrigger value="dashboard">{t('vm.tab.dashboard')}</TabsTrigger>
+          <TabsTrigger value="analytics">{t('vm.tab.analytics')}</TabsTrigger>
+          <TabsTrigger value="billing">{t('vm.tab.billing')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="mail-pieces" className="space-y-4">

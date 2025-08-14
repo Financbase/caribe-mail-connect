@@ -1,6 +1,7 @@
 import { LogOut, User, Settings, Building } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { CachedImage } from '@/components/offline/CachedImage';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { LanguageToggle } from './LanguageToggle';
 import { LocationSelector } from './LocationSelector';
@@ -90,7 +91,10 @@ export function MobileHeader({ title, showLogout = false, onNavigate }: MobileHe
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="h-8 w-8 rounded-full p-0">
                   <Avatar className="h-8 w-8">
-                    <AvatarImage src={profile.avatar_url} />
+                    {/* Keep AvatarImage for semantics; render CachedImage inside for caching */}
+                    <AvatarImage asChild>
+                      <CachedImage src={profile.avatar_url} className="h-full w-full object-cover" alt={profile.full_name} />
+                    </AvatarImage>
                     <AvatarFallback className="bg-gradient-ocean text-white text-xs">
                       {profile.full_name?.split(' ').map(n => n[0]).join('') || 'U'}
                     </AvatarFallback>

@@ -1,0 +1,51 @@
+{
+  "timestamp": "2025-08-13T18:17:57.746Z",
+  "environment": "development",
+  "summary": {
+    "passed": 7,
+    "failed": 1,
+    "successRate": 88
+  },
+  "results": [
+    {
+      "test": "User Authentication",
+      "status": "PASS",
+      "details": "Test user found"
+    },
+    {
+      "test": "Package CRUD",
+      "status": "FAIL",
+      "details": "new row for relation \"packages\" violates check constraint \"packages_carrier_check\""
+    },
+    {
+      "test": "Mailbox Management",
+      "status": "PASS",
+      "details": "5 mailboxes"
+    },
+    {
+      "test": "Environment Config",
+      "status": "PASS",
+      "details": "5 configs found"
+    },
+    {
+      "test": "Data Integrity",
+      "status": "PASS",
+      "details": "20 mailboxes, 3 users"
+    },
+    {
+      "test": "Real-time Features",
+      "status": "PASS",
+      "details": "Channel creation successful"
+    },
+    {
+      "test": "Row Level Security",
+      "status": "PASS",
+      "details": "Anon access properly controlled"
+    },
+    {
+      "test": "Performance",
+      "status": "PASS",
+      "details": "118.33ms average"
+    }
+  ]
+}

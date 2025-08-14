@@ -218,24 +218,24 @@ export function usePerformance() {
   }, []);
 
   // Debounced function factory
-  const debounce = useCallback(<T extends (...args: any[]) => any>(
+  const debounce = useCallback(<T extends (...args: unknown[]) => any>(
     func: T,
     wait: number
   ): T => {
     let timeout: NodeJS.Timeout;
-    return ((...args: any[]) => {
+    return ((...args: unknown[]) => {
       clearTimeout(timeout);
       timeout = setTimeout(() => func.apply(this, args), wait);
     }) as T;
   }, []);
 
   // Throttled function factory
-  const throttle = useCallback(<T extends (...args: any[]) => any>(
+  const throttle = useCallback(<T extends (...args: unknown[]) => any>(
     func: T,
     limit: number
   ): T => {
     let inThrottle: boolean;
-    return ((...args: any[]) => {
+    return ((...args: unknown[]) => {
       if (!inThrottle) {
         func.apply(this, args);
         inThrottle = true;
@@ -252,7 +252,7 @@ export function usePerformance() {
       batches.push(calls.slice(i, i + batchSize));
     }
     
-    const results: any[] = [];
+    const results: unknown[] = [];
     for (const batch of batches) {
       const batchResults = await Promise.all(batch.map(call => call()));
       results.push(...batchResults);

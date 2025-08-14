@@ -63,6 +63,19 @@ export function BottomNavigation({ currentPage, onNavigate }: BottomNavigationPr
     return null;
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    const buttons = Array.from(
+      (e.currentTarget as HTMLElement).querySelectorAll<HTMLButtonElement>('button[data-nav-item="true"]')
+    );
+    const activeIndex = buttons.findIndex((btn) => btn === document.activeElement);
+    const delta = e.key === 'ArrowLeft' ? -1 : 1;
+    const nextIndex = (activeIndex + delta + buttons.length) % buttons.length;
+    const next = buttons[nextIndex];
+    next?.focus();
+    e.preventDefault();
+  };
+
   return (
     <>
       {/* More items overlay */}
@@ -92,8 +105,8 @@ export function BottomNavigation({ currentPage, onNavigate }: BottomNavigationPr
       )}
 
       {/* Bottom navigation bar */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-background border-t z-50 pb-safe">
-        <div className="flex items-center justify-around h-16">
+      <nav className="fixed bottom-0 left-0 right-0 bg-background border-t z-50 pb-safe" aria-label="Navegación principal">
+        <div className="flex items-center justify-around h-16" onKeyDown={handleKeyDown}>
           {navigationItems.map((item) => {
             const Icon = item.icon;
             const isActive = currentPage === item.id || (item.id === 'more' && showMore);
@@ -102,12 +115,14 @@ export function BottomNavigation({ currentPage, onNavigate }: BottomNavigationPr
               <button
                 key={item.id}
                 onClick={() => handleNavigation(item.id)}
+                data-nav-item="true"
                 className={cn(
                   "flex flex-col items-center py-1 px-2 rounded-lg transition-all duration-200 min-w-0 flex-1 touch-target",
                   isActive 
                     ? "text-primary" 
                     : "text-muted-foreground hover:text-foreground"
                 )}
+                aria-current={isActive ? 'page' : undefined}
               >
                 <Icon 
                   className={cn(

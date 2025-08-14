@@ -39,7 +39,7 @@ export function useVirtualMailbox() {
       
       if (error) throw error;
       setVirtualMailboxes(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching virtual mailboxes:', error);
       toast({
         title: 'Error',
@@ -65,7 +65,7 @@ export function useVirtualMailbox() {
       
       if (error) throw error;
       setMailPieces(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching mail pieces:', error);
       toast({
         title: 'Error',
@@ -96,7 +96,7 @@ export function useVirtualMailbox() {
       });
       
       return data;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error creating virtual mailbox:', error);
       toast({
         title: 'Error',
@@ -132,7 +132,7 @@ export function useVirtualMailbox() {
       });
       
       return data;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error adding mail piece:', error);
       toast({
         title: 'Error',
@@ -170,7 +170,7 @@ export function useVirtualMailbox() {
       });
       
       return data;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error creating mail action:', error);
       toast({
         title: 'Error',
@@ -199,7 +199,7 @@ export function useVirtualMailbox() {
       if (error) throw error;
       setScanningQueue(prev => [data, ...prev]);
       return data;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error adding to scanning queue:', error);
       throw error;
     }
@@ -224,7 +224,7 @@ export function useVirtualMailbox() {
       });
       
       return data;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error creating check deposit:', error);
       toast({
         title: 'Error',
@@ -248,22 +248,26 @@ export function useVirtualMailbox() {
 
       if (error) throw error;
       setPricing(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching pricing:', error);
     }
   };
 
   // Calculate action cost
-  const calculateActionCost = (actionType: string, serviceTier: string, additionalData?: any) => {
+  const calculateActionCost = (actionType: string, serviceTier: string, additionalData?: unknown) => {
     const tierPricing = pricing.find(p => p.service_tier === serviceTier);
     if (!tierPricing) return 0;
 
     switch (actionType) {
-      case 'scan':
+      case 'scan': {
         const pages = additionalData?.pages || 1;
+        break;
+      }
         return tierPricing.scan_fee_per_page * pages;
-      case 'forward':
+      case 'forward': {
         const weight = additionalData?.weight || 1;
+        break;
+      }
         return tierPricing.forward_fee_base + (tierPricing.forward_fee_per_ounce * weight);
       case 'shred':
         return tierPricing.shred_fee;
@@ -302,7 +306,7 @@ export function useVirtualMailbox() {
             : piece
         )
       );
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error updating mail piece status:', error);
       throw error;
     }

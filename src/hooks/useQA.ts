@@ -19,7 +19,7 @@ export interface FailedProcess {
   process_name: string;
   process_type: string;
   error_message?: string;
-  error_details?: any;
+  error_details?: unknown;
   severity: 'low' | 'medium' | 'high' | 'critical';
   status: 'open' | 'investigating' | 'resolved' | 'closed';
   failed_at: string;
@@ -38,7 +38,7 @@ export interface UserErrorReport {
   steps_to_reproduce?: string;
   expected_behavior?: string;
   actual_behavior?: string;
-  browser_info?: any;
+  browser_info?: unknown;
   screenshot_urls?: string[];
   video_url?: string;
   priority: 'low' | 'medium' | 'high' | 'urgent';
@@ -71,7 +71,7 @@ export interface UserFeedback {
   category?: string;
   severity?: 'low' | 'medium' | 'high' | 'critical';
   page_url?: string;
-  browser_info?: any;
+  browser_info?: unknown;
   screenshot_urls?: string[];
   priority_score?: number;
   status: 'open' | 'reviewed' | 'in_progress' | 'completed' | 'rejected';
@@ -91,7 +91,7 @@ export interface TestCase {
   category: 'functionality' | 'ui' | 'api' | 'database' | 'security';
   priority: 'low' | 'medium' | 'high' | 'critical';
   preconditions?: string;
-  test_steps?: any[];
+  test_steps?: unknown[];
   expected_results?: string;
   automation_script?: string;
   tags?: string[];
@@ -112,7 +112,7 @@ export interface AutomatedTestRun {
   failed_tests: number;
   skipped_tests: number;
   execution_time_ms?: number;
-  test_results?: any;
+  test_results?: unknown;
   status: 'running' | 'completed' | 'failed' | 'cancelled';
   started_at: string;
   completed_at?: string;
@@ -130,9 +130,9 @@ export interface DailyHealthReport {
   critical_issues_count: number;
   warnings_count: number;
   tests_passed_percentage?: number;
-  anomalies_detected?: any[];
-  recommendations?: any[];
-  report_data?: any;
+  anomalies_detected?: unknown[];
+  recommendations?: unknown[];
+  report_data?: unknown;
   generated_at: string;
 }
 
@@ -142,7 +142,7 @@ export interface QAChecklist {
   name: string;
   description?: string;
   checklist_type: 'deployment' | 'feature_release' | 'daily_checks' | 'security_audit';
-  checklist_items: any[];
+  checklist_items: unknown[];
   is_template: boolean;
   created_by?: string;
   updated_by?: string;

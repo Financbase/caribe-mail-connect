@@ -41,7 +41,7 @@ export function useDocuments() {
 
       if (error) throw error;
       setDocuments(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching documents:', error);
       toast({
         title: 'Error',
@@ -63,7 +63,7 @@ export function useDocuments() {
 
       if (error) throw error;
       setFolders(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching folders:', error);
       toast({
         title: 'Error',
@@ -86,7 +86,7 @@ export function useDocuments() {
 
       if (error) throw error;
       setSearchResults(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error searching documents:', error);
       toast({
         title: 'Error',
@@ -111,7 +111,7 @@ export function useDocuments() {
 
       if (error) throw error;
       setSearchResults(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error in full-text search:', error);
       // Fallback to regular search
       searchDocuments(searchTerm);
@@ -182,7 +182,7 @@ export function useDocuments() {
       // Refresh documents
       await fetchDocuments();
       return docData.id;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error uploading document:', error);
       toast({
         title: 'Error',
@@ -211,7 +211,7 @@ export function useDocuments() {
 
       await fetchFolders();
       return true;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error creating folder:', error);
       toast({
         title: 'Error',
@@ -241,7 +241,7 @@ export function useDocuments() {
       });
 
       return true;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error updating document:', error);
       toast({
         title: 'Error',
@@ -272,7 +272,7 @@ export function useDocuments() {
       });
 
       return true;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error deleting document:', error);
       toast({
         title: 'Error',
@@ -292,14 +292,14 @@ export function useDocuments() {
 
       if (error) throw error;
       return data.signedUrl;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error getting document URL:', error);
       return null;
     }
   };
 
   // Log document access
-  const logDocumentAccess = async (documentId: string, action: string, details?: any) => {
+  const logDocumentAccess = async (documentId: string, action: string, details?: unknown) => {
     try {
       await supabase
         .from('document_access_logs')
@@ -331,7 +331,7 @@ export function useDocuments() {
 
       if (error) throw error;
       return data || [];
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching expiring documents:', error);
       return [];
     }
@@ -350,7 +350,7 @@ export function useDocuments() {
 
       if (error) throw error;
       return data || [];
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching documents by category:', error);
       return [];
     } finally {
@@ -370,7 +370,7 @@ export function useDocuments() {
 
       if (error) throw error;
       return data || [];
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching customer documents:', error);
       return [];
     }
@@ -379,7 +379,7 @@ export function useDocuments() {
   useEffect(() => {
     fetchFolders();
     fetchDocuments();
-  }, []);
+  }, [fetchFolders, fetchDocuments]);
 
   return {
     documents,

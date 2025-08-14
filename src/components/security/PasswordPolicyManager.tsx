@@ -34,7 +34,7 @@ export function PasswordPolicyManager() {
     isActive: true,
   });
 
-  const updatePolicy = (field: keyof PasswordPolicy, value: any) => {
+  const updatePolicy = (field: keyof PasswordPolicy, value: unknown) => {
     setPolicy(prev => ({ ...prev, [field]: value }));
   };
 

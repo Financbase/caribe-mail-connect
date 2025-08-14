@@ -47,7 +47,7 @@ export function AuditLogs() {
 
   useEffect(() => {
     fetchAuditLogs();
-  }, []);
+  }, [fetchAuditLogs]);
 
   const fetchAuditLogs = async () => {
     try {

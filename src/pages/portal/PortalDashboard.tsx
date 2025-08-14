@@ -23,7 +23,7 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 interface PortalDashboardProps {
-  customerData: any;
+  customerData: unknown;
   onNavigate: (page: string) => void;
 }
 

@@ -55,7 +55,7 @@ export function NotificationSettings() {
     updateRule({ id: ruleId, updates: { is_active: !isActive } });
   };
 
-  const duplicateTemplate = (template: any) => {
+  const duplicateTemplate = (template: unknown) => {
     setSelectedTemplate({
       ...template,
       id: undefined,
@@ -354,7 +354,7 @@ export function NotificationSettings() {
                       <div>
                         <span className="text-sm font-medium">Pasos del flujo:</span>
                         <div className="mt-2 space-y-2">
-                          {workflow.steps.map((step: any, index: number) => (
+                          {workflow.steps.map((step: unknown, index: number) => (
                             <div key={index} className="flex items-center gap-2 text-sm">
                               <Badge variant="outline">{step.step}</Badge>
                               <span>{step.trigger}</span>

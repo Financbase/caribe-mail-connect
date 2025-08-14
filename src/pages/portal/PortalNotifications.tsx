@@ -23,7 +23,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
 interface PortalNotificationsProps {
-  customerData: any;
+  customerData: unknown;
   onNavigate: (page: string) => void;
 }
 

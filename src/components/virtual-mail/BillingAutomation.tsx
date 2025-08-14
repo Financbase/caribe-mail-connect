@@ -46,7 +46,7 @@ export function BillingAutomation() {
   useEffect(() => {
     fetchBillingConfig();
     fetchUsageStats();
-  }, []);
+  }, [fetchBillingConfig, fetchUsageStats]);
 
   const fetchBillingConfig = async () => {
     try {

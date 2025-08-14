@@ -84,7 +84,7 @@ export default function StaffAuth({ onNavigate }: StaffAuthProps) {
       });
 
       onNavigate('dashboard');
-    } catch (error: any) {
+    } catch (error: unknown) {
       setError('Error de conexión. Intente nuevamente.');
       console.error('Login error:', error);
     } finally {
@@ -149,7 +149,7 @@ export default function StaffAuth({ onNavigate }: StaffAuthProps) {
         confirmPassword: '',
         employeeId: ''
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       setError('Error de conexión. Intente nuevamente.');
       console.error('Signup error:', error);
     } finally {

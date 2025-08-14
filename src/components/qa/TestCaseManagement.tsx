@@ -159,7 +159,7 @@ export const TestCaseManagement = () => {
                           <label className="text-sm font-medium">Type</label>
                           <Select
                             value={newTestCase.test_type}
-                            onValueChange={(value: any) => setNewTestCase({ ...newTestCase, test_type: value })}
+                            onValueChange={(value: unknown) => setNewTestCase({ ...newTestCase, test_type: value })}
                           >
                             <SelectTrigger>
                               <SelectValue />
@@ -179,7 +179,7 @@ export const TestCaseManagement = () => {
                           <label className="text-sm font-medium">Category</label>
                           <Select
                             value={newTestCase.category}
-                            onValueChange={(value: any) => setNewTestCase({ ...newTestCase, category: value })}
+                            onValueChange={(value: unknown) => setNewTestCase({ ...newTestCase, category: value })}
                           >
                             <SelectTrigger>
                               <SelectValue />
@@ -197,7 +197,7 @@ export const TestCaseManagement = () => {
                           <label className="text-sm font-medium">Priority</label>
                           <Select
                             value={newTestCase.priority}
-                            onValueChange={(value: any) => setNewTestCase({ ...newTestCase, priority: value })}
+                            onValueChange={(value: unknown) => setNewTestCase({ ...newTestCase, priority: value })}
                           >
                             <SelectTrigger>
                               <SelectValue />

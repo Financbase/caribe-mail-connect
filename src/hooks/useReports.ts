@@ -8,8 +8,8 @@ export interface ReportTemplate {
   description: string;
   type: 'operational' | 'financial' | 'compliance';
   category: string;
-  template_config: any;
-  default_parameters: any;
+  template_config: unknown;
+  default_parameters: unknown;
   required_roles: string[];
   is_active: boolean;
   created_at: string;
@@ -22,10 +22,10 @@ export interface Report {
   description: string;
   type: 'operational' | 'financial' | 'compliance' | 'custom';
   category: string;
-  query_config: any;
-  visualization_config: any;
-  filters: any;
-  parameters: any;
+  query_config: unknown;
+  visualization_config: unknown;
+  filters: unknown;
+  parameters: unknown;
   is_public: boolean;
   is_system: boolean;
   location_id: string | null;
@@ -40,7 +40,7 @@ export interface ReportSchedule {
   report_id: string;
   name: string;
   schedule_type: 'once' | 'daily' | 'weekly' | 'monthly' | 'quarterly';
-  schedule_config: any;
+  schedule_config: unknown;
   recipients: string[];
   format: 'pdf' | 'excel' | 'csv';
   is_active: boolean;
@@ -58,8 +58,8 @@ export interface ReportExecution {
   report_id: string;
   schedule_id: string | null;
   status: 'running' | 'completed' | 'failed';
-  parameters: any;
-  result_data: any;
+  parameters: unknown;
+  result_data: unknown;
   file_url: string | null;
   error_message: string | null;
   execution_time_ms: number | null;
@@ -166,7 +166,7 @@ export function useReports() {
         description: 'The report has been created successfully.',
       });
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       toast({
         title: 'Error creating report',
         description: error.message,
@@ -195,7 +195,7 @@ export function useReports() {
         description: 'The report has been updated successfully.',
       });
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       toast({
         title: 'Error updating report',
         description: error.message,
@@ -221,7 +221,7 @@ export function useReports() {
         description: 'The report has been deleted successfully.',
       });
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       toast({
         title: 'Error deleting report',
         description: error.message,
@@ -249,7 +249,7 @@ export function useReports() {
         description: 'The report schedule has been created successfully.',
       });
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       toast({
         title: 'Error creating schedule',
         description: error.message,
@@ -275,7 +275,7 @@ export function useReports() {
         description: 'The report has been executed successfully.',
       });
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       toast({
         title: 'Error executing report',
         description: error.message,
@@ -316,7 +316,7 @@ export function useReports() {
         description: 'The report has been downloaded successfully.',
       });
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       toast({
         title: 'Export failed',
         description: error.message,

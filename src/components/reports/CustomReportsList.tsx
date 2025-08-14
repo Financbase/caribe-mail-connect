@@ -8,7 +8,7 @@ import { formatDistanceToNow } from 'date-fns';
 
 interface CustomReportsListProps {
   reports: Report[];
-  onExecute: (reportId: string, parameters?: any) => void;
+  onExecute: (reportId: string, parameters?: unknown) => void;
   onSchedule: (reportId: string) => void;
   isExecuting: boolean;
 }

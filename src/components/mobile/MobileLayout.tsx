@@ -66,7 +66,9 @@ export function MobileLayout({
     // Desktop layout
     return (
       <div className="min-h-screen bg-gradient-to-br from-background to-accent/20">
-        {children}
+        <main id="main-content" role="main" className="focus:outline-none">
+          {children}
+        </main>
       </div>
     );
   }
@@ -107,12 +109,12 @@ export function MobileLayout({
       )}
 
       {/* Header */}
-      <div className={cn(showInstallPrompt && !deviceInfo?.isNative && "mt-16")}>
+      <div id="primary-navigation" role="navigation" className={cn(showInstallPrompt && !deviceInfo?.isNative && "mt-16")}> 
         <MobileHeader title={title || getTitleForPage(currentPage)} />
       </div>
 
       {/* Main content */}
-      <main className="flex-1 overflow-hidden">
+      <main id="main-content" role="main" className="flex-1 overflow-hidden focus:outline-none">
         {children}
       </main>
 

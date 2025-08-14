@@ -108,7 +108,7 @@ serve(async (req) => {
   }
 });
 
-async function verifyWebhookSignature(service: string, body: string, headers: any, secret?: string): Promise<boolean> {
+async function verifyWebhookSignature(service: string, body: string, headers: unknown, secret?: string): Promise<boolean> {
   switch (service) {
     case 'stripe':
       return verifyStripeSignature(body, headers['stripe-signature'], secret);
@@ -141,7 +141,7 @@ async function verifyStripeSignature(body: string, signature: string, secret?: s
   }
 }
 
-async function verifyPayPalSignature(body: string, headers: any, secret?: string): Promise<boolean> {
+async function verifyPayPalSignature(body: string, headers: unknown, secret?: string): Promise<boolean> {
   // PayPal webhook verification would go here
   // This is more complex and involves certificate validation
   return true; // Simplified for demo
@@ -159,7 +159,7 @@ async function verifyGitHubSignature(body: string, signature: string, secret?: s
   }
 }
 
-async function processStripeWebhook(webhookData: any, supabaseClient: any) {
+async function processStripeWebhook(webhookData: unknown, supabaseClient: unknown) {
   const { type, data } = webhookData;
 
   switch (type) {
@@ -177,7 +177,7 @@ async function processStripeWebhook(webhookData: any, supabaseClient: any) {
   }
 }
 
-async function processPayPalWebhook(webhookData: any, supabaseClient: any) {
+async function processPayPalWebhook(webhookData: unknown, supabaseClient: unknown) {
   const { event_type, resource } = webhookData;
 
   switch (event_type) {
@@ -191,7 +191,7 @@ async function processPayPalWebhook(webhookData: any, supabaseClient: any) {
   }
 }
 
-async function processUPSWebhook(webhookData: any, supabaseClient: any) {
+async function processUPSWebhook(webhookData: unknown, supabaseClient: unknown) {
   // Process UPS tracking updates
   const { trackingNumber, statusCode, statusDescription } = webhookData;
 
@@ -215,7 +215,7 @@ async function processUPSWebhook(webhookData: any, supabaseClient: any) {
   }
 }
 
-async function processFedExWebhook(webhookData: any, supabaseClient: any) {
+async function processFedExWebhook(webhookData: unknown, supabaseClient: unknown) {
   // Process FedEx tracking updates
   const { trackingNumber, eventType, eventDescription } = webhookData;
 
@@ -239,7 +239,7 @@ async function processFedExWebhook(webhookData: any, supabaseClient: any) {
   }
 }
 
-async function processTwilioWebhook(webhookData: any, supabaseClient: any) {
+async function processTwilioWebhook(webhookData: unknown, supabaseClient: unknown) {
   // Process SMS delivery status updates
   const { MessageSid, MessageStatus, To } = webhookData;
 
@@ -262,7 +262,7 @@ async function processTwilioWebhook(webhookData: any, supabaseClient: any) {
   }
 }
 
-async function processSendGridWebhook(webhookData: any, supabaseClient: any) {
+async function processSendGridWebhook(webhookData: unknown, supabaseClient: unknown) {
   // Process email delivery events
   if (!Array.isArray(webhookData)) {
     return { success: false, message: 'Invalid SendGrid webhook format' };
@@ -301,7 +301,7 @@ async function processSendGridWebhook(webhookData: any, supabaseClient: any) {
 }
 
 // Stripe webhook handlers
-async function handleStripePaymentSuccess(paymentIntent: any, supabaseClient: any) {
+async function handleStripePaymentSuccess(paymentIntent: unknown, supabaseClient: unknown) {
   try {
     // Update payment record
     const { error } = await supabaseClient
@@ -339,7 +339,7 @@ async function handleStripePaymentSuccess(paymentIntent: any, supabaseClient: an
   }
 }
 
-async function handleStripePaymentFailed(paymentIntent: any, supabaseClient: any) {
+async function handleStripePaymentFailed(paymentIntent: unknown, supabaseClient: unknown) {
   try {
     const { error } = await supabaseClient
       .from('payments')
@@ -366,7 +366,7 @@ async function handleStripePaymentFailed(paymentIntent: any, supabaseClient: any
   }
 }
 
-async function handleStripeInvoicePayment(invoice: any, supabaseClient: any) {
+async function handleStripeInvoicePayment(invoice: unknown, supabaseClient: unknown) {
   try {
     // Update invoice status in our system
     const { error } = await supabaseClient
@@ -388,7 +388,7 @@ async function handleStripeInvoicePayment(invoice: any, supabaseClient: any) {
   }
 }
 
-async function handleStripeSubscriptionUpdate(subscription: any, supabaseClient: any) {
+async function handleStripeSubscriptionUpdate(subscription: unknown, supabaseClient: unknown) {
   try {
     // Update customer subscription status
     const { error } = await supabaseClient
@@ -411,7 +411,7 @@ async function handleStripeSubscriptionUpdate(subscription: any, supabaseClient:
 }
 
 // PayPal webhook handlers
-async function handlePayPalPaymentCompleted(resource: any, supabaseClient: any) {
+async function handlePayPalPaymentCompleted(resource: unknown, supabaseClient: unknown) {
   try {
     const { error } = await supabaseClient
       .from('payments')
@@ -434,7 +434,7 @@ async function handlePayPalPaymentCompleted(resource: any, supabaseClient: any) 
   }
 }
 
-async function handlePayPalPaymentDenied(resource: any, supabaseClient: any) {
+async function handlePayPalPaymentDenied(resource: unknown, supabaseClient: unknown) {
   try {
     const { error } = await supabaseClient
       .from('payments')

@@ -290,7 +290,7 @@ export function useInventory() {
         description: 'Inventory item has been created successfully.',
       });
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       toast({
         title: 'Error creating item',
         description: error.message,
@@ -319,7 +319,7 @@ export function useInventory() {
         description: 'Inventory item has been updated successfully.',
       });
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       toast({
         title: 'Error updating item',
         description: error.message,
@@ -394,7 +394,7 @@ export function useInventory() {
         description: 'Inventory movement has been recorded successfully.',
       });
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       toast({
         title: 'Error recording movement',
         description: error.message,
@@ -472,7 +472,7 @@ export function useInventory() {
         description: 'Purchase order has been created successfully.',
       });
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       toast({
         title: 'Error creating purchase order',
         description: error.message,
@@ -500,7 +500,7 @@ export function useInventory() {
         description: 'Vendor has been created successfully.',
       });
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       toast({
         title: 'Error creating vendor',
         description: error.message,

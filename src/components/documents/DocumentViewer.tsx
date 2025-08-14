@@ -55,7 +55,7 @@ export function DocumentViewer({ documentId, open, onOpenChange }: DocumentViewe
         const url = await getDocumentUrl(data.file_path, false);
         setFileUrl(url);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching document:', error);
       toast({
         title: isSpanish ? 'Error' : 'Error',
@@ -87,7 +87,7 @@ export function DocumentViewer({ documentId, open, onOpenChange }: DocumentViewe
           description: isSpanish ? 'El archivo se está descargando' : 'File is downloading',
         });
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error downloading document:', error);
       toast({
         title: isSpanish ? 'Error' : 'Error',

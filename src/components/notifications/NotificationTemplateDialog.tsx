@@ -16,7 +16,7 @@ import { Eye, Code, Palette } from 'lucide-react';
 interface NotificationTemplateDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  template?: any;
+  template?: unknown;
   onSuccess: () => void;
 }
 
@@ -368,7 +368,7 @@ export function NotificationTemplateDialog({
                       <Label htmlFor="type">Tipo de mensaje *</Label>
                       <Select 
                         value={formData.type}
-                        onValueChange={(value: any) => setFormData(prev => ({ ...prev, type: value }))}
+                        onValueChange={(value: unknown) => setFormData(prev => ({ ...prev, type: value }))}
                         required
                       >
                         <SelectTrigger>
@@ -387,7 +387,7 @@ export function NotificationTemplateDialog({
                       <Label htmlFor="language">Idioma</Label>
                       <Select 
                         value={formData.language}
-                        onValueChange={(value: any) => setFormData(prev => ({ ...prev, language: value }))}
+                        onValueChange={(value: unknown) => setFormData(prev => ({ ...prev, language: value }))}
                       >
                         <SelectTrigger>
                           <SelectValue />

@@ -1,0 +1,70 @@
+{
+  "lastUpdated": "2025-08-13T20:27:56.999Z",
+  "metrics": [
+    {
+      "timestamp": "2025-08-13T20:27:53.736Z",
+      "environment": "development",
+      "database": {
+        "status": "healthy",
+        "responseTime": 1645,
+        "timestamp": "2025-08-13T20:27:55.381Z"
+      },
+      "dataIntegrity": {
+        "status": "healthy",
+        "counts": {
+          "mailboxes": 20,
+          "users": 3,
+          "configs": 16
+        },
+        "timestamp": "2025-08-13T20:27:55.965Z"
+      },
+      "performance": {
+        "status": "healthy",
+        "averageResponseTime": 189.66666666666666,
+        "tests": [
+          {
+            "name": "simple_query",
+            "time": 175
+          },
+          {
+            "name": "count_query",
+            "time": 182
+          },
+          {
+            "name": "filtered_query",
+            "time": 212
+          }
+        ],
+        "timestamp": "2025-08-13T20:27:56.534Z"
+      },
+      "environmentSwitching": {
+        "status": "healthy",
+        "currentEnvironment": "development",
+        "switchTest": "passed",
+        "timestamp": "2025-08-13T20:27:56.998Z"
+      },
+      "overallStatus": "healthy",
+      "summary": {
+        "healthy": 4,
+        "degraded": 0,
+        "unhealthy": 0,
+        "total": 4
+      }
+    }
+  ],
+  "alerts": [
+    {
+      "type": "performance",
+      "severity": "warning",
+      "message": "Database response time high: 1645ms",
+      "timestamp": "2025-08-13T20:27:53.736Z"
+    }
+  ],
+  "summary": {
+    "checksPerformed": 1,
+    "averageResponseTime": "1645.00",
+    "healthyPercentage": "100.0",
+    "lastCheck": "2025-08-13T20:27:53.736Z",
+    "totalAlerts": 1
+  }
+}

@@ -48,7 +48,7 @@ export default function Reports({ onNavigate }: ReportsProps) {
     setShowScheduleDialog(true);
   };
 
-  const handleExecuteReport = (reportId: string, parameters?: any) => {
+  const handleExecuteReport = (reportId: string, parameters?: unknown) => {
     executeReport({ reportId, parameters });
   };
 

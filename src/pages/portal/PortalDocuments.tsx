@@ -22,7 +22,7 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 interface PortalDocumentsProps {
-  customerData: any;
+  customerData: unknown;
   onNavigate: (page: string) => void;
 }
 
@@ -46,7 +46,7 @@ export default function PortalDocuments({ customerData, onNavigate }: PortalDocu
 
   useEffect(() => {
     fetchDocuments();
-  }, []);
+  }, [fetchDocuments]);
 
   const fetchDocuments = async () => {
     try {

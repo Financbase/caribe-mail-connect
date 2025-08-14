@@ -1,0 +1,52 @@
+{
+  "timestamp": "2025-08-13T18:40:08.099Z",
+  "environment": "development",
+  "supabaseUrl": "https://flbwqsocnlvsuqgupbra.supabase.co",
+  "summary": {
+    "passed": 8,
+    "failed": 0,
+    "successRate": 100
+  },
+  "results": [
+    {
+      "test": "Basic Connection",
+      "status": "PASS",
+      "details": "Connected successfully"
+    },
+    {
+      "test": "Read Operations",
+      "status": "PASS",
+      "details": "5 mailboxes, 3 users"
+    },
+    {
+      "test": "Write Operations",
+      "status": "PASS",
+      "details": "Test record created"
+    },
+    {
+      "test": "Update Operations",
+      "status": "PASS",
+      "details": "Test record updated"
+    },
+    {
+      "test": "Delete Operations",
+      "status": "PASS",
+      "details": "Test record deleted"
+    },
+    {
+      "test": "Authentication",
+      "status": "PASS",
+      "details": "Anon key access working"
+    },
+    {
+      "test": "Environment Config",
+      "status": "PASS",
+      "details": "5 configs found"
+    },
+    {
+      "test": "Performance",
+      "status": "PASS",
+      "details": "190ms response time"
+    }
+  ]
+}

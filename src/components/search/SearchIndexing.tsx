@@ -29,7 +29,7 @@ export function SearchIndexing() {
 
   useEffect(() => {
     checkIndexStatuses();
-  }, []);
+  }, [checkIndexStatuses]);
 
   const checkIndexStatuses = async () => {
     try {

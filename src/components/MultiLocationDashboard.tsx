@@ -45,7 +45,7 @@ export function MultiLocationDashboard({ onNavigate }: MultiLocationDashboardPro
     };
   };
 
-  const formatOperatingHours = (hours: any) => {
+  const formatOperatingHours = (hours: unknown) => {
     if (!hours) return t('locations.notSet');
     
     const today = new Date().getDay();

@@ -6,6 +6,7 @@ import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { formatBytes, formatDate } from '@/lib/utils';
 import type { Document } from '@/hooks/useDocuments';
+import { FixedSizeGrid as Grid } from 'react-window';
 
 interface DocumentGridProps {
   documents: Document[];
@@ -62,12 +63,23 @@ export function DocumentGrid({ documents, loading, onDocumentSelect }: DocumentG
     return colors[category as keyof typeof colors] || colors.general;
   };
 
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-      {documents.map((document) => (
+  // Virtualized grid for large document sets
+  const columnCount = 4;
+  const rowCount = Math.ceil(documents.length / columnCount);
+  const columnWidth = 280;
+  const rowHeight = 190;
+  const width = Math.min(columnCount * columnWidth, window.innerWidth - 32);
+  const height = Math.min(600, Math.ceil(documents.length / columnCount) * rowHeight);
+
+  const Cell = ({ columnIndex, rowIndex, style }: { columnIndex: number; rowIndex: number; style: React.CSSProperties }) => {
+    const index = rowIndex * columnCount + columnIndex;
+    if (index >= documents.length) return null;
+    const document = documents[index];
+    return (
+      <div style={style} className="p-2">
         <Card 
           key={document.id} 
-          className="group hover:shadow-md transition-shadow cursor-pointer"
+          className="group hover:shadow-md transition-shadow cursor-pointer h-full"
           onClick={() => onDocumentSelect(document.id)}
         >
           <CardContent className="p-4">
@@ -132,7 +144,22 @@ export function DocumentGrid({ documents, loading, onDocumentSelect }: DocumentG
             </div>
           </CardContent>
         </Card>
-      ))}
+      </div>
+    );
+  };
+
+  return (
+    <div className="w-full">
+      <Grid
+        columnCount={columnCount}
+        columnWidth={columnWidth}
+        height={height}
+        rowCount={rowCount}
+        rowHeight={rowHeight}
+        width={width}
+      >
+        {Cell}
+      </Grid>
     </div>
   );
 }

@@ -30,13 +30,13 @@ export default function DriverRoute({ onNavigate }: DriverRouteProps) {
     d.status === 'pending' || d.status === 'assigned' || d.status === 'in_transit'
   );
 
-  const handleNavigate = (delivery: any) => {
+  const handleNavigate = (delivery: unknown) => {
     const address = `${delivery.address_line1}, ${delivery.city}, ${delivery.state} ${delivery.zip_code}`;
     const mapsUrl = `https://maps.google.com/?q=${encodeURIComponent(address)}`;
     window.open(mapsUrl, '_blank');
   };
 
-  const handleStartDelivery = async (delivery: any) => {
+  const handleStartDelivery = async (delivery: unknown) => {
     const result = await updateDeliveryStatus(delivery.id, 'in_transit');
     if (result.success) {
       toast({
@@ -52,7 +52,7 @@ export default function DriverRoute({ onNavigate }: DriverRouteProps) {
     }
   };
 
-  const handleCompleteDelivery = async (delivery: any) => {
+  const handleCompleteDelivery = async (delivery: unknown) => {
     setSelectedDelivery(delivery);
     setShowProofDialog(true);
   };
@@ -95,7 +95,7 @@ export default function DriverRoute({ onNavigate }: DriverRouteProps) {
     }
   };
 
-  const handleFailedDelivery = async (delivery: any) => {
+  const handleFailedDelivery = async (delivery: unknown) => {
     const reason = prompt(t('Enter failure reason:'));
     if (!reason) return;
 

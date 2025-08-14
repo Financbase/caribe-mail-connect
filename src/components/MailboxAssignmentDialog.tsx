@@ -11,6 +11,7 @@ import { format } from 'date-fns';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCustomers } from '@/hooks/useCustomers';
 import { cn } from '@/lib/utils';
+import { VirtualizedList } from '@/components/lists/VirtualizedList';
 import type { Mailbox } from '@/hooks/useMailboxes';
 
 interface MailboxAssignmentDialogProps {
@@ -100,24 +101,29 @@ export function MailboxAssignmentDialog({
               
               {showCustomerDropdown && filteredCustomers.length > 0 && (
                 <div className="absolute z-10 w-full mt-1 bg-background border border-border rounded-md shadow-lg max-h-60 overflow-y-auto">
-                  {filteredCustomers.map((customer) => (
-                    <button
-                      key={customer.id}
-                      className="w-full text-left px-3 py-2 hover:bg-accent hover:text-accent-foreground border-b border-border last:border-b-0"
-                      onClick={() => {
-                        setSelectedCustomerId(customer.id);
-                        setCustomerSearch(`${customer.first_name} ${customer.last_name} (${customer.email})`);
-                        setShowCustomerDropdown(false);
-                      }}
-                    >
-                      <div className="font-medium">
-                        {customer.first_name} {customer.last_name}
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        {customer.email} • {t('Mailbox')} #{customer.mailbox_number}
-                      </div>
-                    </button>
-                  ))}
+                  <VirtualizedList
+                    items={filteredCustomers}
+                    itemHeight={56}
+                    ariaLabel={t('Customers')}
+                    renderItem={(customer) => (
+                      <button
+                        key={customer.id}
+                        className="w-full text-left px-3 py-2 hover:bg-accent hover:text-accent-foreground border-b border-border last:border-b-0"
+                        onClick={() => {
+                          setSelectedCustomerId(customer.id);
+                          setCustomerSearch(`${customer.first_name} ${customer.last_name} (${customer.email})`);
+                          setShowCustomerDropdown(false);
+                        }}
+                      >
+                        <div className="font-medium">
+                          {customer.first_name} {customer.last_name}
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          {customer.email} • {t('Mailbox')} #{customer.mailbox_number}
+                        </div>
+                      </button>
+                    )}
+                  />
                 </div>
               )}
             </div>

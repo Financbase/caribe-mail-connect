@@ -2,7 +2,7 @@
 
 ## Project info
 
-**URL**: https://lovable.dev/projects/ac8297d1-7da1-4672-b42f-263b1dc5dd96
+**URL**: <https://lovable.dev/projects/ac8297d1-7da1-4672-b42f-263b1dc5dd96>
 
 ## How can I edit this code?
 
@@ -82,6 +82,7 @@ VITE_SENTRY_TRACES_SAMPLE_RATE=0.1
 ```
 
 Notes:
+
 - Do not commit real secrets.
 - Initialization is handled in `src/main.tsx` via `initSentry()`; see `src/integrations/monitoring/sentry.ts`.
 - See `docs/architecture/monitoring.md` for a full enable/validate checklist.

@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Truck, Clock, MapPin, User, AlertCircle } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import type { DeliveryRoute, DriverAssignment } from '@/hooks/useRoutes';
+import { VirtualizedList } from '@/components/lists/VirtualizedList';
 
 interface RouteListProps {
   routes: DeliveryRoute[];
@@ -76,12 +77,16 @@ export function RouteList({
               <p>{t('No routes scheduled for today')}</p>
             </div>
           ) : (
-            routes.map((route) => (
-              <div 
-                key={route.id} 
-                className="border rounded-lg p-4 hover:bg-accent/50 transition-colors cursor-pointer"
-                onClick={() => onViewRoute(route)}
-              >
+            <VirtualizedList
+              items={routes}
+              itemHeight={156}
+              ariaLabel={t('Delivery Routes')}
+              renderItem={(route) => (
+                <div
+                  key={route.id}
+                  className="border rounded-lg p-4 hover:bg-accent/50 transition-colors cursor-pointer"
+                  onClick={() => onViewRoute(route)}
+                >
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
@@ -212,7 +217,8 @@ export function RouteList({
                   )}
                 </div>
               </div>
-            ))
+              )}
+            />
           )}
         </div>
       </CardContent>

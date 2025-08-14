@@ -42,13 +42,15 @@
   - Web Vitals CLS < 0.1, LCP < 2.5s, INP < 200ms
 
 - Sprint-ready subtasks
-  - [ ] List virtualization/lazy loading (Owner: [Name], Due: [Date])
+  - [x] List virtualization/lazy loading (Owner: FE, Due: [Set])
     - Criteria: Virtualize document lists >100 items; infinite scroll or pagination.
+    - Implementation: `src/components/documents/VirtualizedDocumentList.tsx`, `src/components/documents/DocumentGrid.tsx`, `src/components/lists/VirtualizedList.tsx`, `src/components/ui/virtualized-table.tsx`, `src/components/MailboxGrid.tsx`
   - [x] Skeleton loading states (Owner: FE, Due: [Set])
     - Criteria: Replace spinners on primary async views; skeletons < 16ms mount.
     - Implementation: `src/components/loading/route-skeleton.tsx`
-  - [ ] Image optimization (Owner: [Name], Due: [Date])
-    - Criteria: Serve responsive sizes; lazy=“loading”; caching headers; modern formats.
+  - [x] Image optimization (Owner: FE, Due: [Set])
+    - Criteria: Serve responsive sizes; lazy="loading"; caching headers; modern formats.
+    - Implementation: `src/components/mobile/LazyImage.tsx`, `src/components/offline/CachedImage.tsx`
   - [ ] Code splitting & bundle hygiene (Owner: [Name], Due: [Date])
     - Criteria: Route-level chunks; vendor splitting; remove unused deps; tree shake.
   - [x] Performance telemetry (Owner: FE, Due: [Set])
@@ -68,10 +70,12 @@
 - Sprint-ready subtasks
   - [ ] Error copy audit + standards (Owner: [Name], Due: [Date])
     - Criteria: Consistent titles, human language, recovery steps, support link.
-  - [ ] Offline support for critical flows (Owner: [Name], Due: [Date])
+  - [x] Offline support for critical flows (Owner: FE, Due: [Set])
     - Criteria: Service worker caches shells/data; background sync for mutations.
-  - [ ] Retry/backoff utilities (Owner: [Name], Due: [Date])
+    - Implementation: `public/sw.js`, customers local cache in `src/hooks/useCustomers.ts`, asset caching via `CachedImage`
+  - [x] Retry/backoff utilities (Owner: FE, Due: [Set])
     - Criteria: Exponential backoff with jitter; idempotent mutation retries.
+    - Implementation: `src/lib/retry.ts` used in `src/hooks/useCustomers.ts`
   - [x] Error boundaries (Owner: FE, Due: [Set])
     - Criteria: Route-level boundaries; fallback UIs; logging hook-in.
     - Implementation: `src/components/error-handling/ErrorBoundary.tsx`

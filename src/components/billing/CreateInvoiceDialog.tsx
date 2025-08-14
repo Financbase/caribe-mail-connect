@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { VirtualizedList } from '@/components/lists/VirtualizedList';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Plus, Trash2 } from 'lucide-react';
@@ -214,12 +215,17 @@ export function CreateInvoiceDialog({ open, onOpenChange }: CreateInvoiceDialogP
                 <SelectTrigger>
                   <SelectValue placeholder="Seleccionar cliente" />
                 </SelectTrigger>
-                <SelectContent>
-                  {customers.map((customer) => (
-                    <SelectItem key={customer.id} value={customer.id}>
-                      {customer.first_name} {customer.last_name} - #{customer.mailbox_number}
-                    </SelectItem>
-                  ))}
+                <SelectContent className="max-h-64 p-0">
+                  <VirtualizedList
+                    items={customers}
+                    itemHeight={40}
+                    ariaLabel="Clientes"
+                    renderItem={(customer) => (
+                      <SelectItem key={customer.id} value={customer.id}>
+                        {customer.first_name} {customer.last_name} - #{customer.mailbox_number}
+                      </SelectItem>
+                    )}
+                  />
                 </SelectContent>
               </Select>
             </div>

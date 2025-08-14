@@ -1,10 +1,17 @@
 import { useState, useEffect, Suspense, lazy } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
+import { 
+  Dashboard, 
+  VirtualMail, 
+  Documents, 
+  preloadCriticalComponents,
+  preloadRouteComponents 
+} from '@/lib/lazy-imports';
+
 const AuthSelection = lazy(() => import('./auth/AuthSelection'));
 const StaffAuth = lazy(() => import('./auth/StaffAuth'));
 const CustomerAuth = lazy(() => import('./auth/CustomerAuth'));
-const Dashboard = lazy(() => import('./Dashboard'));
 const PackageIntake = lazy(() => import('./PackageIntake'));
 const Customers = lazy(() => import('./Customers'));
 const Notifications = lazy(() => import('./Notifications'));
@@ -18,14 +25,14 @@ const LocationManagement = lazy(() => import('./LocationManagement'));
 const ProfileSettings = lazy(() => import('./profile/Settings'));
 const Billing = lazy(() => import('./Billing'));
 const Admin = lazy(() => import('./Admin'));
-const Reports = lazy(() => import('./Reports'));
 const CustomerPortal = lazy(() => import('./CustomerPortal'));
 const Integrations = lazy(() => import('./Integrations'));
 const Inventory = lazy(() => import('./Inventory'));
-const Documents = lazy(() => import('./Documents'));
-const VirtualMailComponent = lazy(() => import('./VirtualMail').then(m => ({ default: m.VirtualMail })));
 import { MobileLayout } from '@/components/mobile/MobileLayout';
 import { UserFeedbackWidget } from '@/components/qa/UserFeedbackSystem';
+import { Skeleton } from '@/components/ui/skeleton';
+import { ErrorProvider } from '@/contexts/ErrorContext';
+import { PageSkeleton, MobileSkeleton, AuthSkeleton } from '@/components/loading/PageSkeleton';
 
 // Main application component with navigation logic
 const PRMCMS = () => {
@@ -39,7 +46,27 @@ const PRMCMS = () => {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js').catch(console.error);
     }
+    
+    // Preload critical components on app start
+    preloadCriticalComponents();
   }, []);
+
+  // Route preloading based on navigation
+  useEffect(() => {
+    if (currentPage && user) {
+      const routeMap: Record<string, string> = {
+        'virtual-mail': '/virtual-mail',
+        'documents': '/documents',
+        'package-intake': '/packages',
+        'customers': '/customers'
+      };
+      
+      const route = routeMap[currentPage];
+      if (route) {
+        preloadRouteComponents(route);
+      }
+    }
+  }, [currentPage, user]);
 
   // Auth state management
   useEffect(() => {
@@ -86,87 +113,104 @@ const PRMCMS = () => {
 
   // Show loading while checking authentication
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <p>Loading...</p>
-        </div>
-      </div>
-    );
+    return <PageSkeleton />;
   }
 
   // Show auth pages if not authenticated
   if (!user) {
+    const isMobile = window.innerWidth < 768;
+    const fallback = isMobile ? <MobileSkeleton /> : <AuthSkeleton />;
+    
     switch (currentPage) {
       case 'staff-auth':
         return (
-          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+          <Suspense fallback={fallback}>
             <StaffAuth onNavigate={handleNavigation} />
           </Suspense>
         );
       case 'customer-auth':
         return (
-          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+          <Suspense fallback={fallback}>
             <CustomerAuth onNavigate={handleNavigation} />
           </Suspense>
         );
       case 'customer-portal':
         return (
-          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+          <Suspense fallback={fallback}>
             <CustomerPortal onNavigate={handleNavigation} />
           </Suspense>
         );
       default:
         return (
-          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+          <Suspense fallback={fallback}>
             <AuthSelection onNavigate={handleNavigation} />
           </Suspense>
         );
     }
   }
 
+  const isMobile = window.innerWidth < 768;
+  const pageFallback = isMobile ? <MobileSkeleton /> : <PageSkeleton />;
+
   const renderPage = () => {
     switch (currentPage) {
+      case 'dashboard':
+        return (
+          <Suspense fallback={pageFallback}>
+            <Dashboard onNavigate={handleNavigation} />
+          </Suspense>
+        );
+      case 'virtual-mail':
+        return (
+          <Suspense fallback={pageFallback}>
+            <VirtualMail />
+          </Suspense>
+        );
+      case 'documents':
+        return (
+          <Suspense fallback={pageFallback}>
+            <Documents onNavigate={handleNavigation} />
+          </Suspense>
+        );
       case 'intake':
         return (
-          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+          <Suspense fallback={pageFallback}>
             <PackageIntake onNavigate={handleNavigation} />
           </Suspense>
         );
       case 'customers':
         return (
-          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+          <Suspense fallback={pageFallback}>
             <Customers onNavigate={handleNavigation} />
           </Suspense>
         );
       case 'mailboxes':
         return (
-          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+          <Suspense fallback={pageFallback}>
             <Mailboxes onNavigate={handleNavigation} />
           </Suspense>
         );
       case 'analytics':
         return (
-          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+          <Suspense fallback={pageFallback}>
             <Analytics onNavigate={handleNavigation} />
           </Suspense>
         );
       case 'routes':
         return (
-          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+          <Suspense fallback={pageFallback}>
             <Routes onNavigate={handleNavigation} />
           </Suspense>
         );
       case 'driver-route':
         return (
-          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+          <Suspense fallback={pageFallback}>
             <DriverRoute onNavigate={handleNavigation} />
           </Suspense>
         );
       case 'act60-dashboard':
         return (
-          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+          <Suspense fallback={pageFallback}>
             <Act60Dashboard onNavigate={handleNavigation} />
           </Suspense>
         );
@@ -214,20 +258,8 @@ const PRMCMS = () => {
         );
       case 'inventory':
         return (
-          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+          <Suspense fallback={pageFallback}>
             <Inventory onNavigate={handleNavigation} />
-          </Suspense>
-        );
-      case 'documents':
-        return (
-          <Suspense fallback={<div className="p-4">Cargando…</div>}>
-            <Documents onNavigate={handleNavigation} />
-          </Suspense>
-        );
-      case 'virtual-mail':
-        return (
-          <Suspense fallback={<div className="p-4">Cargando…</div>}>
-            <VirtualMailComponent />
           </Suspense>
         );
       case 'qa':

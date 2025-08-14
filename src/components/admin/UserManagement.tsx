@@ -353,7 +353,18 @@ export function UserManagement() {
                   </TableRow>
                 ) : (
                   filteredUsers.map((user) => (
-                    <TableRow key={user.id}>
+                    <TableRow
+                      key={user.id}
+                      tabIndex={0}
+                      aria-label={`Usuario ${user.first_name} ${user.last_name}`} 
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          const btn = (e.currentTarget as HTMLElement).querySelector<HTMLElement>('button')
+                          btn?.focus();
+                          e.preventDefault();
+                        }
+                      }}
+                    >
                       <TableCell>
                         <div>
                           <p className="font-medium">{user.first_name} {user.last_name}</p>

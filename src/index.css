@@ -126,6 +126,14 @@ All colors MUST be HSL.
 }
 
 @layer utilities {
+  /* Virtualized table grid columns via CSS var */
+  [data-vt-header], [data-vt-row] {
+    grid-template-columns: var(--vt-columns, 1fr);
+  }
+
+  /* Windowed mailbox grid cell padding wrapper */
+  .vt-mailbox-cell { padding: 6px; }
+  
   /* Animation delay utilities */
   .animation-delay-0 { animation-delay: 0ms; }
   .animation-delay-100 { animation-delay: 100ms; }
@@ -147,5 +155,35 @@ All colors MUST be HSL.
   /* Smooth scrolling */
   .scroll-smooth {
     scroll-behavior: smooth;
+  }
+  
+  /* Shimmer animation for skeleton loaders */
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+  
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
+  }
+  
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-pulse,
+    .animate-shimmer,
+    .animate-bounce {
+      animation: none;
+    }
+    
+    .transition-all,
+    .transition,
+    .transition-opacity,
+    .transition-transform {
+      transition: none;
+    }
   }
 }

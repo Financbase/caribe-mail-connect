@@ -1,10 +1,12 @@
 import { useState, useEffect, Suspense, lazy } from 'react';
+import { preloadCriticalComponents, preloadRouteComponents } from '@/lib/lazy-imports';
 import { useAuth } from '@/contexts/AuthContext';
 import { RouteSkeleton } from '@/components/loading/route-skeleton';
-import Auth from './Auth';
-import ResetPassword from './auth/ResetPassword';
-import UpdatePassword from './auth/UpdatePassword';
 import PRMCMS from './Index';
+
+const Auth = lazy(() => import('./Auth'));
+const ResetPassword = lazy(() => import('./auth/ResetPassword'));
+const UpdatePassword = lazy(() => import('./auth/UpdatePassword'));
 
 export default function AppRouter() {
   const { isAuthenticated, loading } = useAuth();
@@ -13,13 +15,24 @@ export default function AppRouter() {
   // Simple hash-based routing to avoid BrowserRouter conflicts
   useEffect(() => {
     const handleHashChange = () => {
-      setCurrentRoute(window.location.hash.replace('#', '') || '/');
+      const newRoute = window.location.hash.replace('#', '') || '/';
+      setCurrentRoute(newRoute);
+      try {
+        preloadRouteComponents(newRoute);
+      } catch {}
     };
 
     window.addEventListener('hashchange', handleHashChange);
     handleHashChange(); // Set initial route
 
     return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  // Idle-time preload of critical components
+  useEffect(() => {
+    try {
+      preloadCriticalComponents();
+    } catch {}
   }, []);
 
   if (loading) {
@@ -29,12 +42,24 @@ export default function AppRouter() {
   // Route logic
   if (!isAuthenticated) {
     if (currentRoute === '/auth/reset-password') {
-      return <ResetPassword />;
+      return (
+        <Suspense fallback={<RouteSkeleton />}>
+          <ResetPassword />
+        </Suspense>
+      );
     }
     if (currentRoute === '/auth/update-password') {
-      return <UpdatePassword />;
+      return (
+        <Suspense fallback={<RouteSkeleton />}>
+          <UpdatePassword />
+        </Suspense>
+      );
     }
-    return <Auth />;
+    return (
+      <Suspense fallback={<RouteSkeleton />}>
+        <Auth />
+      </Suspense>
+    );
   }
 
   // Authenticated user routes

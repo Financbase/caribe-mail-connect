@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ArrowLeft, Search, Plus, Phone, Package, Settings } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { VirtualizedList } from '@/components/lists/VirtualizedList';
 import { MobileHeader } from '@/components/MobileHeader';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { toast } from '@/hooks/use-toast';
@@ -23,12 +24,12 @@ export default function Customers({ onNavigate }: CustomersProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCustomer, setSelectedCustomer] = useState<string | null>(null);
 
-  const filteredCustomers = customers.filter(customer =>
+  const filteredCustomers = useMemo(() => customers.filter(customer =>
     `${customer.first_name} ${customer.last_name}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
     customer.mailbox_number.toLowerCase().includes(searchQuery.toLowerCase()) ||
     customer.phone?.includes(searchQuery) ||
     customer.email.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  ), [customers, searchQuery]);
 
   const handleUpdateNotificationPreferences = (customerId: string) => (preferences: NotificationPreferences) => {
     // In a real app, this would update the customer in the database
@@ -52,19 +53,21 @@ export default function Customers({ onNavigate }: CustomersProps) {
             variant="ghost"
             onClick={() => onNavigate('dashboard')}
             className="mb-4"
+            aria-label={language === 'en' ? 'Back to Dashboard' : 'Volver al Panel'}
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Dashboard
           </Button>
 
           {/* Search Bar */}
-          <div className="relative">
+          <div className="relative" role="search">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder={t('customers.search')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10 h-12"
+              aria-label={t('customers.search')}
             />
           </div>
 
@@ -77,101 +80,99 @@ export default function Customers({ onNavigate }: CustomersProps) {
               // In real app, this would open a modal or navigate to add customer page
               alert('Add Customer feature coming soon!');
             }}
+            aria-label={language === 'en' ? 'Add new customer' : 'Agregar nuevo cliente'}
           >
             <Plus className="h-5 w-5 mr-2" />
             {t('customers.addNew')}
           </Button>
 
-          {/* Customer List */}
-          <div className="space-y-3">
-            {filteredCustomers.map((customer, index) => (
-              <Card
-                key={customer.id}
-                className={`
-                  shadow-elegant hover:shadow-ocean transition-all duration-300 
-                  cursor-pointer hover:scale-[1.02] animate-slide-up
-                  ${customer.act_60_status ? 'border-l-4 border-l-yellow-400 bg-gradient-to-r from-yellow-50 to-transparent' : ''}
-                `}
-                style={{ animationDelay: `${index * 50}ms` }}
-                onClick={() => {
-                  // In real app, this would show customer details
-                  alert(`Customer details for ${customer.first_name} ${customer.last_name}`);
-                }}
-              >
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-3 mb-2">
-                        <div className="w-10 h-10 bg-gradient-ocean rounded-full flex items-center justify-center">
-                          <span className="text-white font-semibold text-sm">
-                            {customer.first_name[0]}{customer.last_name[0]}
-                          </span>
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <h3 className="font-semibold text-foreground truncate">
-                              {customer.first_name} {customer.last_name}
-                            </h3>
-                            <VipBadge isAct60={customer.act_60_status} size="sm" />
+          {/* Customer List (virtualized) */}
+          <div className="space-y-3" role="region" aria-label="Lista de clientes">
+            <VirtualizedList
+              items={filteredCustomers}
+              itemHeight={104}
+              ariaLabel="Clientes"
+              renderItem={(customer) => (
+                <Card
+                  key={customer.id}
+                  className={`
+                    shadow-elegant hover:shadow-ocean transition-all duration-300 
+                    cursor-pointer hover:scale-[1.02]
+                    ${customer.act_60_status ? 'border-l-4 border-l-yellow-400 bg-gradient-to-r from-yellow-50 to-transparent' : ''}
+                  `}
+                  onClick={() => {
+                    alert(`Customer details for ${customer.first_name} ${customer.last_name}`);
+                  }}
+                >
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="w-10 h-10 bg-gradient-ocean rounded-full flex items-center justify-center" aria-hidden="true">
+                            <span className="text-white font-semibold text-sm">
+                              {customer.first_name[0]}{customer.last_name[0]}
+                            </span>
                           </div>
-                          <p className="text-sm text-muted-foreground">
-                            {customer.mailbox_number}
-                          </p>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2">
+                              <h3 className="font-semibold text-foreground truncate">
+                                {customer.first_name} {customer.last_name}
+                              </h3>
+                              <VipBadge isAct60={customer.act_60_status} size="sm" />
+                            </div>
+                            <p className="text-sm text-muted-foreground">
+                              {customer.mailbox_number}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                      
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                        <div className="flex items-center gap-1">
-                          <Phone className="h-3 w-3" />
-                          <span>{customer.phone || 'N/A'}</span>
-                        </div>
-                        
-                        {customer.business_name && (
+                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
                           <div className="flex items-center gap-1">
-                            <Package className="h-3 w-3" />
-                            <span className="truncate">{customer.business_name}</span>
+                            <Phone className="h-3 w-3" aria-hidden="true" />
+                            <span>{customer.phone || 'N/A'}</span>
                           </div>
+                          {customer.business_name && (
+                            <div className="flex items-center gap-1">
+                              <Package className="h-3 w-3" aria-hidden="true" />
+                              <span className="truncate">{customer.business_name}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Badge 
+                          variant={customer.status === 'active' ? 'default' : 'secondary'}
+                          className={customer.act_60_status ? 'bg-yellow-100 text-yellow-800' : ''}
+                        >
+                          {customer.mailbox_number}
+                        </Badge>
+                        {customer.express_handling && (
+                          <Badge variant="outline" className="border-green-500 text-green-700 text-xs">
+                            Express
+                          </Badge>
                         )}
+                      <Dialog open={selectedCustomer === customer.id} onOpenChange={(open) => setSelectedCustomer(open ? customer.id : null)}>
+                          <DialogTrigger asChild>
+                          <Button variant="ghost" size="sm" onClick={(e) => e.stopPropagation()} aria-label={`Configurar notificaciones para ${customer.first_name} ${customer.last_name}`} data-focusable="true">
+                              <Settings className="h-4 w-4" aria-hidden="true" />
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="max-w-lg" aria-labelledby={`dialog-title-${customer.id}`}>
+                            <DialogHeader>
+                              <DialogTitle id={`dialog-title-${customer.id}`}>
+                                {language === 'en' ? 'Notification Settings' : 'Configuración de Notificaciones'} - {customer.first_name} {customer.last_name}
+                              </DialogTitle>
+                            </DialogHeader>
+                            <div className="text-center py-8 text-muted-foreground">
+                              <p>Notification preferences coming soon</p>
+                            </div>
+                          </DialogContent>
+                        </Dialog>
                       </div>
                     </div>
-
-                     {/* Badges and Settings */}
-                    <div className="flex items-center gap-2">
-                      <Badge 
-                        variant={customer.status === 'active' ? 'default' : 'secondary'}
-                        className={customer.act_60_status ? 'bg-yellow-100 text-yellow-800' : ''}
-                      >
-                        {customer.mailbox_number}
-                      </Badge>
-                      
-                      {customer.express_handling && (
-                        <Badge variant="outline" className="border-green-500 text-green-700 text-xs">
-                          Express
-                        </Badge>
-                      )}
-                      
-                      <Dialog open={selectedCustomer === customer.id} onOpenChange={(open) => setSelectedCustomer(open ? customer.id : null)}>
-                        <DialogTrigger asChild>
-                          <Button variant="ghost" size="sm" onClick={(e) => e.stopPropagation()}>
-                            <Settings className="h-4 w-4" />
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="max-w-lg">
-                          <DialogHeader>
-                            <DialogTitle>
-                              {language === 'en' ? 'Notification Settings' : 'Configuración de Notificaciones'} - {customer.first_name} {customer.last_name}
-                            </DialogTitle>
-                          </DialogHeader>
-                          <div className="text-center py-8 text-muted-foreground">
-                            <p>Notification preferences coming soon</p>
-                          </div>
-                        </DialogContent>
-                      </Dialog>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              )}
+            />
           </div>
 
           {/* No Results */}

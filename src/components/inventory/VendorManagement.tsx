@@ -11,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { VirtualizedTable } from '@/components/ui/virtualized-table';
 import {
   Dialog,
   DialogContent,
@@ -123,108 +124,78 @@ export function VendorManagement() {
         </CardContent>
       </Card>
 
-      {/* Vendors Grid */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {filteredVendors.map((vendor) => (
-          <Card key={vendor.id} className={!vendor.is_active ? 'opacity-60' : ''}>
-            <CardHeader>
-              <div className="flex items-start justify-between">
+      {/* Vendors List (virtualized as table-like list) */}
+      <div className="overflow-x-auto">
+        <VirtualizedTable
+          ariaLabel={isSpanish ? 'Proveedores' : 'Vendors'}
+          rows={filteredVendors}
+          rowHeight={96}
+          empty={(
+            <Card>
+              <CardContent className="text-center py-8">
+                <Truck className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                <h3 className="text-lg font-medium">
+                  {isSpanish ? 'No se encontraron proveedores' : 'No vendors found'}
+                </h3>
+                <p className="text-muted-foreground">
+                  {isSpanish ? 'Intente ajustar los filtros de búsqueda' : 'Try adjusting your search filters'}
+                </p>
+              </CardContent>
+            </Card>
+          )}
+          columns={[
+            { id: 'name', header: isSpanish ? 'Proveedor' : 'Vendor', width: '1fr', cell: (v: any) => (
+              <div>
                 <div className="flex items-center gap-2">
                   <Truck className="h-5 w-5 text-muted-foreground" />
-                  <CardTitle className="text-lg">{vendor.name}</CardTitle>
+                  <span className="font-medium">{v.name}</span>
+                  <Badge variant={v.is_active ? 'default' : 'secondary'}>
+                    {v.is_active ? (isSpanish ? 'Activo' : 'Active') : (isSpanish ? 'Inactivo' : 'Inactive')}
+                  </Badge>
                 </div>
-                <Badge variant={vendor.is_active ? 'default' : 'secondary'}>
-                  {vendor.is_active ? 
-                    (isSpanish ? 'Activo' : 'Active') : 
-                    (isSpanish ? 'Inactivo' : 'Inactive')
-                  }
-                </Badge>
-              </div>
-              {vendor.contact_person && (
-                <CardDescription>{vendor.contact_person}</CardDescription>
-              )}
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {/* Contact Information */}
-              <div className="space-y-2">
-                {vendor.email && (
-                  <div className="flex items-center gap-2 text-sm">
-                    <Mail className="h-4 w-4 text-muted-foreground" />
-                    <span>{vendor.email}</span>
-                  </div>
-                )}
-                {vendor.phone && (
-                  <div className="flex items-center gap-2 text-sm">
-                    <Phone className="h-4 w-4 text-muted-foreground" />
-                    <span>{vendor.phone}</span>
-                  </div>
-                )}
-                {vendor.address_line1 && (
-                  <div className="flex items-center gap-2 text-sm">
-                    <MapPin className="h-4 w-4 text-muted-foreground" />
-                    <div>
-                      <p>{vendor.address_line1}</p>
-                      {vendor.address_line2 && <p>{vendor.address_line2}</p>}
-                      <p>
-                        {vendor.city}, {vendor.state} {vendor.zip_code}
-                      </p>
-                    </div>
-                  </div>
+                {v.contact_person && (
+                  <div className="text-xs text-muted-foreground">{v.contact_person}</div>
                 )}
               </div>
-
-              {/* Payment Terms */}
-              <div className="pt-3 border-t">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">
-                    {isSpanish ? 'Términos de Pago:' : 'Payment Terms:'}
-                  </span>
-                  <span className="font-medium">
-                    {vendor.payment_terms} {isSpanish ? 'días' : 'days'}
-                  </span>
+            ) },
+            { id: 'contact', header: isSpanish ? 'Contacto' : 'Contact', width: '1fr', cell: (v: any) => (
+              <div className="text-sm space-y-1">
+                {v.email && <div className="flex items-center gap-2"><Mail className="h-4 w-4" /><span>{v.email}</span></div>}
+                {v.phone && <div className="flex items-center gap-2"><Phone className="h-4 w-4" /><span>{v.phone}</span></div>}
+              </div>
+            ) },
+            { id: 'address', header: isSpanish ? 'Dirección' : 'Address', width: '1fr', cell: (v: any) => (
+              v.address_line1 ? (
+                <div className="text-sm">
+                  <div>{v.address_line1}</div>
+                  {v.address_line2 && <div>{v.address_line2}</div>}
+                  <div>{v.city}, {v.state} {v.zip_code}</div>
                 </div>
-                {vendor.preferred_payment_method && (
-                  <div className="flex items-center justify-between text-sm mt-1">
-                    <span className="text-muted-foreground">
-                      {isSpanish ? 'Método Preferido:' : 'Preferred Method:'}
-                    </span>
-                    <span className="font-medium">{vendor.preferred_payment_method}</span>
-                  </div>
-                )}
-              </div>
-
-              {/* Actions */}
-              <div className="pt-3 border-t">
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button variant="outline" size="sm" className="w-full">
-                      <Edit className="h-4 w-4 mr-2" />
-                      {isSpanish ? 'Editar' : 'Edit'}
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-2xl">
-                    <DialogHeader>
-                      <DialogTitle>
-                        {isSpanish ? 'Editar Proveedor' : 'Edit Vendor'}
-                      </DialogTitle>
-                      <DialogDescription>
-                        {isSpanish ? 'Actualice la información del proveedor' : 'Update vendor information'}
-                      </DialogDescription>
-                    </DialogHeader>
-                    <VendorForm vendor={vendor} onClose={() => setEditingVendor(null)} />
-                  </DialogContent>
-                </Dialog>
-              </div>
-
-              {/* Notes */}
-              {vendor.notes && (
-                <div className="pt-3 border-t">
-                  <p className="text-sm text-muted-foreground">{vendor.notes}</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        ))}
+              ) : null
+            ) },
+            { id: 'actions', header: isSpanish ? 'Acciones' : 'Actions', width: '8rem', align: 'right', cell: (v: any) => (
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <Edit className="h-4 w-4 mr-2" />
+                    {isSpanish ? 'Editar' : 'Edit'}
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle>
+                      {isSpanish ? 'Editar Proveedor' : 'Edit Vendor'}
+                    </DialogTitle>
+                    <DialogDescription>
+                      {isSpanish ? 'Actualice la información del proveedor' : 'Update vendor information'}
+                    </DialogDescription>
+                  </DialogHeader>
+                  <VendorForm vendor={v} onClose={() => setEditingVendor(null)} />
+                </DialogContent>
+              </Dialog>
+            ) },
+          ]}
+        />
       </div>
 
       {filteredVendors.length === 0 && (

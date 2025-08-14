@@ -13,9 +13,10 @@ export function LoadingSpinner({ size = 'md', text }: LoadingSpinnerProps) {
   };
 
   return (
-    <div className="flex items-center justify-center gap-2">
-      <Loader2 className={`${sizeClasses[size]} animate-spin text-primary`} />
+    <div className="flex items-center justify-center gap-2" role="status" aria-live="polite" aria-atomic="true">
+      <Loader2 className={`${sizeClasses[size]} animate-spin text-primary`} aria-hidden="true" />
       {text && <span className="text-sm text-muted-foreground">{text}</span>}
+      {!text && <span className="sr-only">Loading…</span>}
     </div>
   );
 }

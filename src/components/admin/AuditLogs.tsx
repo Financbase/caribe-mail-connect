@@ -328,7 +328,18 @@ export function AuditLogs() {
                   </TableRow>
                 ) : (
                   filteredLogs.map((log) => (
-                    <TableRow key={log.id}>
+                    <TableRow
+                      key={log.id}
+                      tabIndex={0}
+                      aria-label={`Log ${format(new Date(log.timestamp), 'dd/MM/yyyy HH:mm:ss', { locale: es })} ${log.user} ${getActionLabel(log.action)}`}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          const titleCell = (e.currentTarget as HTMLElement).querySelector<HTMLElement>('td[title]')
+                          titleCell?.focus()
+                          e.preventDefault()
+                        }
+                      }}
+                    >
                       <TableCell className="font-mono text-sm">
                         {format(new Date(log.timestamp), 'dd/MM/yyyy HH:mm:ss', { locale: es })}
                       </TableCell>

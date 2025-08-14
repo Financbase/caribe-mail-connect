@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
 import type { Mailbox } from '@/hooks/useMailboxes';
 import { cn } from '@/lib/utils';
+import { FixedSizeGrid as Grid } from 'react-window';
+import { useEffect, useRef, useState } from 'react';
 
 interface MailboxGridProps {
   mailboxes: Mailbox[];
@@ -13,6 +15,8 @@ interface MailboxGridProps {
 
 export function MailboxGrid({ mailboxes, onMailboxClick }: MailboxGridProps) {
   const { t } = useLanguage();
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [containerWidth, setContainerWidth] = useState<number>(typeof window !== 'undefined' ? window.innerWidth : 1200);
 
   const getStatusColor = (mailbox: Mailbox) => {
     if (mailbox.status === 'available') return 'bg-primary-palm border-primary-palm/50';
@@ -70,11 +74,26 @@ export function MailboxGrid({ mailboxes, onMailboxClick }: MailboxGridProps) {
     return t('Occupied');
   };
 
-  return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-3">
-      {mailboxes.map((mailbox) => (
+  // Windowed grid for large datasets
+  // Responsive columns based on container width breakpoints
+  const containerPadding = 32;
+  const baseCell = 120;
+  const gap = 12;
+  const vw = containerWidth;
+  const columnCount = vw >= 1536 ? 10 : vw >= 1280 ? 8 : vw >= 1024 ? 6 : vw >= 640 ? 4 : 2;
+  const columnWidth = baseCell;
+  const rowHeight = baseCell;
+  const rowCount = Math.ceil(mailboxes.length / columnCount);
+  const width = Math.min(columnCount * (columnWidth + gap), vw - containerPadding);
+  const height = Math.min(720, rowCount * (rowHeight + gap));
+
+  const Cell = ({ columnIndex, rowIndex, style }: { columnIndex: number; rowIndex: number; style: React.CSSProperties }) => {
+    const index = rowIndex * columnCount + columnIndex;
+    if (index >= mailboxes.length) return null;
+    const mailbox = mailboxes[index];
+    return (
+      <div className="vt-mailbox-cell" style={style}>
         <Card
-          key={mailbox.id}
           className={cn(
             "relative cursor-pointer transition-all duration-200 hover:scale-105 hover:shadow-lg",
             "aspect-square flex flex-col items-center justify-center p-2",
@@ -86,41 +105,55 @@ export function MailboxGrid({ mailboxes, onMailboxClick }: MailboxGridProps) {
           <div className="absolute top-1 left-1">
             {getStatusIcon(mailbox)}
           </div>
-          
           <div className="absolute top-1 right-1">
-            <Badge 
-              variant="secondary" 
-              className="text-xs px-1 py-0 bg-white/20 text-white border-white/30"
-            >
+            <Badge variant="secondary" className="text-xs px-1 py-0 bg-white/20 text-white border-white/30">
               {getSizeLabel(mailbox.size)[0]}
             </Badge>
           </div>
-
           <div className="text-center flex-1 flex flex-col justify-center">
-            <div className="text-white font-bold text-sm mb-1">
-              #{mailbox.number}
-            </div>
-            
+            <div className="text-white font-bold text-sm mb-1">#{mailbox.number}</div>
             {mailbox.current_customer && (
               <div className="text-white/80 text-xs leading-tight">
                 {mailbox.current_customer.first_name} {mailbox.current_customer.last_name}
               </div>
             )}
-            
             {mailbox.package_count && mailbox.package_count > 0 && (
               <div className="absolute bottom-1 right-1">
-                <Badge className="bg-primary-sunrise text-white text-xs">
-                  {mailbox.package_count}
-                </Badge>
+                <Badge className="bg-primary-sunrise text-white text-xs">{mailbox.package_count}</Badge>
               </div>
             )}
           </div>
-
-          <div className="absolute bottom-1 left-1 text-white/70 text-xs">
-            {getStatusLabel(mailbox)}
-          </div>
+          <div className="absolute bottom-1 left-1 text-white/70 text-xs">{getStatusLabel(mailbox)}</div>
         </Card>
-      ))}
+      </div>
+    );
+  };
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const el = containerRef.current;
+    const ro = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const width = entry.contentRect.width;
+        setContainerWidth(width);
+      }
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  return (
+    <div className="w-full" ref={containerRef}>
+      <Grid
+        columnCount={columnCount}
+        columnWidth={columnWidth + 12}
+        height={height}
+        rowCount={rowCount}
+        rowHeight={rowHeight + 12}
+        width={width}
+      >
+        {Cell}
+      </Grid>
     </div>
   );
 }

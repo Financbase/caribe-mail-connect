@@ -3,7 +3,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
-import { LoadingSpinner } from '@/components/LoadingSpinner';
+import { Skeleton, TableSkeleton } from '@/components/ui/skeleton';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { formatBytes, formatDate } from '@/lib/utils';
 import type { Document } from '@/hooks/useDocuments';
@@ -19,11 +19,7 @@ export function DocumentList({ documents, loading, onDocumentSelect }: DocumentL
   const isSpanish = language === 'es';
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center py-12">
-        <LoadingSpinner />
-      </div>
-    );
+    return <TableSkeleton rows={5} columns={6} />;
   }
 
   if (documents.length === 0) {
@@ -85,6 +81,14 @@ export function DocumentList({ documents, loading, onDocumentSelect }: DocumentL
               key={document.id}
               className="cursor-pointer hover:bg-muted/50"
               onClick={() => onDocumentSelect(document.id)}
+              tabIndex={0}
+              aria-label={`${isSpanish ? 'Abrir documento' : 'Open document'} ${document.title}`}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  onDocumentSelect(document.id);
+                }
+              }}
             >
               <TableCell onClick={(e) => e.stopPropagation()}>
                 <Checkbox />

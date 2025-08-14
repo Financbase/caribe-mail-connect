@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { Skeleton, CardSkeleton } from '@/components/ui/skeleton';
+import { PullToRefresh } from '@/components/ui/pull-to-refresh';
 import { Mail, Scan, Package, Camera, Search, Filter, Plus } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useVirtualMailbox } from '@/hooks/useVirtualMailbox';
@@ -15,7 +17,6 @@ import { AddMailPieceDialog } from '@/components/virtual-mail/AddMailPieceDialog
 import { MailActionDialog } from '@/components/virtual-mail/MailActionDialog';
 import { BillingAutomation } from '@/components/virtual-mail/BillingAutomation';
 import { VirtualMailReporting } from '@/components/virtual-mail/VirtualMailReporting';
-import { LoadingSpinner } from '@/components/LoadingSpinner';
 
 export function VirtualMail() {
   const { t } = useLanguage();
@@ -37,11 +38,23 @@ export function VirtualMail() {
   const [showAddMailDialog, setShowAddMailDialog] = useState(false);
   const [showActionDialog, setShowActionDialog] = useState(false);
   const [selectedMailPiece, setSelectedMailPiece] = useState<string>('');
+  const [refreshing, setRefreshing] = useState(false);
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    try {
+      await Promise.all([
+        fetchVirtualMailboxes(),
+        fetchMailPieces(),
+        fetchPricing()
+      ]);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   useEffect(() => {
-    fetchVirtualMailboxes();
-    fetchMailPieces();
-    fetchPricing();
+    handleRefresh();
   }, []);
 
   const filteredMailPieces = mailPieces.filter(piece => {
@@ -62,14 +75,27 @@ export function VirtualMail() {
 
   if (loading && mailPieces.length === 0) {
     return (
-      <div className="flex justify-center items-center min-h-[400px]">
-        <LoadingSpinner />
+      <div className="container mx-auto p-6 space-y-6">
+        <div className="space-y-2">
+          <Skeleton className="h-8 w-64" />
+          <Skeleton className="h-4 w-96" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <CardSkeleton key={i} />
+          ))}
+        </div>
+        <Skeleton className="h-96 w-full" />
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <PullToRefresh 
+      onRefresh={handleRefresh}
+      disabled={loading}
+    >
+      <div className="container mx-auto p-6 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -243,6 +269,7 @@ export function VirtualMail() {
           setSelectedMailPiece('');
         }}
       />
-    </div>
+      </div>
+    </PullToRefresh>
   );
 }

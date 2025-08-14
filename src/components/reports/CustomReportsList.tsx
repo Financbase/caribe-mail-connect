@@ -59,7 +59,18 @@ export function CustomReportsList({ reports, onExecute, onSchedule, isExecuting 
       ) : (
         <div className="grid gap-4">
           {reports.map((report) => (
-            <Card key={report.id} className="hover:shadow-md transition-shadow">
+            <Card
+              key={report.id}
+              className="hover:shadow-md transition-shadow"
+              tabIndex={0}
+              aria-label={`${language === 'en' ? 'Open report' : 'Abrir informe'} ${report.name}`}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  onExecute(report.id)
+                  e.preventDefault()
+                }
+              }}
+            >
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="space-y-1 flex-1">

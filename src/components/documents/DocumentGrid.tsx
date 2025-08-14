@@ -2,27 +2,43 @@ import { FileText, Download, Eye, Edit, Trash2 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { LoadingSpinner } from '@/components/LoadingSpinner';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { formatBytes, formatDate } from '@/lib/utils';
 import type { Document } from '@/hooks/useDocuments';
 import { CachedImage } from '@/components/offline/CachedImage';
+import { useEffect, useMemo, useState } from 'react';
+import { useDocuments } from '@/hooks/useDocuments';
 import { FixedSizeGrid as Grid } from 'react-window';
 
 interface DocumentGridProps {
   documents: Document[];
   loading: boolean;
   onDocumentSelect: (documentId: string) => void;
+  thumbUrls?: Record<string, string>;
+  placeholderMap?: Record<string, string>;
 }
 
-export function DocumentGrid({ documents, loading, onDocumentSelect }: DocumentGridProps) {
+export function DocumentGrid({ documents, loading, onDocumentSelect, thumbUrls = {}, placeholderMap = {} }: DocumentGridProps) {
   const { language } = useLanguage();
   const isSpanish = language === 'es';
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center py-12">
-        <LoadingSpinner />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <Card key={i} className="h-64">
+            <CardContent className="p-4 space-y-2">
+              <Skeleton className="h-32 w-full" variant="image" />
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-3 w-1/2" />
+              <div className="flex gap-2">
+                <Skeleton className="h-6 w-16" />
+                <Skeleton className="h-6 w-12" />
+              </div>
+            </CardContent>
+          </Card>
+        ))}
       </div>
     );
   }
@@ -109,11 +125,18 @@ export function DocumentGrid({ documents, loading, onDocumentSelect }: DocumentG
 
             {isImage(document.content_type) && (
               <div className="mb-2 w-full h-28 bg-muted/40 rounded overflow-hidden border">
-                {/* In a full impl, you’d likely have a dedicated thumbnail URL; here using storage path via backend getter is omitted for brevity */}
-                {/* Render a generic preview box if we don’t have a direct URL yet */}
-                {/* This grid component doesn’t fetch URLs; the viewer does. Optionally, connect getDocumentUrl for previews. */}
-                {/* Placeholder pattern: show icon backdrop; CachedImage reserved for when a URL is provided in future iteration. */}
-                <div className="w-full h-full flex items-center justify-center text-2xl">🖼️</div>
+        {thumbUrls[document.id] ? (
+                  <CachedImage
+                    src={thumbUrls[document.id]}
+                    alt={document.title}
+          className="w-full h-full object-cover"
+                    cacheName="images-cache"
+          placeholderSrc={placeholderMap[document.id]}
+          fadeInDurationMs={200}
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-2xl">🖼️</div>
+                )}
               </div>
             )}
             <h3 className="font-medium text-sm mb-2 line-clamp-2">

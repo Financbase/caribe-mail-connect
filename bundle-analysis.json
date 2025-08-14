@@ -1,0 +1,15 @@
+{
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:analyze": "vite build --mode analyze",
+    "preview": "vite preview",
+    "test": "vitest",
+    "typecheck": "tsc --noEmit",
+    "bundle:analyze": "npm run build:analyze && npx serve dist",
+    "bundle:size": "npm run build && du -sh dist/assets/*.js | sort -hr"
+  },
+  "devDependencies": {
+    "rollup-plugin-visualizer": "^5.12.0"
+  }
+}

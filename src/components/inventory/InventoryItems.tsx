@@ -11,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { VirtualizedTable } from '@/components/ui/virtualized-table';
 import {
   Dialog,
   DialogContent,
@@ -144,6 +145,7 @@ export function InventoryItems() {
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
                 className="px-3 py-2 border border-input bg-background rounded-md text-sm"
+                aria-label={isSpanish ? 'Filtrar por categoría' : 'Filter by category'}
               >
                 {categories.map((category) => (
                   <option key={category.value} value={category.value}>
@@ -169,70 +171,63 @@ export function InventoryItems() {
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{isSpanish ? 'SKU' : 'SKU'}</TableHead>
-                  <TableHead>{isSpanish ? 'Nombre' : 'Name'}</TableHead>
-                  <TableHead>{isSpanish ? 'Categoría' : 'Category'}</TableHead>
-                  <TableHead>{isSpanish ? 'Stock Total' : 'Total Stock'}</TableHead>
-                  <TableHead>{isSpanish ? 'Unidad' : 'Unit'}</TableHead>
-                  <TableHead>{isSpanish ? 'Costo Estándar' : 'Standard Cost'}</TableHead>
-                  <TableHead>{isSpanish ? 'Estado' : 'Status'}</TableHead>
-                  <TableHead className="text-right">{isSpanish ? 'Acciones' : 'Actions'}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredItems.map((item) => {
-                  const totalStock = getTotalStock(item.id);
-                  const isLowStock = totalStock <= item.reorder_point;
-                  
-                  return (
-                    <TableRow key={item.id}>
-                      <TableCell className="font-mono text-sm">{item.sku}</TableCell>
-                      <TableCell>
+            <VirtualizedTable
+              ariaLabel={isSpanish ? 'Catálogo de Artículos' : 'Item Catalog'}
+              rows={filteredItems}
+              rowHeight={64}
+              empty={(
+                <div className="text-center py-8">
+                  <Package className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-lg font-medium">
+                    {isSpanish ? 'No se encontraron artículos' : 'No items found'}
+                  </h3>
+                  <p className="text-muted-foreground">
+                    {isSpanish ? 'Intente ajustar los filtros de búsqueda' : 'Try adjusting your search filters'}
+                  </p>
+                </div>
+              )}
+              columns={[
+                { id: 'sku', header: isSpanish ? 'SKU' : 'SKU', width: '10rem', cell: (item: any) => (
+                  <span className="font-mono text-sm">{item.sku}</span>
+                ) },
+                { id: 'name', header: isSpanish ? 'Nombre' : 'Name', width: '1fr', cell: (item: any) => (
                         <div>
                           <p className="font-medium">{item.name}</p>
                           {item.description && (
                             <p className="text-sm text-muted-foreground">{item.description}</p>
                           )}
                         </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline">
-                          {getCategoryLabel(item.category)}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <span className={isLowStock ? 'text-amber-600 font-medium' : ''}>
-                            {totalStock}
-                          </span>
+                ) },
+                { id: 'category', header: isSpanish ? 'Categoría' : 'Category', width: '12rem', cell: (item: any) => (
+                  <Badge variant="outline">{getCategoryLabel(item.category)}</Badge>
+                ) },
+                { id: 'stock', header: isSpanish ? 'Stock Total' : 'Total Stock', width: '10rem', align: 'right', cell: (item: any) => {
+                  const totalStock = getTotalStock(item.id);
+                  const isLowStock = totalStock <= item.reorder_point;
+                  return (
+                    <div className="flex items-center gap-2 justify-end">
+                      <span className={isLowStock ? 'text-amber-600 font-medium' : ''}>{totalStock}</span>
                           {isLowStock && (
-                            <Badge variant="destructive" className="text-xs">
-                              {isSpanish ? 'Bajo' : 'Low'}
-                            </Badge>
+                        <Badge variant="destructive" className="text-xs">{isSpanish ? 'Bajo' : 'Low'}</Badge>
                           )}
                         </div>
-                      </TableCell>
-                      <TableCell>{item.unit_of_measure}</TableCell>
-                      <TableCell>{formatCurrency(item.standard_cost)}</TableCell>
-                      <TableCell>
+                  );
+                } },
+                { id: 'unit', header: isSpanish ? 'Unidad' : 'Unit', width: '8rem', cell: (item: any) => item.unit_of_measure },
+                { id: 'cost', header: isSpanish ? 'Costo Estándar' : 'Standard Cost', width: '12rem', align: 'right', cell: (item: any) => formatCurrency(item.standard_cost) },
+                { id: 'status', header: isSpanish ? 'Estado' : 'Status', width: '10rem', cell: (item: any) => (
                         <Badge variant={item.is_active ? 'default' : 'secondary'}>
-                          {item.is_active ? 
-                            (isSpanish ? 'Activo' : 'Active') : 
-                            (isSpanish ? 'Inactivo' : 'Inactive')
-                          }
+                    {item.is_active ? (isSpanish ? 'Activo' : 'Active') : (isSpanish ? 'Inactivo' : 'Inactive')}
                         </Badge>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <Dialog>
-                            <DialogTrigger asChild>
-                              <Button variant="ghost" size="sm">
-                                <Edit className="h-4 w-4" />
-                              </Button>
-                            </DialogTrigger>
+                ) },
+                { id: 'actions', header: isSpanish ? 'Acciones' : 'Actions', width: '8rem', align: 'right', cell: (item: any) => (
+                  <div className="flex items-center justify-end gap-2">
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button variant="ghost" size="sm" data-focusable="true" aria-label={isSpanish ? 'Editar artículo' : 'Edit item'}>
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                      </DialogTrigger>
                             <DialogContent className="max-w-2xl">
                               <DialogHeader>
                                 <DialogTitle>
@@ -246,24 +241,9 @@ export function InventoryItems() {
                             </DialogContent>
                           </Dialog>
                         </div>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-            
-            {filteredItems.length === 0 && (
-              <div className="text-center py-8">
-                <Package className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-lg font-medium">
-                  {isSpanish ? 'No se encontraron artículos' : 'No items found'}
-                </h3>
-                <p className="text-muted-foreground">
-                  {isSpanish ? 'Intente ajustar los filtros de búsqueda' : 'Try adjusting your search filters'}
-                </p>
-              </div>
-            )}
+                ) },
+              ]}
+            />
           </div>
         </CardContent>
       </Card>

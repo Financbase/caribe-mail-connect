@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { useQA } from '@/hooks/useQA';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
+import { CacheMetrics } from './CacheMetrics';
 
 export const PerformanceMonitoringDashboard = () => {
   const { performanceMetrics } = useQA();
@@ -273,6 +274,9 @@ export const PerformanceMonitoringDashboard = () => {
           </ResponsiveContainer>
         </CardContent>
       </Card>
+
+  {/* Cache Storage Metrics */}
+  <CacheMetrics />
 
       {/* Performance Recommendations */}
       <Card>

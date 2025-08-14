@@ -82,7 +82,19 @@ export function ReportExecutionsHistory({ executions }: ReportExecutionsHistoryP
       ) : (
         <div className="space-y-3">
           {executions.map((execution) => (
-            <Card key={execution.id} className="hover:shadow-sm transition-shadow">
+            <Card
+              key={execution.id}
+              className="hover:shadow-sm transition-shadow"
+              tabIndex={0}
+              aria-label={`${language === 'en' ? 'Execution for' : 'Ejecución de'} ${execution.reports.name}`}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  const btn = (e.currentTarget as HTMLElement).querySelector<HTMLElement>('button')
+                  btn?.click()
+                  e.preventDefault()
+                }
+              }}
+            >
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3 flex-1">

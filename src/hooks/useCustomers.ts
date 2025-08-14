@@ -88,7 +88,7 @@ export function useCustomers() {
       const customersWithCounts = data?.map(customer => ({
         ...customer,
         activePackages: customer.packages?.filter(
-          (pkg: any) => pkg.status === 'Received' || pkg.status === 'Ready'
+          (pkg: unknown) => pkg.status === 'Received' || pkg.status === 'Ready'
         ).length || 0,
         totalPackages: customer.packages?.length || 0
       })) || [];

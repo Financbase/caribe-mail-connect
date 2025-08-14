@@ -38,7 +38,7 @@ export function SessionManager() {
     return <Monitor className="h-4 w-4" />;
   };
 
-  const getDeviceInfo = (userAgent?: string, deviceInfo?: any) => {
+  const getDeviceInfo = (userAgent?: string, deviceInfo?: unknown) => {
     if (deviceInfo?.browser) {
       return `${deviceInfo.browser} ${deviceInfo.version || ''}`;
     }
@@ -52,7 +52,7 @@ export function SessionManager() {
     return 'Navegador desconocido';
   };
 
-  const isCurrentSession = (session: any) => {
+  const isCurrentSession = (session: unknown) => {
     // This would normally check against the current session token
     return session.id === userSessions[0]?.id;
   };

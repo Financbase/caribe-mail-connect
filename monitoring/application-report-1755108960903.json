@@ -1,0 +1,51 @@
+{
+  "timestamp": "2025-08-13T18:16:00.902Z",
+  "environment": "development",
+  "summary": {
+    "passed": 6,
+    "failed": 2,
+    "successRate": 75
+  },
+  "results": [
+    {
+      "test": "User Authentication",
+      "status": "PASS",
+      "details": "Test user found"
+    },
+    {
+      "test": "Package CRUD",
+      "status": "FAIL",
+      "details": "Could not find the 'package_type' column of 'packages' in the schema cache"
+    },
+    {
+      "test": "Mailbox Management",
+      "status": "PASS",
+      "details": "5 mailboxes"
+    },
+    {
+      "test": "Environment Config",
+      "status": "PASS",
+      "details": "5 configs found"
+    },
+    {
+      "test": "Data Integrity",
+      "status": "PASS",
+      "details": "20 mailboxes, 3 users"
+    },
+    {
+      "test": "Real-time Features",
+      "status": "FAIL",
+      "details": "this.conn.close is not a function"
+    },
+    {
+      "test": "Row Level Security",
+      "status": "PASS",
+      "details": "Anon access properly controlled"
+    },
+    {
+      "test": "Performance",
+      "status": "PASS",
+      "details": "138.33ms average"
+    }
+  ]
+}

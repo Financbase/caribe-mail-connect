@@ -12,6 +12,7 @@ import { useVirtualMailbox } from '@/hooks/useVirtualMailbox';
 import { useCamera } from '@/hooks/useCamera';
 import { useToast } from '@/components/ui/use-toast';
 import { formatCurrency, formatDate } from '@/lib/utils';
+import { CachedImage } from '@/components/offline/CachedImage';
 
 export function CheckDepositCapture() {
   const { language } = useLanguage();
@@ -300,7 +301,7 @@ export function CheckDepositCapture() {
                 <CardContent className="space-y-4">
                   {frontImage ? (
                     <div className="space-y-2">
-                      <img
+                      <CachedImage
                         src={frontImage}
                         alt="Front of check"
                         className="w-full h-32 object-cover rounded border"
@@ -364,7 +365,7 @@ export function CheckDepositCapture() {
                 <CardContent className="space-y-4">
                   {backImage ? (
                     <div className="space-y-2">
-                      <img
+                      <CachedImage
                         src={backImage}
                         alt="Back of check"
                         className="w-full h-32 object-cover rounded border"

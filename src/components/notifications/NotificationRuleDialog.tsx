@@ -15,7 +15,7 @@ import { Mail, MessageSquare, Smartphone, Bell } from 'lucide-react';
 interface NotificationRuleDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  rule?: any;
+  rule?: unknown;
   onSuccess: () => void;
 }
 
@@ -91,7 +91,7 @@ export function NotificationRuleDialog({
     }));
   };
 
-  const updateCondition = (key: string, value: any) => {
+  const updateCondition = (key: string, value: unknown) => {
     setFormData(prev => ({
       ...prev,
       conditions: { ...prev.conditions, [key]: value }

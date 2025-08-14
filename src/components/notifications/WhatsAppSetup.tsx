@@ -93,7 +93,7 @@ export function WhatsAppSetup() {
     }, 2000);
   };
 
-  const submitTemplate = (templateData: any) => {
+  const submitTemplate = (templateData: unknown) => {
     toast({
       title: 'Plantilla enviada',
       description: 'Su plantilla ha sido enviada para revisión. Puede tomar hasta 24 horas.',

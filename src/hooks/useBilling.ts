@@ -167,7 +167,7 @@ export function useBilling() {
   };
 
   // Create new invoice
-  const createInvoice = async (invoiceData: any) => {
+  const createInvoice = async (invoiceData: unknown) => {
     try {
       setLoading(true);
       
@@ -221,7 +221,7 @@ export function useBilling() {
   };
 
   // Record payment
-  const recordPayment = async (paymentData: any) => {
+  const recordPayment = async (paymentData: unknown) => {
     try {
       setLoading(true);
       

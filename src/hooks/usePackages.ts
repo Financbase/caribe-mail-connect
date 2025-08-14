@@ -68,13 +68,13 @@ export function usePackages() {
     localStorage.setItem(queueKey, JSON.stringify(syncQueue));
   }, [syncQueue]);
 
-  const fetchPackages = async () => {
+  const fetchPackages = useCallback(async () => {
     if (!user) return;
-    
+
     try {
       setLoading(true);
       console.log('Fetching packages from database...');
-      
+
       const { data, error } = await supabase
         .from('packages')
         .select(`
@@ -92,14 +92,14 @@ export function usePackages() {
       console.log('Fetched packages:', data?.length || 0);
       setPackages(data || []);
       setError(null);
-      
+
       // Process sync queue after successful fetch
       await processSyncQueue();
-      
+
     } catch (err) {
       console.error('Error fetching packages:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch packages');
-      
+
       // If offline, use cached data
       if (err instanceof Error && err.message.includes('fetch')) {
         console.log('Using cached packages due to network error');
@@ -107,7 +107,7 @@ export function usePackages() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
 
   // Process pending sync operations
   const processSyncQueue = async () => {
@@ -137,7 +137,7 @@ export function usePackages() {
     setSyncQueue(prev => prev.filter(op => !processed.includes(op)));
   };
   // Execute create operation
-  const executeCreate = async (packageData: any) => {
+  const executeCreate = async (packageData: unknown) => {
     const { data, error } = await supabase
       .from('packages')
       .insert([packageData])
@@ -156,7 +156,7 @@ export function usePackages() {
   };
 
   // Execute update operation
-  const executeUpdate = async (packageId: string, updateData: any) => {
+  const executeUpdate = async (packageId: string, updateData: unknown) => {
     const { data, error } = await supabase
       .from('packages')
       .update(updateData)
@@ -281,20 +281,20 @@ export function usePackages() {
     return packages.filter(pkg => pkg.customer_id === customerId);
   };
 
-  const getTodayStats = () => {
+  const getTodayStats = useCallback(() => {
     const today = new Date().toISOString().split('T')[0];
-    const todayPackages = packages.filter(pkg => 
+    const todayPackages = packages.filter(pkg =>
       pkg.received_at.startsWith(today)
     );
-    
+
     return {
       packagesReceived: todayPackages.length,
-      pendingDeliveries: packages.filter(pkg => 
+      pendingDeliveries: packages.filter(pkg =>
         pkg.status === 'Ready' || pkg.status === 'Received'
       ).length,
       totalPackages: packages.length
     };
-  };
+  }, [packages]);
 
   useEffect(() => {
     fetchPackages();

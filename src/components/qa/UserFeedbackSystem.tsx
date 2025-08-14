@@ -100,7 +100,7 @@ export const UserFeedbackWidget = () => {
                 <label className="text-sm font-medium">Category</label>
                 <Select
                   value={feedback.category}
-                  onValueChange={(value: any) => setFeedback({ ...feedback, category: value })}
+                  onValueChange={(value: unknown) => setFeedback({ ...feedback, category: value })}
                 >
                   <SelectTrigger>
                     <SelectValue />

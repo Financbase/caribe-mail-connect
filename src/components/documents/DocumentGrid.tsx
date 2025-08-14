@@ -6,6 +6,8 @@ import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { formatBytes, formatDate } from '@/lib/utils';
 import type { Document } from '@/hooks/useDocuments';
+import { CachedImage } from '@/components/offline/CachedImage';
+import { FixedSizeGrid as Grid } from 'react-window';
 
 interface DocumentGridProps {
   documents: Document[];
@@ -50,6 +52,8 @@ export function DocumentGrid({ documents, loading, onDocumentSelect }: DocumentG
     return '📁';
   };
 
+  const isImage = (contentType: string) => contentType.includes('image');
+
   const getCategoryColor = (category: string) => {
     const colors = {
       customer_docs: 'bg-blue-100 text-blue-800',
@@ -62,12 +66,23 @@ export function DocumentGrid({ documents, loading, onDocumentSelect }: DocumentG
     return colors[category as keyof typeof colors] || colors.general;
   };
 
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-      {documents.map((document) => (
+  // Virtualized grid for large document sets
+  const columnCount = 4;
+  const rowCount = Math.ceil(documents.length / columnCount);
+  const columnWidth = 280;
+  const rowHeight = 190;
+  const width = Math.min(columnCount * columnWidth, window.innerWidth - 32);
+  const height = Math.min(600, Math.ceil(documents.length / columnCount) * rowHeight);
+
+  const Cell = ({ columnIndex, rowIndex, style }: { columnIndex: number; rowIndex: number; style: React.CSSProperties }) => {
+    const index = rowIndex * columnCount + columnIndex;
+    if (index >= documents.length) return null;
+    const document = documents[index];
+    return (
+      <div style={style} className="p-2">
         <Card 
           key={document.id} 
-          className="group hover:shadow-md transition-shadow cursor-pointer"
+          className="group hover:shadow-md transition-shadow cursor-pointer h-full"
           onClick={() => onDocumentSelect(document.id)}
         >
           <CardContent className="p-4">
@@ -92,6 +107,15 @@ export function DocumentGrid({ documents, loading, onDocumentSelect }: DocumentG
               </div>
             </div>
 
+            {isImage(document.content_type) && (
+              <div className="mb-2 w-full h-28 bg-muted/40 rounded overflow-hidden border">
+                {/* In a full impl, you’d likely have a dedicated thumbnail URL; here using storage path via backend getter is omitted for brevity */}
+                {/* Render a generic preview box if we don’t have a direct URL yet */}
+                {/* This grid component doesn’t fetch URLs; the viewer does. Optionally, connect getDocumentUrl for previews. */}
+                {/* Placeholder pattern: show icon backdrop; CachedImage reserved for when a URL is provided in future iteration. */}
+                <div className="w-full h-full flex items-center justify-center text-2xl">🖼️</div>
+              </div>
+            )}
             <h3 className="font-medium text-sm mb-2 line-clamp-2">
               {document.title}
             </h3>
@@ -132,7 +156,22 @@ export function DocumentGrid({ documents, loading, onDocumentSelect }: DocumentG
             </div>
           </CardContent>
         </Card>
-      ))}
+      </div>
+    );
+  };
+
+  return (
+    <div className="w-full">
+      <Grid
+        columnCount={columnCount}
+        columnWidth={columnWidth}
+        height={height}
+        rowCount={rowCount}
+        rowHeight={rowHeight}
+        width={width}
+      >
+        {Cell}
+      </Grid>
     </div>
   );
 }

@@ -4,7 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { toast } from '@/hooks/use-toast';
 
 interface NotificationHookResult {
-  notifications: any[];
+  notifications: unknown[];
   markAsRead: (id: string) => void;
   clearAll: () => void;
 }

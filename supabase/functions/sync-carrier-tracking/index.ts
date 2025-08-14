@@ -136,7 +136,7 @@ serve(async (req) => {
   }
 });
 
-async function syncCarrierPackages(integration: any, packages: any[], supabaseClient: any) {
+async function syncCarrierPackages(integration: unknown, packages: unknown[], supabaseClient: unknown) {
   const startTime = Date.now();
   let updated = 0;
   const errors = [];
@@ -187,7 +187,7 @@ async function syncCarrierPackages(integration: any, packages: any[], supabaseCl
   };
 }
 
-async function fetchTrackingData(carrier: string, trackingNumber: string, credentials: any) {
+async function fetchTrackingData(carrier: string, trackingNumber: string, credentials: unknown) {
   switch (carrier.toLowerCase()) {
     case 'ups':
       return await fetchUPSTracking(trackingNumber, credentials);
@@ -202,7 +202,7 @@ async function fetchTrackingData(carrier: string, trackingNumber: string, creden
   }
 }
 
-async function fetchUPSTracking(trackingNumber: string, credentials: any) {
+async function fetchUPSTracking(trackingNumber: string, credentials: unknown) {
   try {
     const response = await fetch(`https://onlinetools.ups.com/api/track/v1/details/${trackingNumber}`, {
       headers: {
@@ -235,7 +235,7 @@ async function fetchUPSTracking(trackingNumber: string, credentials: any) {
   }
 }
 
-async function fetchFedExTracking(trackingNumber: string, credentials: any) {
+async function fetchFedExTracking(trackingNumber: string, credentials: unknown) {
   try {
     const response = await fetch('https://apis.fedex.com/track/v1/trackingnumbers', {
       method: 'POST',
@@ -275,7 +275,7 @@ async function fetchFedExTracking(trackingNumber: string, credentials: any) {
   }
 }
 
-async function fetchUSPSTracking(trackingNumber: string, credentials: any) {
+async function fetchUSPSTracking(trackingNumber: string, credentials: unknown) {
   try {
     const xmlRequest = `
       <TrackRequest USERID="${credentials.user_id}">
@@ -297,7 +297,7 @@ async function fetchUSPSTracking(trackingNumber: string, credentials: any) {
   }
 }
 
-async function fetchDHLTracking(trackingNumber: string, credentials: any) {
+async function fetchDHLTracking(trackingNumber: string, credentials: unknown) {
   try {
     const response = await fetch(`https://api-eu.dhl.com/track/shipments?trackingNumber=${trackingNumber}`, {
       headers: {
@@ -398,7 +398,7 @@ function shouldNotifyStatusChange(oldStatus: string, newStatus: string): boolean
   return importantStatuses.includes(newStatus) && oldStatus !== newStatus;
 }
 
-async function createTrackingNotification(pkg: any, trackingData: any, supabaseClient: any) {
+async function createTrackingNotification(pkg: unknown, trackingData: unknown, supabaseClient: unknown) {
   try {
     // Get customer notification preferences
     const { data: customer } = await supabaseClient

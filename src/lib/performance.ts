@@ -11,7 +11,7 @@ interface APIInterceptorConfig {
 // API Performance Interceptor
 export class APIPerformanceInterceptor {
   private config: APIInterceptorConfig;
-  private cache: Map<string, { data: any; timestamp: number; ttl: number }> = new Map();
+  private cache: Map<string, { data: Record<string, unknown>; timestamp: number; ttl: number }> = new Map();
   private trackAPICall?: (endpoint: string, responseTime: number) => void;
 
   constructor(config: APIInterceptorConfig, trackAPICall?: (endpoint: string, responseTime: number) => void) {
@@ -77,7 +77,7 @@ export class APIPerformanceInterceptor {
     return null;
   }
 
-  private cacheResponse(url: string, data: any, ttl: number) {
+  private cacheResponse(url: string, data: Record<string, unknown>, ttl: number) {
     this.cache.set(url, {
       data,
       timestamp: Date.now(),

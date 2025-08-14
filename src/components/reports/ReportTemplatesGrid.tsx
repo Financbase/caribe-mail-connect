@@ -7,7 +7,7 @@ import { Play, Calendar, TrendingUp, DollarSign, Shield, Clock, Users, BarChart3
 
 interface ReportTemplatesGridProps {
   templates: ReportTemplate[];
-  onExecute: (templateId: string, parameters?: any) => void;
+  onExecute: (templateId: string, parameters?: unknown) => void;
   onSchedule: (templateId: string) => void;
   isExecuting: boolean;
 }

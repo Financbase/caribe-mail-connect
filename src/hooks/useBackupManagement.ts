@@ -12,8 +12,8 @@ export interface BackupConfiguration {
   encryption_enabled: boolean;
   cross_region_enabled: boolean;
   target_region?: string;
-  backup_schedule: any;
-  configuration: any;
+  backup_schedule: unknown;
+  configuration: unknown;
   created_at: string;
   updated_at: string;
 }
@@ -42,7 +42,7 @@ export interface RestorePoint {
   is_available: boolean;
   size_bytes?: number;
   location_path?: string;
-  metadata?: any;
+  metadata?: unknown;
   created_at: string;
 }
 
@@ -55,8 +55,8 @@ export interface DisasterRecoveryPlan {
   recovery_time_objective?: number;
   recovery_point_objective?: number;
   automated_execution: boolean;
-  plan_steps: any;
-  emergency_contacts: any;
+  plan_steps: unknown;
+  emergency_contacts: unknown;
   last_tested_at?: string;
   is_active: boolean;
   created_at: string;
@@ -82,7 +82,7 @@ export const useBackupManagement = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   const fetchData = async () => {
     try {
@@ -157,7 +157,7 @@ export const useBackupManagement = () => {
     }
   };
 
-  const createConfiguration = async (config: any) => {
+  const createConfiguration = async (config: unknown) => {
     const { data, error } = await supabase
       .from('backup_configurations')
       .insert([config])
@@ -292,7 +292,7 @@ export const useBackupManagement = () => {
     return data;
   };
 
-  const createRecoveryPlan = async (plan: any) => {
+  const createRecoveryPlan = async (plan: unknown) => {
     const { data, error } = await supabase
       .from('disaster_recovery_plans')
       .insert(plan)
@@ -310,7 +310,7 @@ export const useBackupManagement = () => {
     return data;
   };
 
-  const updateRecoveryPlan = async (id: string, updates: any) => {
+  const updateRecoveryPlan = async (id: string, updates: unknown) => {
     const { data, error } = await supabase
       .from('disaster_recovery_plans')
       .update(updates)

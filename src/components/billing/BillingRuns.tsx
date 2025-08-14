@@ -46,7 +46,7 @@ export function BillingRuns({ variant = 'full' }: BillingRunsProps) {
 
   useEffect(() => {
     fetchBillingRuns();
-  }, []);
+  }, [fetchBillingRuns]);
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {

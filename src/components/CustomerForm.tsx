@@ -82,7 +82,7 @@ export function CustomerForm({ onClose, customerId, initialData }: CustomerFormP
     }
   };
 
-  const updateFormData = (field: string, value: any) => {
+  const updateFormData = (field: string, value: unknown) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 

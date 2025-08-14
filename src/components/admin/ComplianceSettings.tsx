@@ -25,11 +25,11 @@ interface CompliancePolicy {
   id: string;
   policy_name: string;
   policy_type: string;
-  policy_rules: any;
+  policy_rules: unknown;
   retention_period_days?: number;
-  geographic_restrictions: any;
-  encryption_requirements: any;
-  audit_requirements: any;
+  geographic_restrictions: unknown;
+  encryption_requirements: unknown;
+  audit_requirements: unknown;
   is_mandatory: boolean;
   compliance_framework?: string;
   effective_date: string;
@@ -66,7 +66,7 @@ export const ComplianceSettings: React.FC = () => {
 
   useEffect(() => {
     fetchPolicies();
-  }, []);
+  }, [fetchPolicies]);
 
   const fetchPolicies = async () => {
     try {
@@ -365,7 +365,7 @@ export const ComplianceSettings: React.FC = () => {
                 <Label htmlFor="policy_type">Policy Type</Label>
                 <Select 
                   value={formData.policy_type} 
-                  onValueChange={(value: any) => setFormData(prev => ({ ...prev, policy_type: value }))}
+                  onValueChange={(value: unknown) => setFormData(prev => ({ ...prev, policy_type: value }))}
                 >
                   <SelectTrigger>
                     <SelectValue />

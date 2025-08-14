@@ -1,4 +1,6 @@
+// Map runtime import to npm types via local ambient declaration in typings.d.ts
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import type { SupabaseClient } from '@supabase/supabase-js'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -13,7 +15,7 @@ Deno.serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-    const supabase = createClient(supabaseUrl, supabaseKey)
+    const supabase: SupabaseClient = createClient(supabaseUrl, supabaseKey)
 
     const { test_type, location_id } = await req.json()
 
@@ -39,7 +41,7 @@ Deno.serve(async (req) => {
       passed: 0,
       failed: 0,
       skipped: 0,
-      results: [] as any[]
+      results: [] as TestResult[]
     }
 
     // Run different test suites based on type
@@ -92,14 +94,21 @@ Deno.serve(async (req) => {
   } catch (error) {
     console.error('Error running tests:', error)
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: error instanceof Error ? error.message : String(error) }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
     )
   }
 })
 
-async function runDataValidationTests(supabase: any, locationId: string) {
-  const results = []
+type TestStatus = 'passed' | 'failed' | 'skipped'
+interface TestResult {
+  test: string
+  status: TestStatus
+  message: string
+}
+
+async function runDataValidationTests(supabase: SupabaseClient, locationId: string) {
+  const results: TestResult[] = []
   let passed = 0, failed = 0
 
   // Test: Check for customers without required fields
@@ -118,7 +127,7 @@ async function runDataValidationTests(supabase: any, locationId: string) {
       failed++
     }
   } catch (error) {
-    results.push({ test: 'Customer data validation', status: 'failed', message: error.message })
+    results.push({ test: 'Customer data validation', status: 'failed', message: error instanceof Error ? error.message : String(error) })
     failed++
   }
 
@@ -139,27 +148,30 @@ async function runDataValidationTests(supabase: any, locationId: string) {
       failed++
     }
   } catch (error) {
-    results.push({ test: 'Package data integrity', status: 'failed', message: error.message })
+    results.push({ test: 'Package data integrity', status: 'failed', message: error instanceof Error ? error.message : String(error) })
     failed++
   }
 
   return { passed, failed, skipped: 0, results }
 }
 
-async function runWorkflowTests(supabase: any, locationId: string) {
-  const results = []
+async function runWorkflowTests(supabase: SupabaseClient, locationId: string) {
+  const results: TestResult[] = []
   let passed = 0, failed = 0
 
   // Test: Package intake workflow
   try {
     // Create test customer
+    const testEmail = (typeof Deno !== 'undefined' && Deno.env?.get)
+      ? (Deno.env.get('TEST_CUSTOMER_EMAIL') || 'test@example.com')
+      : 'test@example.com'
     const { data: testCustomer, error: customerError } = await supabase
       .from('customers')
       .insert({
         location_id: locationId,
         first_name: 'Test',
         last_name: 'Customer',
-        email: 'test@example.com',
+        email: testEmail,
         mailbox_number: 'TEST001',
         address_line1: '123 Test St',
         city: 'Test City',
@@ -193,15 +205,15 @@ async function runWorkflowTests(supabase: any, locationId: string) {
     results.push({ test: 'Package intake workflow', status: 'passed', message: 'Workflow completed successfully' })
     passed++
   } catch (error) {
-    results.push({ test: 'Package intake workflow', status: 'failed', message: error.message })
+    results.push({ test: 'Package intake workflow', status: 'failed', message: error instanceof Error ? error.message : String(error) })
     failed++
   }
 
   return { passed, failed, skipped: 0, results }
 }
 
-async function runAPIMonitoringTests(supabase: any) {
-  const results = []
+async function runAPIMonitoringTests(supabase: SupabaseClient) {
+  const results: TestResult[] = []
   let passed = 0, failed = 0
 
   // Test: Database connection
@@ -212,15 +224,15 @@ async function runAPIMonitoringTests(supabase: any) {
     results.push({ test: 'Database connectivity', status: 'passed', message: 'Database connection successful' })
     passed++
   } catch (error) {
-    results.push({ test: 'Database connectivity', status: 'failed', message: error.message })
+    results.push({ test: 'Database connectivity', status: 'failed', message: error instanceof Error ? error.message : String(error) })
     failed++
   }
 
   return { passed, failed, skipped: 0, results }
 }
 
-async function runDatabaseIntegrityTests(supabase: any, locationId: string) {
-  const results = []
+async function runDatabaseIntegrityTests(supabase: SupabaseClient, locationId: string) {
+  const results: TestResult[] = []
   let passed = 0, failed = 0
 
   // Test: Foreign key constraints
@@ -236,7 +248,7 @@ async function runDatabaseIntegrityTests(supabase: any, locationId: string) {
       failed++
     }
   } catch (error) {
-    // If the function doesn't exist, skip this test
+    // If the function doesn't exist or fails, skip this test to avoid false failures in environments without the RPC
     results.push({ test: 'Foreign key integrity', status: 'skipped', message: 'Test function not available' })
   }
 

@@ -44,6 +44,8 @@ const translations = {
     // Package Intake
     'intake.title': 'Recepción de Paquetes',
     'intake.scanBarcode': 'Escanear código de barras',
+  'intake.positionInFrame': 'Coloca el código dentro del marco',
+  'intake.scan': 'Escanear',
     'intake.trackingNumber': 'Número de seguimiento',
     'intake.carrier': 'Transportista',
     'intake.customer': 'Cliente',
@@ -88,6 +90,28 @@ const translations = {
     'common.error': 'Error',
     'common.success': 'Éxito',
     'common.logout': 'Cerrar sesión',
+
+  // Virtual Mail
+  'vm.title': 'Buzón Virtual',
+  'vm.subtitle': 'Gestiona el correo virtual de tus clientes',
+  'vm.newMail': 'Nuevo Correo',
+  'vm.totalMail': 'Total Correos',
+  'vm.pendingActions': 'Pendientes',
+  'vm.inScanning': 'Escaneando',
+  'vm.checkDeposits': 'Depósitos',
+  'vm.searchPlaceholder': 'Buscar por remitente o número...',
+  'vm.status.all': 'Todos los estados',
+  'vm.status.received': 'Recibido',
+  'vm.status.notified': 'Notificado',
+  'vm.status.action_pending': 'Acción Pendiente',
+  'vm.status.completed': 'Completado',
+  'vm.allMailboxes': 'Todos los buzones',
+  'vm.tab.mailPieces': 'Correo',
+  'vm.tab.scanning': 'Escaneo',
+  'vm.tab.deposits': 'Depósitos',
+  'vm.tab.dashboard': 'Panel',
+  'vm.tab.analytics': 'Analítica',
+  'vm.tab.billing': 'Billing',
   },
   en: {
     // Auth
@@ -122,6 +146,8 @@ const translations = {
     // Package Intake
     'intake.title': 'Package Intake',
     'intake.scanBarcode': 'Scan barcode',
+  'intake.positionInFrame': 'Position barcode within the frame',
+  'intake.scan': 'Scan',
     'intake.trackingNumber': 'Tracking number',
     'intake.carrier': 'Carrier',
     'intake.customer': 'Customer',
@@ -166,6 +192,28 @@ const translations = {
     'common.error': 'Error',
     'common.success': 'Success',
     'common.logout': 'Logout',
+
+  // Virtual Mail
+  'vm.title': 'Virtual Mailbox',
+  'vm.subtitle': 'Manage virtual mail for your customers',
+  'vm.newMail': 'New Mail',
+  'vm.totalMail': 'Total Mail',
+  'vm.pendingActions': 'Pending Actions',
+  'vm.inScanning': 'In Scanning',
+  'vm.checkDeposits': 'Check Deposits',
+  'vm.searchPlaceholder': 'Search by sender or number...',
+  'vm.status.all': 'All Status',
+  'vm.status.received': 'Received',
+  'vm.status.notified': 'Notified',
+  'vm.status.action_pending': 'Action Pending',
+  'vm.status.completed': 'Completed',
+  'vm.allMailboxes': 'All Mailboxes',
+  'vm.tab.mailPieces': 'Mail Pieces',
+  'vm.tab.scanning': 'Scanning Queue',
+  'vm.tab.deposits': 'Check Deposits',
+  'vm.tab.dashboard': 'Dashboard',
+  'vm.tab.analytics': 'Analytics',
+  'vm.tab.billing': 'Billing',
   }
 };
 

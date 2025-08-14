@@ -10,11 +10,11 @@ import { supabase } from '@/integrations/supabase/client';
 import { formatCurrency, formatDate } from '@/lib/utils';
 
 interface ReportData {
-  virtualMailboxes: any[];
-  revenue: any[];
-  actionBreakdown: any[];
-  customerTiers: any[];
-  monthlyTrends: any[];
+  virtualMailboxes: unknown[];
+  revenue: unknown[];
+  actionBreakdown: unknown[];
+  customerTiers: unknown[];
+  monthlyTrends: unknown[];
 }
 
 const COLORS = ['hsl(var(--primary))', 'hsl(var(--secondary))', 'hsl(var(--accent))', 'hsl(var(--muted))'];
@@ -92,7 +92,7 @@ export function VirtualMailReporting() {
     }
   };
 
-  const processActionBreakdown = (actions: any[]) => {
+  const processActionBreakdown = (actions: unknown[]) => {
     const breakdown = actions.reduce((acc, action) => {
       const type = action.action_type || 'unknown';
       acc[type] = (acc[type] || 0) + (action.cost_amount || 0);
@@ -106,7 +106,7 @@ export function VirtualMailReporting() {
     }));
   };
 
-  const processCustomerTiers = (virtualMailboxes: any[]) => {
+  const processCustomerTiers = (virtualMailboxes: unknown[]) => {
     const tiers = virtualMailboxes.reduce((acc, vm) => {
       const tier = vm.service_tier || 'basic';
       acc[tier] = (acc[tier] || 0) + 1;
@@ -119,7 +119,7 @@ export function VirtualMailReporting() {
     }));
   };
 
-  const processRevenueData = (billing: any[]) => {
+  const processRevenueData = (billing: unknown[]) => {
     return billing.map(bill => ({
       date: bill.billing_period_end,
       amount: bill.total_amount,
@@ -127,7 +127,7 @@ export function VirtualMailReporting() {
     }));
   };
 
-  const processMonthlyTrends = (actions: any[], billing: any[]) => {
+  const processMonthlyTrends = (actions: unknown[], billing: unknown[]) => {
     const months: { [key: string]: { actions: number, revenue: number } } = {};
     
     // Process actions

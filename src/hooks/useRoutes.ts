@@ -269,7 +269,7 @@ export function useRoutes() {
     deliveryId: string,
     status: string,
     notes?: string,
-    proof?: any
+    proof?: unknown
   ): Promise<{ success: boolean; error?: string }> => {
     if (!user) return { success: false, error: 'User not authenticated' };
 

@@ -76,7 +76,7 @@ export function BiometricAuthManager() {
 
   useEffect(() => {
     checkBiometricSupport();
-  }, []);
+  }, [checkBiometricSupport]);
 
   const checkBiometricSupport = async () => {
     const supported = [];
@@ -100,7 +100,7 @@ export function BiometricAuthManager() {
     setSupportedMethods(supported);
   };
 
-  const updateSettings = (field: keyof BiometricSettings, value: any) => {
+  const updateSettings = (field: keyof BiometricSettings, value: unknown) => {
     setSettings(prev => ({ ...prev, [field]: value }));
   };
 

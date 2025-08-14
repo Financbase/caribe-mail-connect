@@ -1,29 +1,29 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense, lazy } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
-import AuthSelection from './auth/AuthSelection';
-import StaffAuth from './auth/StaffAuth';
-import CustomerAuth from './auth/CustomerAuth';
-import Dashboard from './Dashboard';
-import PackageIntake from './PackageIntake';
-import Customers from './Customers';
-import Notifications from './Notifications';
-import { NotificationSettings } from './NotificationSettings';
-import Mailboxes from './Mailboxes';
-import Analytics from './Analytics';
-import Routes from './Routes';
-import DriverRoute from './DriverRoute';
-import Act60Dashboard from './Act60Dashboard';
-import LocationManagement from './LocationManagement';
-import ProfileSettings from './profile/Settings';
-import Billing from './Billing';
-import Admin from './Admin';
-import Reports from './Reports';
-import CustomerPortal from './CustomerPortal';
-import Integrations from './Integrations';
-import Inventory from './Inventory';
-import Documents from './Documents';
-import { VirtualMail } from './VirtualMail';
+const AuthSelection = lazy(() => import('./auth/AuthSelection'));
+const StaffAuth = lazy(() => import('./auth/StaffAuth'));
+const CustomerAuth = lazy(() => import('./auth/CustomerAuth'));
+const Dashboard = lazy(() => import('./Dashboard'));
+const PackageIntake = lazy(() => import('./PackageIntake'));
+const Customers = lazy(() => import('./Customers'));
+const Notifications = lazy(() => import('./Notifications'));
+const NotificationSettingsLazy = lazy(() => import('./NotificationSettings').then(m => ({ default: m.NotificationSettings })));
+const Mailboxes = lazy(() => import('./Mailboxes'));
+const Analytics = lazy(() => import('./Analytics'));
+const Routes = lazy(() => import('./Routes'));
+const DriverRoute = lazy(() => import('./DriverRoute'));
+const Act60Dashboard = lazy(() => import('./Act60Dashboard'));
+const LocationManagement = lazy(() => import('./LocationManagement'));
+const ProfileSettings = lazy(() => import('./profile/Settings'));
+const Billing = lazy(() => import('./Billing'));
+const Admin = lazy(() => import('./Admin'));
+const Reports = lazy(() => import('./Reports'));
+const CustomerPortal = lazy(() => import('./CustomerPortal'));
+const Integrations = lazy(() => import('./Integrations'));
+const Inventory = lazy(() => import('./Inventory'));
+const Documents = lazy(() => import('./Documents'));
+const VirtualMailComponent = lazy(() => import('./VirtualMail').then(m => ({ default: m.VirtualMail })));
 import { MobileLayout } from '@/components/mobile/MobileLayout';
 import { UserFeedbackWidget } from '@/components/qa/UserFeedbackSystem';
 
@@ -100,52 +100,136 @@ const PRMCMS = () => {
   if (!user) {
     switch (currentPage) {
       case 'staff-auth':
-        return <StaffAuth onNavigate={handleNavigation} />;
+        return (
+          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+            <StaffAuth onNavigate={handleNavigation} />
+          </Suspense>
+        );
       case 'customer-auth':
-        return <CustomerAuth onNavigate={handleNavigation} />;
+        return (
+          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+            <CustomerAuth onNavigate={handleNavigation} />
+          </Suspense>
+        );
       case 'customer-portal':
-        return <CustomerPortal onNavigate={handleNavigation} />;
+        return (
+          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+            <CustomerPortal onNavigate={handleNavigation} />
+          </Suspense>
+        );
       default:
-        return <AuthSelection onNavigate={handleNavigation} />;
+        return (
+          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+            <AuthSelection onNavigate={handleNavigation} />
+          </Suspense>
+        );
     }
   }
 
   const renderPage = () => {
     switch (currentPage) {
       case 'intake':
-        return <PackageIntake onNavigate={handleNavigation} />;
+        return (
+          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+            <PackageIntake onNavigate={handleNavigation} />
+          </Suspense>
+        );
       case 'customers':
-        return <Customers onNavigate={handleNavigation} />;
+        return (
+          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+            <Customers onNavigate={handleNavigation} />
+          </Suspense>
+        );
       case 'mailboxes':
-        return <Mailboxes onNavigate={handleNavigation} />;
+        return (
+          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+            <Mailboxes onNavigate={handleNavigation} />
+          </Suspense>
+        );
       case 'analytics':
-        return <Analytics onNavigate={handleNavigation} />;
+        return (
+          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+            <Analytics onNavigate={handleNavigation} />
+          </Suspense>
+        );
       case 'routes':
-        return <Routes onNavigate={handleNavigation} />;
+        return (
+          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+            <Routes onNavigate={handleNavigation} />
+          </Suspense>
+        );
       case 'driver-route':
-        return <DriverRoute onNavigate={handleNavigation} />;
+        return (
+          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+            <DriverRoute onNavigate={handleNavigation} />
+          </Suspense>
+        );
       case 'act60-dashboard':
-        return <Act60Dashboard onNavigate={handleNavigation} />;
+        return (
+          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+            <Act60Dashboard onNavigate={handleNavigation} />
+          </Suspense>
+        );
       case 'location-management':
-        return <LocationManagement onNavigate={handleNavigation} />;
+        return (
+          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+            <LocationManagement onNavigate={handleNavigation} />
+          </Suspense>
+        );
       case 'notifications':
-        return <Notifications onNavigate={handleNavigation} />;
+        return (
+          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+            <Notifications onNavigate={handleNavigation} />
+          </Suspense>
+        );
       case 'notification-settings':
-        return <NotificationSettings />;
+        return (
+          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+            <NotificationSettingsLazy />
+          </Suspense>
+        );
       case 'billing':
-        return <Billing onNavigate={handleNavigation} />;
+        return (
+          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+            <Billing onNavigate={handleNavigation} />
+          </Suspense>
+        );
       case 'reports':
-        return <Reports onNavigate={handleNavigation} />;
+        return (
+          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+            <Reports onNavigate={handleNavigation} />
+          </Suspense>
+        );
       case 'admin':
-        return <Admin onNavigate={handleNavigation} />;
+        return (
+          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+            <Admin onNavigate={handleNavigation} />
+          </Suspense>
+        );
       case 'integrations':
-        return <Integrations onNavigate={handleNavigation} />;
+        return (
+          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+            <Integrations onNavigate={handleNavigation} />
+          </Suspense>
+        );
       case 'inventory':
-        return <Inventory onNavigate={handleNavigation} />;
+        return (
+          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+            <Inventory onNavigate={handleNavigation} />
+          </Suspense>
+        );
       case 'documents':
-        return <Documents onNavigate={handleNavigation} />;
+        return (
+          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+            <Documents onNavigate={handleNavigation} />
+          </Suspense>
+        );
       case 'virtual-mail':
-        return <VirtualMail />;
+        return (
+          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+            <VirtualMailComponent />
+          </Suspense>
+        );
       case 'qa':
         // QA page handled by AppRouter
         return null;
@@ -186,7 +270,11 @@ const PRMCMS = () => {
           </div>
         );
       default:
-        return <Dashboard onNavigate={handleNavigation} />;
+        return (
+          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+            <Dashboard onNavigate={handleNavigation} />
+          </Suspense>
+        );
     }
   };
 

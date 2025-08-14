@@ -280,7 +280,7 @@ export const DisasterRecoveryPlan: React.FC<DisasterRecoveryPlanProps> = ({
                 <Label htmlFor="plan_type">Plan Type</Label>
                 <Select 
                   value={formData.plan_type} 
-                  onValueChange={(value: any) => setFormData(prev => ({ ...prev, plan_type: value }))}
+                  onValueChange={(value: unknown) => setFormData(prev => ({ ...prev, plan_type: value }))}
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -300,7 +300,7 @@ export const DisasterRecoveryPlan: React.FC<DisasterRecoveryPlanProps> = ({
                 <Label htmlFor="priority_level">Priority Level</Label>
                 <Select 
                   value={formData.priority_level} 
-                  onValueChange={(value: any) => setFormData(prev => ({ ...prev, priority_level: value }))}
+                  onValueChange={(value: unknown) => setFormData(prev => ({ ...prev, priority_level: value }))}
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -490,7 +490,7 @@ export const DisasterRecoveryPlan: React.FC<DisasterRecoveryPlanProps> = ({
                 <div>
                   <Label>Recovery Steps</Label>
                   <div className="space-y-2 mt-2">
-                    {selectedPlan.plan_steps.map((step: any, index: number) => (
+                    {selectedPlan.plan_steps.map((step: unknown, index: number) => (
                       <div key={index} className="flex gap-2 text-sm">
                         <span className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-xs">
                           {index + 1}
@@ -506,7 +506,7 @@ export const DisasterRecoveryPlan: React.FC<DisasterRecoveryPlanProps> = ({
                 <div>
                   <Label>Emergency Contacts</Label>
                   <div className="space-y-2 mt-2">
-                    {selectedPlan.emergency_contacts.map((contact: any, index: number) => (
+                    {selectedPlan.emergency_contacts.map((contact: unknown, index: number) => (
                       <div key={index} className="text-sm border rounded p-2">
                         <p className="font-medium">{contact.name} - {contact.role}</p>
                         <p className="text-muted-foreground">{contact.email} | {contact.phone}</p>

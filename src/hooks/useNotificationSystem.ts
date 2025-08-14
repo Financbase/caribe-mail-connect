@@ -45,7 +45,7 @@ export interface NotificationWorkflow {
   description?: string;
   category: 'package' | 'mailbox' | 'payment';
   is_system: boolean;
-  steps: any[];
+  steps: unknown[];
   is_active: boolean;
   location_id?: string;
   created_at: string;

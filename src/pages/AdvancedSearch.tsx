@@ -19,7 +19,7 @@ import { es } from 'date-fns/locale';
 interface SearchPreset {
   id: string;
   name: string;
-  filters: any;
+  filters: unknown;
   isPublic: boolean;
 }
 

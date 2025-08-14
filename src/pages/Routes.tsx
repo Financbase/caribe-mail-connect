@@ -61,7 +61,7 @@ export default function Routes({ onNavigate }: RoutesProps) {
     }
   };
 
-  const handleViewRoute = (route: any) => {
+  const handleViewRoute = (route: unknown) => {
     // Navigate to detailed route view
     console.log('View route:', route);
   };

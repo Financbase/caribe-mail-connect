@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { AriaInput } from '@/components/ui/aria-components';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { useBackupManagement, RestorePoint } from '@/hooks/useBackupManagement';
 import { 
@@ -92,14 +93,15 @@ export const RestorePointManager: React.FC<RestorePointManagerProps> = ({
         <CardContent className="space-y-4">
           {/* Filters */}
           <div className="flex gap-4">
-            <Input
+            <AriaInput
+              label="Search restore points"
               placeholder="Search restore points..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => setSearchTerm((e.target as HTMLInputElement).value)}
               className="max-w-sm"
             />
             <Select value={filterType} onValueChange={setFilterType}>
-              <SelectTrigger className="w-48">
+              <SelectTrigger className="w-48" aria-label="Filter by backup type">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -113,9 +115,22 @@ export const RestorePointManager: React.FC<RestorePointManagerProps> = ({
           </div>
 
           {/* Restore Points List */}
-          <div className="space-y-4">
+          <div className="space-y-4" role="list" aria-label="Restore points list">
             {filteredPoints.map((point) => (
-              <div key={point.id} className="border rounded-lg p-4">
+              <div
+                key={point.id}
+                className="border rounded-lg p-4"
+                tabIndex={0}
+                role="listitem"
+                aria-label={`Restore point ${point.restore_point_name}, type ${point.backup_type}, ${point.data_integrity_verified ? 'verified' : 'unverified'}`}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    const btn = (e.currentTarget as HTMLElement).querySelector<HTMLButtonElement>('button[data-action="test-restore"]')
+                    btn?.focus()
+                    e.preventDefault()
+                  }
+                }}
+              >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     {getBackupTypeIcon(point.backup_type)}
@@ -151,6 +166,8 @@ export const RestorePointManager: React.FC<RestorePointManagerProps> = ({
                       size="sm"
                       variant="outline"
                       onClick={() => initiateRestore(point, 'test')}
+                      data-action="test-restore"
+                      aria-label={`Test restore ${point.restore_point_name}`}
                     >
                       <TestTube className="h-4 w-4 mr-2" />
                       Test Restore
@@ -160,6 +177,7 @@ export const RestorePointManager: React.FC<RestorePointManagerProps> = ({
                       size="sm"
                       variant="destructive"
                       onClick={() => initiateRestore(point, 'actual')}
+                      aria-label={`Restore ${point.restore_point_name}`}
                     >
                       <RotateCcw className="h-4 w-4 mr-2" />
                       Restore

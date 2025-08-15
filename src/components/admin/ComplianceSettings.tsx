@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { AriaInput } from '@/components/ui/aria-components';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
@@ -352,10 +353,10 @@ export const ComplianceSettings: React.FC = () => {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="policy_name">Policy Name</Label>
-                <Input
-                  id="policy_name"
+                <AriaInput
+                  label="Policy Name"
                   value={formData.policy_name}
-                  onChange={(e) => setFormData(prev => ({ ...prev, policy_name: e.target.value }))}
+                  onChange={(e) => setFormData(prev => ({ ...prev, policy_name: (e.target as HTMLInputElement).value }))}
                   placeholder="e.g., GDPR Data Retention Policy"
                   required
                 />

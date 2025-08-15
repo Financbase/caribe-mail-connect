@@ -166,10 +166,22 @@ export const DisasterRecoveryPlan: React.FC<DisasterRecoveryPlanProps> = ({
           </div>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4" aria-label="Disaster recovery plans">
             {plans.map((plan) => (
-              <Card key={plan.id} className="cursor-pointer hover:shadow-md transition-shadow"
-                    onClick={() => { setSelectedPlan(plan); setShowDetailsDialog(true); }}>
+              <Card
+                key={plan.id}
+                className="cursor-pointer hover:shadow-md transition-shadow"
+                tabIndex={0}
+                aria-label={`Plan ${plan.plan_name}, tipo ${plan.plan_type.replace('_', ' ')}, prioridad ${plan.priority_level}`}
+                onClick={() => { setSelectedPlan(plan); setShowDetailsDialog(true); }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    setSelectedPlan(plan);
+                    setShowDetailsDialog(true);
+                    e.preventDefault();
+                  }
+                }}
+              >
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">

@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
+import { AriaInput } from '@/components/ui/aria-components';
 import { 
   Settings, 
   Mail, 
@@ -81,11 +82,11 @@ export function SystemConfig() {
       </div>
 
       <Tabs defaultValue="business" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="business">Negocio</TabsTrigger>
-          <TabsTrigger value="tax">Impuestos</TabsTrigger>
-          <TabsTrigger value="notifications">Notificaciones</TabsTrigger>
-          <TabsTrigger value="backup">Respaldo</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-4" aria-label="System configuration sections">
+          <TabsTrigger value="business" aria-label="Negocio">Negocio</TabsTrigger>
+          <TabsTrigger value="tax" aria-label="Impuestos">Impuestos</TabsTrigger>
+          <TabsTrigger value="notifications" aria-label="Notificaciones">Notificaciones</TabsTrigger>
+          <TabsTrigger value="backup" aria-label="Respaldo">Respaldo</TabsTrigger>
         </TabsList>
 
         <TabsContent value="business">
@@ -101,26 +102,23 @@ export function SystemConfig() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label>Nombre de la Empresa</Label>
-                  <Input
-                    value={config.business.name}
-                    onChange={(e) => setConfig({
-                      ...config,
-                      business: { ...config.business, name: e.target.value }
-                    })}
-                  />
-                </div>
-                <div>
-                  <Label>Teléfono</Label>
-                  <Input
-                    value={config.business.phone}
-                    onChange={(e) => setConfig({
-                      ...config,
-                      business: { ...config.business, phone: e.target.value }
-                    })}
-                  />
-                </div>
+                <AriaInput
+                  label="Nombre de la Empresa"
+                  value={config.business.name}
+                  onChange={(e) => setConfig({
+                    ...config,
+                    business: { ...config.business, name: (e.target as HTMLInputElement).value }
+                  })}
+                  required
+                />
+                <AriaInput
+                  label="Teléfono"
+                  value={config.business.phone}
+                  onChange={(e) => setConfig({
+                    ...config,
+                    business: { ...config.business, phone: (e.target as HTMLInputElement).value }
+                  })}
+                />
               </div>
               <div>
                 <Label>Dirección</Label>
@@ -133,27 +131,23 @@ export function SystemConfig() {
                 />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label>Email</Label>
-                  <Input
-                    type="email"
-                    value={config.business.email}
-                    onChange={(e) => setConfig({
-                      ...config,
-                      business: { ...config.business, email: e.target.value }
-                    })}
-                  />
-                </div>
-                <div>
-                  <Label>Número de Identificación Tributaria</Label>
-                  <Input
-                    value={config.business.taxId}
-                    onChange={(e) => setConfig({
-                      ...config,
-                      business: { ...config.business, taxId: e.target.value }
-                    })}
-                  />
-                </div>
+                <AriaInput
+                  label="Email"
+                  type="email"
+                  value={config.business.email}
+                  onChange={(e) => setConfig({
+                    ...config,
+                    business: { ...config.business, email: (e.target as HTMLInputElement).value }
+                  })}
+                />
+                <AriaInput
+                  label="Número de Identificación Tributaria"
+                  value={config.business.taxId}
+                  onChange={(e) => setConfig({
+                    ...config,
+                    business: { ...config.business, taxId: (e.target as HTMLInputElement).value }
+                  })}
+                />
               </div>
             </CardContent>
           </Card>
@@ -181,6 +175,7 @@ export function SystemConfig() {
                     ...config,
                     tax: { ...config.tax, enabled: checked }
                   })}
+                  aria-label="Aplicar IVU"
                 />
               </div>
               <Separator />
@@ -232,6 +227,7 @@ export function SystemConfig() {
                     ...config,
                     notifications: { ...config.notifications, emailEnabled: checked }
                   })}
+                  aria-label="Habilitar notificaciones por email"
                 />
               </div>
               <Separator />
@@ -251,6 +247,7 @@ export function SystemConfig() {
                     ...config,
                     notifications: { ...config.notifications, smsEnabled: checked }
                   })}
+                  aria-label="Habilitar notificaciones por SMS"
                 />
               </div>
               <Separator />
@@ -270,6 +267,7 @@ export function SystemConfig() {
                     ...config,
                     notifications: { ...config.notifications, whatsappEnabled: checked }
                   })}
+                  aria-label="Habilitar notificaciones por WhatsApp"
                 />
               </div>
             </CardContent>
@@ -301,6 +299,7 @@ export function SystemConfig() {
                     ...config,
                     backup: { ...config.backup, autoBackup: checked }
                   })}
+                  aria-label="Habilitar respaldo automático"
                 />
               </div>
               <Separator />

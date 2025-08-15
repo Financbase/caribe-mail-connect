@@ -26,6 +26,8 @@ import Documents from './Documents';
 import { VirtualMail } from './VirtualMail';
 import { MobileLayout } from '@/components/mobile/MobileLayout';
 import { UserFeedbackWidget } from '@/components/qa/UserFeedbackSystem';
+import Onboarding from './Onboarding';
+import { featureFlags } from '@/lib/featureFlags';
 
 // Main application component with navigation logic
 const PRMCMS = () => {
@@ -51,7 +53,12 @@ const PRMCMS = () => {
         
         // Set appropriate initial page based on auth state
         if (session?.user) {
-          setCurrentPage('dashboard');
+          const completed = localStorage.getItem('onboarding-completed');
+          if (featureFlags.onboarding && !completed) {
+            setCurrentPage('onboarding');
+          } else {
+            setCurrentPage('dashboard');
+          }
         } else {
           setCurrentPage('auth-selection');
         }
@@ -65,7 +72,12 @@ const PRMCMS = () => {
       
       // Set appropriate initial page based on auth state
       if (session?.user) {
-        setCurrentPage('dashboard');
+        const completed = localStorage.getItem('onboarding-completed');
+        if (featureFlags.onboarding && !completed) {
+          setCurrentPage('onboarding');
+        } else {
+          setCurrentPage('dashboard');
+        }
       } else {
         setCurrentPage('auth-selection');
       }
@@ -82,6 +94,11 @@ const PRMCMS = () => {
   const handleLogout = async () => {
     await supabase.auth.signOut();
     window.location.hash = '#/';
+  };
+
+  const handleOnboardingComplete = () => {
+    localStorage.setItem('onboarding-completed', 'true');
+    setCurrentPage('dashboard');
   };
 
   // Show loading while checking authentication
@@ -146,6 +163,8 @@ const PRMCMS = () => {
         return <Documents onNavigate={handleNavigation} />;
       case 'virtual-mail':
         return <VirtualMail />;
+      case 'onboarding':
+        return <Onboarding onComplete={handleOnboardingComplete} />;
       case 'qa':
         // QA page handled by AppRouter
         return null;

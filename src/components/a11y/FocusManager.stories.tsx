@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { FocusManagerProvider, useFocusManager } from './FocusManager';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 const meta: Meta<typeof FocusManagerProvider> = {
   title: 'Caribbean/FocusManager',
@@ -52,11 +52,14 @@ type Story = StoryObj<typeof FocusManagerProvider>;
 function FocusTrapDemo() {
   const { trapFocus, restoreFocus } = useFocusManager();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   const openModal = () => {
     setIsModalOpen(true);
     setTimeout(() => {
-      trapFocus('modal-container');
+      if (modalRef.current) {
+        trapFocus(modalRef.current);
+      }
     }, 100);
   };
 

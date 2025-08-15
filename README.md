@@ -1,88 +1,185 @@
-# Welcome to your Lovable project
+# Caribe Mail Connect
 
-## Project info
+A comprehensive mail and package management system designed for the Caribbean region, with a focus on Puerto Rico's unique postal and logistics needs.
 
-**URL**: <https://lovable.dev/projects/ac8297d1-7da1-4672-b42f-263b1dc5dd96>
+## 🚀 Features
 
-## How can I edit this code?
+### Core Functionality
+- **📦 Package Tracking**: Real-time tracking of packages and mail
+- **📮 Virtual Mailbox**: Digital mail management and forwarding
+- **👥 Customer Portal**: Self-service portal for customers
+- **📱 Mobile App**: iOS and Android applications
+- **🏢 Multi-location Support**: Manage multiple service locations
+- **💳 Billing & Invoicing**: Automated billing and payment processing
 
-There are several ways of editing your application.
+### Advanced Features
+- **🗺️ Route Optimization**: Efficient delivery route planning
+- **📊 Analytics & Reporting**: Comprehensive business intelligence
+- **🔌 Integration APIs**: Connect with external services
+- **✅ Compliance Tools**: USPS and local regulation compliance
+- **🔄 Backup & Recovery**: Automated data protection
+- **📈 Performance Monitoring**: Real-time system monitoring
 
-**Use Lovable**
+## 🛠️ Technology Stack
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/ac8297d1-7da1-4672-b42f-263b1dc5dd96) and start prompting.
+- **Frontend**: React 18 + TypeScript + Vite
+- **Backend**: Supabase (PostgreSQL + Edge Functions)
+- **UI Framework**: Tailwind CSS + shadcn/ui + Caribbean Design System
+- **Testing**: Vitest + Playwright + Storybook
+- **Deployment**: Cloudflare Pages
+- **Analytics**: Privacy-focused analytics with GDPR compliance
 
-Changes made via Lovable will be committed automatically to this repo.
+## ⚡ Quick Start
 
-**Use your preferred IDE**
+### Prerequisites
+- Node.js 18+
+- npm or yarn
+- Git
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Installation
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+```bash
+# Clone the repository
+git clone https://github.com/Financbase/caribe-mail-connect.git
+cd caribe-mail-connect
 
-Follow these steps:
+# Install dependencies
+npm install
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Set up environment variables
+cp .env.example .env.local
+# Edit .env.local with your configuration
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start development server
 npm run dev
 ```
+### Environment Setup
 
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/ac8297d1-7da1-4672-b42f-263b1dc5dd96) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
-
-## Environment variables
-
-To enable monitoring and error tracking with Sentry, create a `.env.local` file in `caribe-mail-connect/` with:
+Create a `.env.local` file with the following variables:
 
 ```env
+# Supabase Configuration
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+# Application Configuration
+VITE_APP_ENV=development
+VITE_APP_VERSION=1.0.0
+
+# Feature Flags
+VITE_FEATURE_ANALYTICS=true
+VITE_FEATURE_NOTIFICATIONS=true
+VITE_FEATURE_VIRTUAL_MAILBOX=true
+VITE_FEATURE_CUSTOMER_PORTAL=true
+
+# Optional: Monitoring (Sentry)
 VITE_SENTRY_DSN=
 VITE_SENTRY_TRACES_SAMPLE_RATE=0.1
 ```
 
-Notes:
+## 🔧 Development
 
-- Do not commit real secrets.
-- Initialization is handled in `src/main.tsx` via `initSentry()`; see `src/integrations/monitoring/sentry.ts`.
-- See `docs/architecture/monitoring.md` for a full enable/validate checklist.
+### Available Scripts
+
+```bash
+# Development
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run preview      # Preview production build
+
+# Testing
+npm run test         # Run unit tests
+npm run test:e2e     # Run end-to-end tests
+npm run test:coverage # Generate coverage report
+
+# Code Quality
+npm run lint         # Run ESLint
+npm run type-check   # Run TypeScript checks
+npm run format       # Format code with Prettier
+
+# Storybook
+npm run storybook    # Start Storybook
+npm run build-storybook # Build Storybook
+```
+
+### Project Structure
+
+```
+src/
+├── components/          # Reusable UI components
+│   ├── ui/             # Base UI components (shadcn/ui)
+│   ├── compound/       # Complex compound components
+│   ├── feedback/       # User feedback components
+│   └── a11y/           # Accessibility components
+├── pages/              # Application pages
+├── hooks/              # Custom React hooks
+├── services/           # API and external services
+├── types/              # TypeScript type definitions
+├── utils/              # Utility functions
+├── styles/             # Global styles
+└── tests/              # Test files
+
+docs/                   # Documentation
+supabase/              # Database schema and functions
+scripts/               # Build and deployment scripts
+```
+
+## 📚 Documentation
+
+- [Development Guide](docs/DEVELOPMENT_GUIDE.md)
+- [API Documentation](docs/API_DOCUMENTATION.md)
+- [Component Documentation](docs/COMPONENT_DOCUMENTATION.md)
+- [Security Policy](SECURITY.md)
+
+## 🚀 Deployment
+
+The application is deployed on Cloudflare Pages with automatic deployments from the main branch.
+
+```bash
+# Build for production
+npm run build
+
+# Deploy to staging
+npm run deploy:staging
+
+# Deploy to production
+npm run deploy:production
+```
+
+## 🤝 Contributing
+
+We welcome contributions! Please follow these guidelines:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes
+4. Add tests for new functionality
+5. Ensure all tests pass (`npm run test`)
+6. Run linting (`npm run lint`)
+7. Commit your changes (`git commit -m 'Add amazing feature'`)
+8. Push to the branch (`git push origin feature/amazing-feature`)
+9. Open a Pull Request
+
+## 🔒 Security
+
+Security is a top priority. Please see our [Security Policy](SECURITY.md) for reporting vulnerabilities and security practices.
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🆘 Support
+
+- **Documentation**: [docs/](docs/)
+- **Issues**: [GitHub Issues](https://github.com/Financbase/caribe-mail-connect/issues)
+
+## 🙏 Acknowledgments
+
+- Built with [React](https://reactjs.org/) and [TypeScript](https://www.typescriptlang.org/)
+- UI components from [shadcn/ui](https://ui.shadcn.com/) and custom Caribbean Design System
+- Backend powered by [Supabase](https://supabase.com/)
+- Deployed on [Cloudflare Pages](https://pages.cloudflare.com/)
+
+---
+
+**Caribe Mail Connect** - Connecting the Caribbean through efficient mail and package management. 🌴📦

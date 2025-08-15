@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, useRef, useEffect } from 'react';
-import { useLanguage } from '@/hooks/useLanguage';
+import { useLanguage } from '../../hooks/useLanguage';
 
 interface AriaLiveMessage {
   id: string;

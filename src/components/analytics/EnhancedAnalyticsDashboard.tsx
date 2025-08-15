@@ -395,7 +395,7 @@ export function EnhancedAnalyticsDashboard() {
                 <div>
                   <div className="flex justify-between text-sm mb-1">
                     <span>Query Performance</span>
-                    <span className="text-green-600">< 100ms</span>
+                    <span className="text-green-600">&lt; 100ms</span>
                   </div>
                   <Progress value={95} className="h-2" />
                 </div>

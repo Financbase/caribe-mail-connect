@@ -18,6 +18,7 @@ const Notifications = lazy(() => import('./Notifications'));
 const NotificationSettingsLazy = lazy(() => import('./NotificationSettings').then(m => ({ default: m.NotificationSettings })));
 const Mailboxes = lazy(() => import('./Mailboxes'));
 const Analytics = lazy(() => import('./Analytics'));
+const Reports = lazy(() => import('./Reports'));
 const Routes = lazy(() => import('./Routes'));
 const DriverRoute = lazy(() => import('./DriverRoute'));
 const Act60Dashboard = lazy(() => import('./Act60Dashboard'));
@@ -28,6 +29,7 @@ const Admin = lazy(() => import('./Admin'));
 const CustomerPortal = lazy(() => import('./CustomerPortal'));
 const Integrations = lazy(() => import('./Integrations'));
 const Inventory = lazy(() => import('./Inventory'));
+const FeaturedIconShowcase = lazy(() => import('@/components/examples/FeaturedIconShowcase'));
 import { MobileLayout } from '@/components/mobile/MobileLayout';
 import { UserFeedbackWidget } from '@/components/qa/UserFeedbackSystem';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -284,6 +286,12 @@ const PRMCMS = () => {
               </button>
             </div>
           </div>
+        );
+      case 'featured-icons':
+        return (
+          <Suspense fallback={pageFallback}>
+            <FeaturedIconShowcase />
+          </Suspense>
         );
       case 'deliver':
         // Placeholder for delivery page

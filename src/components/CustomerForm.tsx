@@ -10,6 +10,7 @@ import { Separator } from '@/components/ui/separator';
 import { Crown, Star } from 'lucide-react';
 import { useCustomers, type CustomerFormData } from '@/hooks/useCustomers';
 import { toast } from '@/hooks/use-toast';
+import { AriaInput } from '@/components/ui/aria-components';
 
 interface CustomerFormProps {
   onClose: () => void;
@@ -87,7 +88,7 @@ export function CustomerForm({ onClose, customerId, initialData }: CustomerFormP
   };
 
   return (
-    <Card className="w-full max-w-4xl mx-auto">
+    <Card className="w-full max-w-4xl mx-auto cq-form">
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
           <span>{customerId ? 'Edit Customer' : 'Add New Customer'}</span>
@@ -97,92 +98,69 @@ export function CustomerForm({ onClose, customerId, initialData }: CustomerFormP
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Basic Information */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="first_name">First Name *</Label>
-              <Input
-                id="first_name"
-                value={formData.first_name}
-                onChange={(e) => updateFormData('first_name', e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="last_name">Last Name *</Label>
-              <Input
-                id="last_name"
-                value={formData.last_name}
-                onChange={(e) => updateFormData('last_name', e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="email">Email *</Label>
-              <Input
-                id="email"
-                type="email"
-                value={formData.email}
-                onChange={(e) => updateFormData('email', e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="phone">Phone</Label>
-              <Input
-                id="phone"
-                value={formData.phone}
-                onChange={(e) => updateFormData('phone', e.target.value)}
-              />
-            </div>
-            <div>
-              <Label htmlFor="business_name">Business Name</Label>
-              <Input
-                id="business_name"
-                value={formData.business_name}
-                onChange={(e) => updateFormData('business_name', e.target.value)}
-              />
-            </div>
-            <div>
-              <Label htmlFor="mailbox_number">Mailbox Number *</Label>
-              <Input
-                id="mailbox_number"
-                value={formData.mailbox_number}
-                onChange={(e) => updateFormData('mailbox_number', e.target.value)}
-                required
-              />
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 form-grid-2">
+            <AriaInput
+              label="First Name *"
+              value={formData.first_name}
+              onChange={(e) => updateFormData('first_name', (e.target as HTMLInputElement).value)}
+              required
+            />
+            <AriaInput
+              label="Last Name *"
+              value={formData.last_name}
+              onChange={(e) => updateFormData('last_name', (e.target as HTMLInputElement).value)}
+              required
+            />
+            <AriaInput
+              label="Email *"
+              type="email"
+              value={formData.email}
+              onChange={(e) => updateFormData('email', (e.target as HTMLInputElement).value)}
+              required
+            />
+            <AriaInput
+              label="Phone"
+              value={formData.phone}
+              onChange={(e) => updateFormData('phone', (e.target as HTMLInputElement).value)}
+            />
+            <AriaInput
+              label="Business Name"
+              value={formData.business_name}
+              onChange={(e) => updateFormData('business_name', (e.target as HTMLInputElement).value)}
+            />
+            <AriaInput
+              label="Mailbox Number *"
+              value={formData.mailbox_number}
+              onChange={(e) => updateFormData('mailbox_number', (e.target as HTMLInputElement).value)}
+              required
+            />
           </div>
 
           {/* Address Information */}
           <Separator />
           <h3 className="text-lg font-semibold">Address Information</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 form-grid-2">
             <div className="md:col-span-2">
-              <Label htmlFor="address_line1">Address Line 1 *</Label>
-              <Input
-                id="address_line1"
+              <AriaInput
+                label="Address Line 1 *"
                 value={formData.address_line1}
-                onChange={(e) => updateFormData('address_line1', e.target.value)}
+                onChange={(e) => updateFormData('address_line1', (e.target as HTMLInputElement).value)}
                 required
               />
             </div>
             <div className="md:col-span-2">
-              <Label htmlFor="address_line2">Address Line 2</Label>
-              <Input
-                id="address_line2"
+              <AriaInput
+                label="Address Line 2"
                 value={formData.address_line2}
-                onChange={(e) => updateFormData('address_line2', e.target.value)}
+                onChange={(e) => updateFormData('address_line2', (e.target as HTMLInputElement).value)}
               />
             </div>
-            <div>
-              <Label htmlFor="city">City *</Label>
-              <Input
-                id="city"
-                value={formData.city}
-                onChange={(e) => updateFormData('city', e.target.value)}
-                required
-              />
-            </div>
+            <AriaInput
+              label="City *"
+              value={formData.city}
+              onChange={(e) => updateFormData('city', (e.target as HTMLInputElement).value)}
+              required
+            />
             <div>
               <Label htmlFor="state">State</Label>
               <Select value={formData.state} onValueChange={(value) => updateFormData('state', value)}>
@@ -196,15 +174,12 @@ export function CustomerForm({ onClose, customerId, initialData }: CustomerFormP
                 </SelectContent>
               </Select>
             </div>
-            <div>
-              <Label htmlFor="zip_code">ZIP Code *</Label>
-              <Input
-                id="zip_code"
-                value={formData.zip_code}
-                onChange={(e) => updateFormData('zip_code', e.target.value)}
-                required
-              />
-            </div>
+            <AriaInput
+              label="ZIP Code *"
+              value={formData.zip_code}
+              onChange={(e) => updateFormData('zip_code', (e.target as HTMLInputElement).value)}
+              required
+            />
             <div>
               <Label htmlFor="customer_type">Customer Type</Label>
               <Select value={formData.customer_type} onValueChange={(value) => updateFormData('customer_type', value)}>

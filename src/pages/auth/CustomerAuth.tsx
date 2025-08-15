@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { AriaInput } from '@/components/ui/aria-components';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -22,6 +23,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { getFriendlyAuthError } from '@/lib/errorCopy';
 
 interface CustomerAuthProps {
   onNavigate: (page: string) => void;
@@ -64,9 +66,8 @@ export default function CustomerAuth({ onNavigate }: CustomerAuthProps) {
       });
 
       if (error) {
-        setError(error.message === 'Invalid login credentials' 
-          ? 'Credenciales inválidas. Verifique su email y contraseña.'
-          : error.message);
+        const friendly = getFriendlyAuthError(error.message, 'login', 'es');
+        setError(`${friendly.title}: ${friendly.description}`);
         return;
       }
 
@@ -143,11 +144,8 @@ export default function CustomerAuth({ onNavigate }: CustomerAuthProps) {
       });
 
       if (error) {
-        if (error.message.includes('User already registered')) {
-          setError('Este email ya está registrado. Use la opción de iniciar sesión.');
-        } else {
-          setError(error.message);
-        }
+        const friendly = getFriendlyAuthError(error.message, 'signup', 'es');
+        setError(`${friendly.title}: ${friendly.description}`);
         return;
       }
 
@@ -241,7 +239,7 @@ export default function CustomerAuth({ onNavigate }: CustomerAuthProps) {
               }
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="cq-form compact-pad">
             <Tabs value={activeTab} onValueChange={setActiveTab}>
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="login">Iniciar Sesión</TabsTrigger>
@@ -292,6 +290,7 @@ export default function CustomerAuth({ onNavigate }: CustomerAuthProps) {
                         size="sm"
                         className="absolute right-0 top-0 h-full px-3"
                         onClick={() => setShowPassword(!showPassword)}
+                        aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
                       >
                         {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </Button>
@@ -306,7 +305,7 @@ export default function CustomerAuth({ onNavigate }: CustomerAuthProps) {
 
               <TabsContent value="signup">
                 <form onSubmit={handleSignup} className="space-y-4">
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="form-grid-2">
                     <div>
                       <Label htmlFor="firstName">Nombre</Label>
                       <div className="relative">
@@ -321,16 +320,13 @@ export default function CustomerAuth({ onNavigate }: CustomerAuthProps) {
                         />
                       </div>
                     </div>
-                    <div>
-                      <Label htmlFor="lastName">Apellido</Label>
-                      <Input
-                        id="lastName"
-                        placeholder="Pérez"
-                        value={signupForm.lastName}
-                        onChange={(e) => setSignupForm({...signupForm, lastName: e.target.value})}
-                        required
-                      />
-                    </div>
+                    <AriaInput
+                      label="Apellido"
+                      placeholder="Pérez"
+                      value={signupForm.lastName}
+                      onChange={(e) => setSignupForm({ ...signupForm, lastName: e.target.value })}
+                      required
+                    />
                   </div>
 
                   <div>
@@ -380,28 +376,22 @@ export default function CustomerAuth({ onNavigate }: CustomerAuthProps) {
                   </div>
 
                   {userType === 'customer' && (
-                    <div>
-                      <Label htmlFor="mailboxNumber">Número de Buzón (opcional)</Label>
-                      <Input
-                        id="mailboxNumber"
-                        placeholder="MB-001"
-                        value={signupForm.mailboxNumber}
-                        onChange={(e) => setSignupForm({...signupForm, mailboxNumber: e.target.value})}
-                      />
-                    </div>
+                    <AriaInput
+                      label="Número de Buzón (opcional)"
+                      placeholder="MB-001"
+                      value={signupForm.mailboxNumber}
+                      onChange={(e) => setSignupForm({ ...signupForm, mailboxNumber: e.target.value })}
+                    />
                   )}
 
                   {userType === 'driver' && (
-                    <div>
-                      <Label htmlFor="licenseNumber">Número de Licencia</Label>
-                      <Input
-                        id="licenseNumber"
-                        placeholder="12345678"
-                        value={signupForm.licenseNumber}
-                        onChange={(e) => setSignupForm({...signupForm, licenseNumber: e.target.value})}
-                        required
-                      />
-                    </div>
+                    <AriaInput
+                      label="Número de Licencia"
+                      placeholder="12345678"
+                      value={signupForm.licenseNumber}
+                      onChange={(e) => setSignupForm({ ...signupForm, licenseNumber: e.target.value })}
+                      required
+                    />
                   )}
 
                   <div>

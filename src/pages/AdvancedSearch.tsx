@@ -379,9 +379,20 @@ export default function AdvancedSearch() {
                   <TableHead>Acciones</TableHead>
                 </TableRow>
               </TableHeader>
-              <TableBody>
-                {searchResults.map((result, index) => (
-                  <TableRow key={index}>
+            <TableBody>
+              {searchResults.map((result, index) => (
+                <TableRow
+                  key={index}
+                  tabIndex={0}
+                  aria-label={`Resultado ${index + 1}: ${result.title}`}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      const btn = (e.currentTarget as HTMLElement).querySelector<HTMLButtonElement>('button[data-action="view"]');
+                      btn?.click();
+                      e.preventDefault();
+                    }
+                  }}
+                >
                     <TableCell>
                       <Badge variant="outline" className="capitalize">
                         {result.type}
@@ -390,7 +401,7 @@ export default function AdvancedSearch() {
                     <TableCell className="font-medium">{result.title}</TableCell>
                     <TableCell className="text-muted-foreground">{result.subtitle}</TableCell>
                     <TableCell>
-                      <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" data-action="view" aria-label={`Ver detalles de ${result.title}`}>
                         Ver detalles
                       </Button>
                     </TableCell>

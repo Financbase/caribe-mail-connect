@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { AriaInput } from '@/components/ui/aria-components';
 import { LanguageToggle } from '@/components/LanguageToggle';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
+import { getFriendlyAuthError } from '@/lib/errorCopy';
 import { Package } from 'lucide-react';
 
 export default function UpdatePassword() {
@@ -64,9 +64,10 @@ export default function UpdatePassword() {
       });
 
       if (error) {
+        const friendly = getFriendlyAuthError(error.message, 'update', 'en');
         toast({
-          title: t('common.error'),
-          description: error.message,
+          title: friendly.title,
+          description: friendly.description,
           variant: 'destructive',
         });
       } else {
@@ -118,36 +119,28 @@ export default function UpdatePassword() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="password">New Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  minLength={6}
-                  className="h-12"
-                />
-                <p className="text-xs text-muted-foreground">
-                  Password must be at least 6 characters
-                </p>
-              </div>
+              <AriaInput
+                label="New Password"
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                minLength={6}
+                className="h-12"
+                description="Password must be at least 6 characters"
+              />
 
-              <div className="space-y-2">
-                <Label htmlFor="confirm-password">Confirm Password</Label>
-                <Input
-                  id="confirm-password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                  minLength={6}
-                  className="h-12"
-                />
-              </div>
+              <AriaInput
+                label="Confirm Password"
+                type="password"
+                placeholder="••••••••"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                minLength={6}
+                className="h-12"
+              />
 
               <Button
                 type="submit"

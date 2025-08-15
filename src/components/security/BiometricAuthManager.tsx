@@ -217,6 +217,7 @@ export function BiometricAuthManager() {
             <Switch
               checked={settings.enabled}
               onCheckedChange={(checked) => updateSettings('enabled', checked)}
+              aria-label="Autenticación biométrica habilitada"
             />
           </div>
 
@@ -229,6 +230,7 @@ export function BiometricAuthManager() {
                     <Switch
                       checked={settings.allowFingerprint}
                       onCheckedChange={(checked) => updateSettings('allowFingerprint', checked)}
+                      aria-label="Permitir huella dactilar"
                     />
                   </div>
 
@@ -237,6 +239,7 @@ export function BiometricAuthManager() {
                     <Switch
                       checked={settings.allowFaceId}
                       onCheckedChange={(checked) => updateSettings('allowFaceId', checked)}
+                      aria-label="Permitir Face ID"
                     />
                   </div>
 
@@ -245,6 +248,7 @@ export function BiometricAuthManager() {
                     <Switch
                       checked={settings.allowTouchId}
                       onCheckedChange={(checked) => updateSettings('allowTouchId', checked)}
+                      aria-label="Permitir Touch ID"
                     />
                   </div>
                 </div>
@@ -255,6 +259,7 @@ export function BiometricAuthManager() {
                     <Switch
                       checked={settings.requireFallback}
                       onCheckedChange={(checked) => updateSettings('requireFallback', checked)}
+                      aria-label="Requerir método de respaldo"
                     />
                   </div>
 
@@ -267,6 +272,7 @@ export function BiometricAuthManager() {
                       value={settings.trustThreshold}
                       onChange={(e) => updateSettings('trustThreshold', parseInt(e.target.value))}
                       className="w-full"
+                      aria-label="Umbral de confianza mínimo"
                     />
                   </div>
                 </div>

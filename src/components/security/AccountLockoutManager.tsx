@@ -128,6 +128,7 @@ export function AccountLockoutManager() {
             <Switch
               checked={policy.enabled}
               onCheckedChange={(checked) => updatePolicy('enabled', checked)}
+              aria-label="Bloqueo automático habilitado"
             />
           </div>
 
@@ -174,6 +175,7 @@ export function AccountLockoutManager() {
                   <Switch
                     checked={policy.autoUnlock}
                     onCheckedChange={(checked) => updatePolicy('autoUnlock', checked)}
+                    aria-label="Desbloqueo automático"
                   />
                 </div>
               </div>
@@ -225,7 +227,11 @@ export function AccountLockoutManager() {
               </TableHeader>
               <TableBody>
                 {lockedAccounts.map((account) => (
-                  <TableRow key={account.id}>
+                  <TableRow
+                    key={account.id}
+                    tabIndex={0}
+                    aria-label={`Cuenta ${account.email} ${account.status}`}
+                  >
                     <TableCell className="font-medium">{account.email}</TableCell>
                     <TableCell>
                       <Badge variant="destructive">{account.failedAttempts}</Badge>

@@ -139,7 +139,11 @@ export function SessionManager() {
                   </TableHeader>
                   <TableBody>
                     {activeSessions.map((session) => (
-                      <TableRow key={session.id}>
+                      <TableRow
+                        key={session.id}
+                        tabIndex={0}
+                        aria-label={`Sesión ${session.ip_address} ${new Date(session.last_activity).toLocaleString('es-PR')}`}
+                      >
                         <TableCell>
                           <div className="flex items-center space-x-3">
                             {getDeviceIcon(session.user_agent)}
@@ -255,8 +259,12 @@ export function SessionManager() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {expiredSessions.slice(0, 10).map((session) => (
-                    <TableRow key={session.id}>
+                    {expiredSessions.slice(0, 10).map((session) => (
+                      <TableRow
+                        key={session.id}
+                        tabIndex={0}
+                        aria-label={`Sesión expirada ${session.ip_address} ${new Date(session.created_at).toLocaleDateString('es-PR')}`}
+                      >
                       <TableCell>
                         <div className="flex items-center space-x-3">
                           {getDeviceIcon(session.user_agent)}

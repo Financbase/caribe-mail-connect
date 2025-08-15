@@ -294,7 +294,7 @@ export const TestCaseManagement = () => {
               {/* Filters */}
               <div className="flex gap-4 mb-6">
                 <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                  <SelectTrigger className="w-40">
+                  <SelectTrigger className="w-40" aria-label="Filter by category">
                     <SelectValue placeholder="Filter by category" />
                   </SelectTrigger>
                   <SelectContent>
@@ -308,7 +308,7 @@ export const TestCaseManagement = () => {
                 </Select>
 
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger className="w-40">
+                  <SelectTrigger className="w-40" aria-label="Filter by status">
                     <SelectValue placeholder="Filter by status" />
                   </SelectTrigger>
                   <SelectContent>
@@ -335,7 +335,18 @@ export const TestCaseManagement = () => {
                   </TableHeader>
                   <TableBody>
                     {filteredTestCases.map((testCase) => (
-                      <TableRow key={testCase.id}>
+                      <TableRow
+                        key={testCase.id}
+                        tabIndex={0}
+                        aria-label={`Test case ${testCase.title}, type ${testCase.test_type}, category ${testCase.category}, priority ${testCase.priority}, status ${testCase.status}`}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            const btn = (e.currentTarget as HTMLElement).querySelector<HTMLButtonElement>('button[data-action="run"]');
+                            btn?.click();
+                            e.preventDefault();
+                          }
+                        }}
+                      >
                         <TableCell>
                           <div className="flex items-center gap-2">
                             {getStatusIcon(testCase.status)}
@@ -359,7 +370,7 @@ export const TestCaseManagement = () => {
                         </TableCell>
                         <TableCell>
                           <div className="flex gap-2">
-                            <Button variant="ghost" size="sm">
+                            <Button variant="ghost" size="sm" data-action="run" aria-label={`Run ${testCase.title}`}>
                               <Play className="h-4 w-4" />
                             </Button>
                             <Button variant="ghost" size="sm">

@@ -217,7 +217,7 @@ export const ErrorReportsManager = () => {
           {/* Filters */}
           <div className="flex gap-4 mb-6">
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-40">
+              <SelectTrigger className="w-40" aria-label="Filter by status">
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
               <SelectContent>
@@ -231,7 +231,7 @@ export const ErrorReportsManager = () => {
             </Select>
 
             <Select value={priorityFilter} onValueChange={setPriorityFilter}>
-              <SelectTrigger className="w-40">
+              <SelectTrigger className="w-40" aria-label="Filter by priority">
                 <SelectValue placeholder="Filter by priority" />
               </SelectTrigger>
               <SelectContent>
@@ -259,7 +259,18 @@ export const ErrorReportsManager = () => {
               </TableHeader>
               <TableBody>
                 {filteredReports.map((report) => (
-                  <TableRow key={report.id}>
+                  <TableRow
+                    key={report.id}
+                    tabIndex={0}
+                    aria-label={`Report ${report.title}, type ${report.error_type.replace('_',' ')}, priority ${report.priority}, status ${report.status}, reported ${format(new Date(report.reported_at), 'MMM d, HH:mm')}`}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        const btn = (e.currentTarget as HTMLElement).querySelector<HTMLButtonElement>('button[data-action="view"]');
+                        btn?.click();
+                        e.preventDefault();
+                      }
+                    }}
+                  >
                     <TableCell>
                       <div>
                         <div className="font-medium">{report.title}</div>
@@ -284,6 +295,7 @@ export const ErrorReportsManager = () => {
                               variant="ghost"
                               size="sm"
                               onClick={() => setSelectedReport(report)}
+                              data-action="view"
                             >
                               <Eye className="h-4 w-4" />
                             </Button>

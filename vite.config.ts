@@ -123,17 +123,42 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom'],
-          ui: ['@radix-ui/react-accordion', '@radix-ui/react-alert-dialog'],
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          ui: ['@radix-ui/react-accordion', '@radix-ui/react-alert-dialog', '@radix-ui/react-dialog'],
           charts: ['recharts'],
           supabase: ['@supabase/supabase-js'],
+          forms: ['react-hook-form', '@hookform/resolvers'],
+          icons: ['lucide-react', '@untitledui/icons'],
+          ai: ['@huggingface/transformers'],
+          // Separate large WASM files
+          wasm: ['@zxing/browser', '@zxing/library']
         },
+        // Optimize asset naming for better caching
+        chunkFileNames: (chunkInfo) => {
+          const facadeModuleId = chunkInfo.facadeModuleId ? 
+            chunkInfo.facadeModuleId.split('/').pop().replace(/\.[^/.]+$/, "") : 
+            "unknown";
+          return `assets/${facadeModuleId}-[hash].js`;
+        },
+        assetFileNames: (assetInfo) => {
+          const info = assetInfo.name.split('.');
+          let extType = info[info.length - 1];
+          if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(extType)) {
+            extType = 'img';
+          } else if (/woff|woff2|eot|ttf|otf/i.test(extType)) {
+            extType = 'fonts';
+          }
+          return `assets/${extType}/[name]-[hash][extname]`;
+        }
       },
     },
     target: 'esnext',
     minify: 'esbuild',
     sourcemap: mode === 'development',
     chunkSizeWarningLimit: 1000,
+    // Optimize for production
+    cssCodeSplit: true,
+    assetsInlineLimit: 4096, // Inline small assets
   },
   optimizeDeps: {
     include: ['react', 'react-dom', '@supabase/supabase-js', 'recharts'],

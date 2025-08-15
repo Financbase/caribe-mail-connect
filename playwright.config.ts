@@ -76,6 +76,8 @@ export default defineConfig({
     
     // Default viewport size
     viewport: { width: 1280, height: 720 },
+    // Storage access permissions to fix mobile localStorage denial in some contexts
+    javaScriptEnabled: true,
     
     // Ignore HTTPS errors (useful for local development)
     ignoreHTTPSErrors: true,
@@ -91,8 +93,8 @@ export default defineConfig({
       // Timezone
       timezoneId: 'America/Puerto_Rico',
       
-      // Permissions
-      permissions: ['geolocation', 'notifications', 'camera'],
+      // Permissions (avoid unsupported camera permission on Mobile Safari context)
+      permissions: ['geolocation', 'notifications'],
       
       // Geolocation (San Juan, Puerto Rico)
       geolocation: { latitude: 18.4655, longitude: -66.1057 },

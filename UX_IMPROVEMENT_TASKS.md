@@ -22,11 +22,11 @@
   - Screen reader smoke test passes (NVDA/VoiceOver)
 
 - Sprint-ready subtasks
-  - [ ] ARIA audit sweep (Owner: [Name], Due: [Date])
+  - [x] ARIA audit sweep (Owner: FE, Due: [Set])
     - Criteria: No missing/incorrect role, name, state on buttons/links/menus; form inputs have labels/aria-describedby.
-  - [ ] Keyboard navigation patterns (Owner: [Name], Due: [Date])
+  - [x] Keyboard navigation patterns (Owner: FE, Due: [Set])
     - Criteria: Tab order logical; Arrow key navigation for menus/lists; Escape closes overlays.
-  - [ ] Focus management in modals/dialogs (Owner: [Name], Due: [Date])
+  - [x] Focus management in modals/dialogs (Owner: FE, Due: [Set])
     - Criteria: Focus trap; initial focus set; return focus on close; inert background.
   - [x] Add skip links (Owner: UX, Due: [Set])
     - Criteria: Visible on focus; targets main, nav, content regions.
@@ -51,7 +51,7 @@
   - [x] Image optimization (Owner: FE, Due: [Set])
     - Criteria: Serve responsive sizes; lazy="loading"; caching headers; modern formats.
     - Implementation: `src/components/mobile/LazyImage.tsx`, `src/components/offline/CachedImage.tsx`
-  - [ ] Code splitting & bundle hygiene (Owner: [Name], Due: [Date])
+  - [x] Code splitting & bundle hygiene (Owner: FE, Due: [Set])
     - Criteria: Route-level chunks; vendor splitting; remove unused deps; tree shake.
   - [x] Performance telemetry (Owner: FE, Due: [Set])
     - Criteria: Capture Web Vitals; create dashboard; thresholds with alerts.
@@ -91,11 +91,11 @@
   - No horizontal scroll/overflow on common pages
 
 - Sprint-ready subtasks
-  - [ ] Touch target audit & fixes (Owner: [Name], Due: [Date])
+  - [x] Touch target audit & fixes (Owner: FE, Due: [Set])
     - Criteria: Buttons/inputs/links >= 44x44; spacing tokens updated.
   - [ ] Responsive layout QA matrix (Owner: [Name], Due: [Date])
     - Criteria: Screenshots/tests for key pages on breakpoints; issues resolved.
-  - [ ] Mobile gestures (Owner: [Name], Due: [Date])
+  - [x] Mobile gestures (Owner: FE, Due: [Set])
     - Criteria: Pull-to-refresh, swipe actions (where applicable), with a11y fallbacks.
   - [ ] Mobile perf (Owner: [Name], Due: [Date])
     - Criteria: Reduce JS on mobile; defer non-critical; image preconnects.
@@ -259,16 +259,16 @@
 
 ## 📌 Sprint 1 Backlog (Fill Owners/Due Dates)
 
-- [ ] ARIA audit sweep (Owner: [Name], Due: [Date])
+  - [x] ARIA audit sweep (Owner: FE, Due: [Set])
 - [ ] Keyboard navigation patterns (Owner: [Name], Due: [Date])
 - [ ] Focus management in modals/dialogs (Owner: [Name], Due: [Date])
 - [x] Add skip links (Owner: UX, Due: [Set])
-- [ ] List virtualization/lazy loading (Owner: [Name], Due: [Date])
+  - [x] List virtualization/lazy loading (Owner: FE, Due: [Set])
 - [x] Skeleton loading states (Owner: FE, Due: [Set])
 - [ ] Code splitting & bundle hygiene (Owner: [Name], Due: [Date])
 - [x] Error boundaries (Owner: FE, Due: [Set])
 - [ ] Error copy audit + standards (Owner: [Name], Due: [Date])
-- [ ] Retry/backoff utilities (Owner: [Name], Due: [Date])
+  - [x] Retry/backoff utilities (Owner: FE, Due: [Set])
 
 ## 📝 Notes
 

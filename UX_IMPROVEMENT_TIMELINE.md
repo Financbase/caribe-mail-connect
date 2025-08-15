@@ -15,8 +15,8 @@
 
 #### Accessibility Enhancements
 
-- [x] Add ARIA labels to key interactive elements (Quick Actions, Command palette, Dialogs; continue sweeping components)
-- [x] Implement keyboard navigation patterns (Quick Actions menu + Command list; BottomNavigation supports Escape/arrow; virtualized lists)
+- [x] Add ARIA labels to key interactive elements (app-wide coverage across Auth, Admin, QA, Documents, Billing, Security, Inventory, Virtual Mail, and Upload flows)
+- [x] Implement keyboard navigation patterns (Quick Actions menu + Command list; BottomNavigation supports Escape/arrow; virtualized lists; applied to Admin and QA tables/lists including Audit Logs, Error Reports, Test Cases, Restore Points, User Feedback)
 - [x] Enhance focus management in modals and dialogs (auto-wired `aria-labelledby`/`aria-describedby` in `src/components/ui/dialog.tsx`)
 - [x] Add skip links for main content areas (implemented in `src/components/a11y/SkipLinks.tsx`)
 - [ ] Test with screen readers and fix issues

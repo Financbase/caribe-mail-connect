@@ -1,0 +1,18 @@
+{
+  "timestamp": "2025-08-13T20:04:45.619Z",
+  "summary": {
+    "totalIssues": 0,
+    "warnings": 0,
+    "suggestions": 0,
+    "fixesApplied": 0
+  },
+  "issues": [],
+  "fixes": [],
+  "recommendations": [
+    "Monitor dead tuple ratios regularly",
+    "Review index usage periodically",
+    "Consider partitioning for large tables",
+    "Implement regular maintenance schedules",
+    "Monitor RLS policy performance"
+  ]
+}

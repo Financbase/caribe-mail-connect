@@ -31,12 +31,12 @@ export function RevenueChart({ data }: RevenueChartProps) {
     }).format(value);
   };
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: unknown) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-background border border-border rounded-lg p-3 shadow-lg">
           <p className="font-medium mb-2">{formatMonth(label)}</p>
-          {payload.map((entry: any, index: number) => (
+          {payload.map((entry: unknown, index: number) => (
             <p key={index} style={{ color: entry.color }} className="text-sm">
               {entry.name}: {formatCurrency(entry.value)}
             </p>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -7,8 +7,10 @@ import { Mail, Package, FileText, Clock, AlertCircle, Eye, MoreHorizontal } from
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
+import { FixedSizeList as List } from 'react-window';
 import { formatDate } from '@/lib/utils';
 import type { MailPiece } from '@/hooks/useVirtualMailbox';
+import { CachedImage } from '@/components/offline/CachedImage';
 
 interface MailPieceListProps {
   mailPieces: MailPiece[];
@@ -86,6 +88,85 @@ export function MailPieceList({ mailPieces, loading, onActionRequest }: MailPiec
     );
   }
 
+  const itemCount = mailPieces.length;
+  const itemSize = 56; // approximate row height
+
+  const Row = ({ index, style }: { index: number; style: React.CSSProperties }) => {
+    const piece = mailPieces[index];
+    return (
+      <TableRow key={piece.id} className="cursor-pointer hover:bg-muted/50" style={style}>
+        <TableCell>
+          <div className="flex items-center gap-1">
+            {getMailTypeIcon(piece.mail_type)}
+            {getPriorityIcon(piece.priority_level)}
+          </div>
+        </TableCell>
+        <TableCell className="font-medium">{piece.piece_number}</TableCell>
+        <TableCell>
+          <div>
+            <div className="font-medium">{piece.sender_name || 'Unknown'}</div>
+            {piece.sender_address && (
+              <div className="text-sm text-muted-foreground line-clamp-1">
+                {piece.sender_address}
+              </div>
+            )}
+          </div>
+        </TableCell>
+        <TableCell>
+          <div className="flex items-center gap-2">
+            {getMailTypeIcon(piece.mail_type)}
+            <span className="capitalize">{piece.mail_type}</span>
+            {piece.size_category !== 'standard' && (
+              <Badge variant="outline" className="text-xs">
+                {piece.size_category}
+              </Badge>
+            )}
+          </div>
+        </TableCell>
+        <TableCell>{formatDate(piece.received_date)}</TableCell>
+        <TableCell>{getStatusBadge(piece.status)}</TableCell>
+        <TableCell>
+          {piece.photo_exterior_url ? (
+            <div className="flex items-center gap-2">
+              <CachedImage
+                src={piece.photo_thumbnail_url || piece.photo_exterior_url}
+                alt="Mail exterior"
+                className="w-12 h-8 object-cover rounded border"
+              />
+              <Button variant="ghost" size="sm">
+                <Eye className="h-3 w-3" />
+              </Button>
+            </div>
+          ) : (
+            <Badge variant="outline" className="text-xs">
+              {isSpanish ? 'Sin foto' : 'No photo'}
+            </Badge>
+          )}
+        </TableCell>
+        <TableCell>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm">
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => onActionRequest(piece.id)}>
+                {isSpanish ? 'Crear Acción' : 'Create Action'}
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                {isSpanish ? 'Ver Detalles' : 'View Details'}
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                {isSpanish ? 'Editar' : 'Edit'}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </TableCell>
+      </TableRow>
+    );
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -109,91 +190,14 @@ export function MailPieceList({ mailPieces, loading, onActionRequest }: MailPiec
             </TableRow>
           </TableHeader>
           <TableBody>
-            {mailPieces.map((piece) => (
-              <TableRow key={piece.id} className="cursor-pointer hover:bg-muted/50">
-                <TableCell>
-                  <div className="flex items-center gap-1">
-                    {getMailTypeIcon(piece.mail_type)}
-                    {getPriorityIcon(piece.priority_level)}
-                  </div>
-                </TableCell>
-                
-                <TableCell className="font-medium">
-                  {piece.piece_number}
-                </TableCell>
-                
-                <TableCell>
-                  <div>
-                    <div className="font-medium">{piece.sender_name || 'Unknown'}</div>
-                    {piece.sender_address && (
-                      <div className="text-sm text-muted-foreground line-clamp-1">
-                        {piece.sender_address}
-                      </div>
-                    )}
-                  </div>
-                </TableCell>
-                
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    {getMailTypeIcon(piece.mail_type)}
-                    <span className="capitalize">{piece.mail_type}</span>
-                    {piece.size_category !== 'standard' && (
-                      <Badge variant="outline" className="text-xs">
-                        {piece.size_category}
-                      </Badge>
-                    )}
-                  </div>
-                </TableCell>
-                
-                <TableCell>
-                  {formatDate(piece.received_date)}
-                </TableCell>
-                
-                <TableCell>
-                  {getStatusBadge(piece.status)}
-                </TableCell>
-                
-                <TableCell>
-                  {piece.photo_exterior_url ? (
-                    <div className="flex items-center gap-2">
-                      <img 
-                        src={piece.photo_thumbnail_url || piece.photo_exterior_url}
-                        alt="Mail exterior"
-                        className="w-12 h-8 object-cover rounded border"
-                      />
-                      <Button variant="ghost" size="sm">
-                        <Eye className="h-3 w-3" />
-                      </Button>
-                    </div>
-                  ) : (
-                    <Badge variant="outline" className="text-xs">
-                      {isSpanish ? 'Sin foto' : 'No photo'}
-                    </Badge>
-                  )}
-                </TableCell>
-                
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="sm">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => onActionRequest(piece.id)}>
-                        {isSpanish ? 'Crear Acción' : 'Create Action'}
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        {isSpanish ? 'Ver Detalles' : 'View Details'}
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        {isSpanish ? 'Editar' : 'Edit'}
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))}
+            <List
+              height={Math.min(480, itemCount * itemSize)}
+              width={'100%'}
+              itemCount={itemCount}
+              itemSize={itemSize}
+            >
+              {({ index, style }) => <Row index={index} style={style} />}
+            </List>
           </TableBody>
         </Table>
       </CardContent>

@@ -14,6 +14,8 @@ import { mockNotifications, mockNotificationBatches } from '@/data/notificationD
 import { mockPackages } from '@/data/mockData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { MobileHeader } from '@/components/MobileHeader';
+import { VirtualizedList } from '@/components/lists/VirtualizedList';
+import { VirtualizedList } from '@/components/lists/VirtualizedList';
 
 interface NotificationsProps {
   onNavigate: (page: string) => void;
@@ -169,24 +171,29 @@ const Notifications = ({ onNavigate }: NotificationsProps) => {
               </DialogHeader>
               
               <div className="space-y-4">
-                <div className="max-h-60 overflow-y-auto space-y-2">
-                  {readyPackages.map(pkg => (
-                    <div key={pkg.id} className="flex items-center space-x-2 p-2 border rounded">
-                      <Checkbox
-                        id={pkg.id}
-                        checked={selectedPackages.includes(pkg.id)}
-                        onCheckedChange={(checked) => 
-                          handlePackageSelection(pkg.id, checked as boolean)
-                        }
-                      />
-                      <Label htmlFor={pkg.id} className="flex-1 cursor-pointer">
-                        <div className="font-medium">{pkg.customerName}</div>
-                        <div className="text-sm text-muted-foreground">
-                          {pkg.trackingNumber} • {pkg.carrier}
-                        </div>
-                      </Label>
-                    </div>
-                  ))}
+                <div className="max-h-60 overflow-y-auto">
+                  <VirtualizedList
+                    items={readyPackages}
+                    itemHeight={56}
+                    ariaLabel={language === 'en' ? 'Ready packages' : 'Paquetes listos'}
+                    renderItem={(pkg) => (
+                      <div key={pkg.id} className="flex items-center space-x-2 p-2 border rounded">
+                        <Checkbox
+                          id={pkg.id}
+                          checked={selectedPackages.includes(pkg.id)}
+                          onCheckedChange={(checked) => 
+                            handlePackageSelection(pkg.id, checked as boolean)
+                          }
+                        />
+                        <Label htmlFor={pkg.id} className="flex-1 cursor-pointer">
+                          <div className="font-medium">{pkg.customerName}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {pkg.trackingNumber} • {pkg.carrier}
+                          </div>
+                        </Label>
+                      </div>
+                    )}
+                  />
                 </div>
                 
                 <div className="flex justify-between items-center pt-4">
@@ -322,8 +329,12 @@ const Notifications = ({ onNavigate }: NotificationsProps) => {
           </TabsList>
 
           <TabsContent value="notifications" className="space-y-4">
-            {filteredNotifications.map(notification => (
-              <Card key={notification.id}>
+            <VirtualizedList
+              items={filteredNotifications}
+              itemHeight={156}
+              ariaLabel={language === 'en' ? 'Notifications' : 'Notificaciones'}
+              renderItem={(notification) => (
+                <Card key={notification.id}>
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between">
                     <div className="space-y-1">
@@ -379,8 +390,9 @@ const Notifications = ({ onNavigate }: NotificationsProps) => {
                     )}
                   </div>
                 </CardContent>
-              </Card>
-            ))}
+                </Card>
+              )}
+            />
             
             {filteredNotifications.length === 0 && (
               <Card>
@@ -400,8 +412,12 @@ const Notifications = ({ onNavigate }: NotificationsProps) => {
           </TabsContent>
 
           <TabsContent value="batches" className="space-y-4">
-            {mockNotificationBatches.map(batch => (
-              <Card key={batch.id}>
+            <VirtualizedList
+              items={mockNotificationBatches}
+              itemHeight={112}
+              ariaLabel={language === 'en' ? 'Batch history' : 'Historial de lotes'}
+              renderItem={(batch) => (
+                <Card key={batch.id}>
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <div>
@@ -433,8 +449,9 @@ const Notifications = ({ onNavigate }: NotificationsProps) => {
                     )}
                   </div>
                 </CardContent>
-              </Card>
-            ))}
+                </Card>
+              )}
+            />
           </TabsContent>
         </Tabs>
       </div>

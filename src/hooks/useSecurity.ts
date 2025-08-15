@@ -11,7 +11,7 @@ export interface LoginAttempt {
   user_agent?: string;
   attempt_result: 'success' | 'failed' | 'blocked';
   failure_reason?: string;
-  location_data: any;
+  location_data: unknown;
   created_at: string;
 }
 
@@ -21,8 +21,8 @@ export interface UserSession {
   session_token: string;
   ip_address: string;
   user_agent?: string;
-  device_info: any;
-  location_data: any;
+  device_info: unknown;
+  location_data: unknown;
   is_active: boolean;
   last_activity: string;
   expires_at: string;
@@ -36,7 +36,7 @@ export interface SecurityAlert {
   severity: 'low' | 'medium' | 'high' | 'critical';
   title: string;
   description: string;
-  metadata: any;
+  metadata: unknown;
   ip_address?: string;
   status: 'active' | 'investigating' | 'resolved' | 'false_positive';
   resolved_by?: string;
@@ -60,7 +60,7 @@ export interface GDPRRequest {
   user_id: string;
   request_type: 'export' | 'deletion' | 'portability' | 'rectification';
   status: 'pending' | 'processing' | 'completed' | 'rejected';
-  requested_data: any;
+  requested_data: unknown;
   processed_by?: string;
   processed_at?: string;
   completion_date?: string;
@@ -287,7 +287,7 @@ export function useSecurity() {
     }
   };
 
-  const createGDPRRequest = async (requestType: 'export' | 'deletion' | 'portability' | 'rectification', requestedData?: any) => {
+  const createGDPRRequest = async (requestType: 'export' | 'deletion' | 'portability' | 'rectification', requestedData?: unknown) => {
     if (!user) return;
     
     try {

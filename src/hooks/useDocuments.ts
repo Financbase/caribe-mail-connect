@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
-import type { Database } from '@/integrations/supabase/types';
+import { setPlaceholder } from '@/lib/thumbCache';
+import type { Database, Json } from '@/integrations/supabase/types';
 
 type DocumentFolder = Database['public']['Tables']['document_folders']['Row'];
 type Document = Database['public']['Tables']['documents']['Row'];
@@ -41,7 +42,7 @@ export function useDocuments() {
 
       if (error) throw error;
       setDocuments(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching documents:', error);
       toast({
         title: 'Error',
@@ -63,7 +64,7 @@ export function useDocuments() {
 
       if (error) throw error;
       setFolders(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching folders:', error);
       toast({
         title: 'Error',
@@ -86,7 +87,7 @@ export function useDocuments() {
 
       if (error) throw error;
       setSearchResults(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error searching documents:', error);
       toast({
         title: 'Error',
@@ -111,7 +112,7 @@ export function useDocuments() {
 
       if (error) throw error;
       setSearchResults(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error in full-text search:', error);
       // Fallback to regular search
       searchDocuments(searchTerm);
@@ -127,6 +128,48 @@ export function useDocuments() {
   ): Promise<string | null> => {
     try {
       setLoading(true);
+
+      // Generate tiny placeholder for images (for blur-up), best-effort
+      let tinyPlaceholder: string | null = null;
+      if (file.type?.startsWith('image/') && typeof window !== 'undefined') {
+        try {
+          tinyPlaceholder = await (async () => {
+            // Read file to data URL
+            const dataUrl: string = await new Promise((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onload = () => resolve(reader.result as string);
+              reader.onerror = () => reject(new Error('read failed'));
+              reader.readAsDataURL(file);
+            });
+            // Draw downscaled to small canvas
+            const img = new Image();
+            const smallUrl: string = await new Promise((resolve) => {
+              img.onload = () => {
+                const maxSide = 24;
+                const scale = Math.min(maxSide / img.width, maxSide / img.height, 1);
+                const w = Math.max(1, Math.floor(img.width * scale));
+                const h = Math.max(1, Math.floor(img.height * scale));
+                const canvas = document.createElement('canvas');
+                canvas.width = w; canvas.height = h;
+                const ctx = canvas.getContext('2d');
+                if (!ctx) { resolve(dataUrl); return; }
+                ctx.drawImage(img, 0, 0, w, h);
+                try {
+                  resolve(canvas.toDataURL('image/jpeg', 0.6));
+                } catch {
+                  resolve(dataUrl);
+                }
+              };
+              img.onerror = () => resolve(dataUrl);
+              img.src = dataUrl;
+            });
+            return smallUrl;
+          })();
+        } catch {
+          // ignore placeholder errors
+          tinyPlaceholder = null;
+        }
+      }
 
       // Generate unique file path
       const fileExt = file.name.split('.').pop();
@@ -171,6 +214,15 @@ export function useDocuments() {
 
       if (docError) throw docError;
 
+      // Persist placeholder mapped to document id for blur-up in the grid
+      if (tinyPlaceholder) {
+        try {
+          await setPlaceholder(docData.id, tinyPlaceholder);
+        } catch {
+          // best-effort only
+        }
+      }
+
       // Log access
       await logDocumentAccess(docData.id, 'upload');
 
@@ -182,7 +234,7 @@ export function useDocuments() {
       // Refresh documents
       await fetchDocuments();
       return docData.id;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error uploading document:', error);
       toast({
         title: 'Error',
@@ -211,7 +263,7 @@ export function useDocuments() {
 
       await fetchFolders();
       return true;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error creating folder:', error);
       toast({
         title: 'Error',
@@ -241,7 +293,7 @@ export function useDocuments() {
       });
 
       return true;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error updating document:', error);
       toast({
         title: 'Error',
@@ -272,7 +324,7 @@ export function useDocuments() {
       });
 
       return true;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error deleting document:', error);
       toast({
         title: 'Error',
@@ -292,21 +344,21 @@ export function useDocuments() {
 
       if (error) throw error;
       return data.signedUrl;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error getting document URL:', error);
       return null;
     }
   };
 
   // Log document access
-  const logDocumentAccess = async (documentId: string, action: string, details?: any) => {
+  const logDocumentAccess = async (documentId: string, action: string, details?: unknown) => {
     try {
       await supabase
         .from('document_access_logs')
         .insert({
           document_id: documentId,
           action,
-          details: details || {},
+          details: (details as Json) ?? ({} as Json),
           ip_address: '127.0.0.1', // In a real app, get actual IP
           user_agent: navigator.userAgent,
         });
@@ -331,7 +383,7 @@ export function useDocuments() {
 
       if (error) throw error;
       return data || [];
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching expiring documents:', error);
       return [];
     }
@@ -350,7 +402,7 @@ export function useDocuments() {
 
       if (error) throw error;
       return data || [];
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching documents by category:', error);
       return [];
     } finally {
@@ -370,7 +422,7 @@ export function useDocuments() {
 
       if (error) throw error;
       return data || [];
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching customer documents:', error);
       return [];
     }
@@ -379,7 +431,7 @@ export function useDocuments() {
   useEffect(() => {
     fetchFolders();
     fetchDocuments();
-  }, []);
+  }, [fetchFolders, fetchDocuments]);
 
   return {
     documents,

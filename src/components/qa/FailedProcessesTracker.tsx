@@ -120,7 +120,18 @@ export const FailedProcessesTracker = () => {
               </TableHeader>
               <TableBody>
                 {filteredProcesses.map((process) => (
-                  <TableRow key={process.id}>
+                  <TableRow
+                    key={process.id}
+                    tabIndex={0}
+                    aria-label={`Process ${process.process_name}`}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        const btn = (e.currentTarget as HTMLElement).querySelector<HTMLElement>('button')
+                        btn?.click()
+                        e.preventDefault()
+                      }
+                    }}
+                  >
                     <TableCell>
                       <div className="flex items-center gap-2">
                         {getSeverityIcon(process.severity)}

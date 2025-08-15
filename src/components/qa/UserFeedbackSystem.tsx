@@ -59,6 +59,7 @@ export const UserFeedbackWidget = () => {
             <Button
               size="lg"
               className="rounded-full h-14 w-14 shadow-lg hover:shadow-xl transition-all duration-200"
+              aria-label="Open feedback form"
             >
               <MessageSquare className="h-6 w-6" />
             </Button>
@@ -71,7 +72,7 @@ export const UserFeedbackWidget = () => {
               {/* Feedback Type Selection */}
               <div>
                 <label className="text-sm font-medium mb-2 block">What type of feedback?</label>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-2" aria-label="Feedback type">
                   {feedbackTypes.map((type) => {
                     const IconComponent = type.icon;
                     return (
@@ -84,6 +85,8 @@ export const UserFeedbackWidget = () => {
                             ? 'border-primary bg-primary/10'
                             : 'border-border hover:bg-muted'
                         }`}
+                        
+                        aria-label={type.label}
                       >
                         <div className="flex items-center gap-2">
                           <IconComponent className={`h-4 w-4 ${type.color}`} />
@@ -100,9 +103,9 @@ export const UserFeedbackWidget = () => {
                 <label className="text-sm font-medium">Category</label>
                 <Select
                   value={feedback.category}
-                  onValueChange={(value: any) => setFeedback({ ...feedback, category: value })}
+                  onValueChange={(value: unknown) => setFeedback({ ...feedback, category: value })}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger aria-label="Feedback category">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -220,7 +223,7 @@ export const UserFeedbackManager = () => {
         {/* Filters */}
         <div className="flex gap-4 mb-6">
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-40">
+            <SelectTrigger className="w-40" aria-label="Filter feedback by status">
               <SelectValue placeholder="Filter by status" />
             </SelectTrigger>
             <SelectContent>
@@ -234,7 +237,7 @@ export const UserFeedbackManager = () => {
           </Select>
 
           <Select value={typeFilter} onValueChange={setTypeFilter}>
-            <SelectTrigger className="w-40">
+            <SelectTrigger className="w-40" aria-label="Filter feedback by type">
               <SelectValue placeholder="Filter by type" />
             </SelectTrigger>
             <SelectContent>
@@ -251,7 +254,15 @@ export const UserFeedbackManager = () => {
         {/* Feedback Cards */}
         <div className="space-y-4">
           {filteredFeedback.map((feedback) => (
-            <Card key={feedback.id} className="border-l-4 border-l-primary">
+            <Card key={feedback.id} className="border-l-4 border-l-primary" tabIndex={0} aria-label={`Feedback ${feedback.title}, type ${feedback.feedback_type.replace('_',' ')}, status ${feedback.status}, submitted ${new Date(feedback.created_at).toLocaleDateString()}`}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  const btn = (e.currentTarget as HTMLElement).querySelector<HTMLButtonElement>('button[data-action="view"]');
+                  btn?.click();
+                  e.preventDefault();
+                }
+              }}
+            >
               <CardContent className="p-4">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
@@ -272,7 +283,7 @@ export const UserFeedbackManager = () => {
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <Button variant="ghost" size="sm">
+                    <Button variant="ghost" size="sm" data-action="view" aria-label={`View details for ${feedback.title}`}>
                       View Details
                     </Button>
                     <Button variant="ghost" size="sm">

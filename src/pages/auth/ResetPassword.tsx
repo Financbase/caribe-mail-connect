@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { AriaInput } from '@/components/ui/aria-components';
 import { LanguageToggle } from '@/components/LanguageToggle';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
+import { getFriendlyAuthError } from '@/lib/errorCopy';
 import { Package, ArrowLeft } from 'lucide-react';
 
 export default function ResetPassword() {
@@ -27,9 +27,10 @@ export default function ResetPassword() {
       });
 
       if (error) {
+        const friendly = getFriendlyAuthError(error.message, 'reset', 'en');
         toast({
-          title: t('common.error'),
-          description: error.message,
+          title: friendly.title,
+          description: friendly.description,
           variant: 'destructive',
         });
       } else {
@@ -131,18 +132,15 @@ export default function ResetPassword() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">{t('auth.email')}</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="your.email@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="h-12"
-                />
-              </div>
+              <AriaInput
+                label={t('auth.email')}
+                type="email"
+                placeholder="your.email@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="h-12"
+              />
 
               <Button
                 type="submit"

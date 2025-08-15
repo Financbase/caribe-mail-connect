@@ -136,7 +136,17 @@ export function ScanningQueue({ queueItems, loading }: ScanningQueueProps) {
               </TableHeader>
               <TableBody>
                 {queueItems.map((item, index) => (
-                  <TableRow key={item.id}>
+                  <TableRow
+                    key={item.id}
+                    tabIndex={0}
+                    aria-label={`${isSpanish ? 'Elemento' : 'Item'} #${item.queue_position}, ${isSpanish ? 'prioridad' : 'priority'} ${item.priority_level}, ${isSpanish ? 'estado' : 'status'} ${item.status}`}
+                    onKeyDown={(e) => {
+                      if ((e.key === 'Enter' || e.key === ' ') && item.status === 'queued') {
+                        startScanning(item);
+                        e.preventDefault();
+                      }
+                    }}
+                  >
                     <TableCell>
                       <Badge variant="outline">#{item.queue_position}</Badge>
                     </TableCell>
@@ -170,13 +180,14 @@ export function ScanningQueue({ queueItems, loading }: ScanningQueueProps) {
                           size="sm"
                           onClick={() => startScanning(item)}
                           className="flex items-center gap-1"
+                          aria-label={isSpanish ? `Iniciar escaneo para elemento #${item.queue_position}` : `Start scanning for item #${item.queue_position}`}
                         >
                           <Play className="h-3 w-3" />
                           {isSpanish ? 'Iniciar' : 'Start'}
                         </Button>
                       )}
                       {item.status === 'completed' && (
-                        <Button size="sm" variant="outline">
+                        <Button size="sm" variant="outline" aria-label={isSpanish ? `Descargar PDF para elemento #${item.queue_position}` : `Download PDF for item #${item.queue_position}`}>
                           <Download className="h-3 w-3 mr-1" />
                           PDF
                         </Button>

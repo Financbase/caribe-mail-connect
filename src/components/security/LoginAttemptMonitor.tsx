@@ -140,7 +140,7 @@ export function LoginAttemptMonitor() {
             </div>
             
             <Select value={filterResult} onValueChange={setFilterResult}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-[180px]" aria-label="Filtrar por resultado">
                 <SelectValue placeholder="Filtrar por resultado" />
               </SelectTrigger>
               <SelectContent>
@@ -152,7 +152,7 @@ export function LoginAttemptMonitor() {
             </Select>
 
             <Select value={selectedTimeRange} onValueChange={setSelectedTimeRange}>
-              <SelectTrigger className="w-[150px]">
+              <SelectTrigger className="w-[150px]" aria-label="Rango de tiempo">
                 <SelectValue placeholder="Rango de tiempo" />
               </SelectTrigger>
               <SelectContent>
@@ -190,7 +190,11 @@ export function LoginAttemptMonitor() {
               </TableHeader>
               <TableBody>
                 {filteredAttempts.map((attempt) => (
-                  <TableRow key={attempt.id}>
+                  <TableRow
+                    key={attempt.id}
+                    tabIndex={0}
+                    aria-label={`Intento ${attempt.email} ${attempt.ip_address} ${attempt.attempt_result}`}
+                  >
                     <TableCell>
                       <div className="flex items-center space-x-2">
                         {getResultIcon(attempt.attempt_result)}

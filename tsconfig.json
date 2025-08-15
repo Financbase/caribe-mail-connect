@@ -16,5 +16,8 @@
     "allowJs": true,
     "noUnusedLocals": false,
     "strictNullChecks": false
-  }
+  },
+  "include": [
+    "types/**/*.d.ts"
+  ]
 }

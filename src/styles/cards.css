@@ -1,0 +1,434 @@
+/* Enhanced Card Styles */
+/* Caribbean-themed card components for PRMCMS */
+
+/* Loading states for cards */
+.card-loading {
+  position: relative;
+  pointer-events: none;
+}
+
+.card-loading::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  z-index: 10;
+  border-radius: inherit;
+  backdrop-filter: blur(2px);
+}
+
+.card-loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 2px solid #0B5394;
+  animation: card-spin 1s linear infinite;
+  z-index: 11;
+}
+
+@keyframes card-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Caribbean card variant */
+.card-caribbean {
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 1) 0%, 
+    rgba(239, 246, 255, 1) 100%);
+  border: 1px solid rgba(11, 83, 148, 0.2);
+  box-shadow: 0 4px 6px rgba(11, 83, 148, 0.1);
+}
+
+.card-caribbean:hover {
+  box-shadow: 0 8px 15px rgba(11, 83, 148, 0.15);
+}
+
+/* Interactive card animations */
+.card-interactive {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.card-interactive:active {
+  transform: translateY(0);
+  transition-duration: 0.1s;
+}
+
+/* Card size variants */
+.card-sm {
+  max-width: 20rem; /* 320px */
+}
+
+.card-md {
+  max-width: 28rem; /* 448px */
+}
+
+.card-lg {
+  max-width: 32rem; /* 512px */
+}
+
+.card-xl {
+  max-width: 36rem; /* 576px */
+}
+
+/* Mobile responsiveness */
+@media (max-width: 640px) {
+  .card-sm,
+  .card-md,
+  .card-lg,
+  .card-xl {
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
+/* Card header enhancements */
+.card-header-enhanced {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1.5rem 1.5rem 0 1.5rem;
+}
+
+.card-avatar {
+  flex-shrink: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-action {
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+/* Status badges in cards */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.status-active {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.status-inactive {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.status-overdue {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.status-received {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.status-ready {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.status-delivered {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.status-returned {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+/* Urgent package styling */
+.package-urgent {
+  border: 2px solid #fed7aa;
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  position: relative;
+}
+
+.package-urgent::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #f59e0b, #d97706, #f59e0b);
+  border-radius: inherit;
+  z-index: -1;
+  animation: urgent-pulse 2s ease-in-out infinite;
+}
+
+@keyframes urgent-pulse {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* Stat card styling */
+.stat-card {
+  text-align: left;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #111827;
+  font-family: 'Montserrat', 'Inter', system-ui, sans-serif;
+  margin: 0.25rem 0;
+}
+
+.stat-change {
+  font-size: 0.75rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.stat-change-positive {
+  color: #059669;
+}
+
+.stat-change-negative {
+  color: #dc2626;
+}
+
+.stat-icon {
+  font-size: 2rem;
+  opacity: 0.8;
+}
+
+/* Notification card styling */
+.notification-card {
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.notification-unread {
+  border-left: 4px solid #0B5394;
+  background: linear-gradient(90deg, rgba(11, 83, 148, 0.05) 0%, transparent 100%);
+}
+
+.notification-unread::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 8px;
+  height: 8px;
+  background: #0B5394;
+  border-radius: 50%;
+}
+
+/* Card image styling */
+.card-image {
+  overflow: hidden;
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.card-interactive .card-image img:hover {
+  transform: scale(1.05);
+}
+
+/* Aspect ratio utilities for card images */
+.aspect-square {
+  aspect-ratio: 1 / 1;
+}
+
+.aspect-video {
+  aspect-ratio: 16 / 9;
+}
+
+.aspect-4-3 {
+  aspect-ratio: 4 / 3;
+}
+
+.aspect-3-2 {
+  aspect-ratio: 3 / 2;
+}
+
+/* Text truncation utilities */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Focus management for interactive cards */
+.card-interactive:focus {
+  outline: 2px solid #0B5394;
+  outline-offset: 2px;
+}
+
+.card-interactive:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Disabled card state */
+.card-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Card grid layouts */
+.card-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.card-grid-1 {
+  grid-template-columns: 1fr;
+}
+
+.card-grid-2 {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.card-grid-3 {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.card-grid-4 {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+/* Mobile adjustments */
+@media (max-width: 640px) {
+  .card-grid-2,
+  .card-grid-3,
+  .card-grid-4 {
+    grid-template-columns: 1fr;
+  }
+  
+  .stat-value {
+    font-size: 1.5rem;
+  }
+  
+  .card-header-enhanced {
+    padding: 1rem 1rem 0 1rem;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .card-caribbean {
+    background: linear-gradient(135deg, 
+      rgba(31, 41, 55, 1) 0%, 
+      rgba(17, 24, 39, 1) 100%);
+    border-color: rgba(59, 130, 246, 0.3);
+  }
+  
+  .stat-value {
+    color: #f9fafb;
+  }
+  
+  .status-active {
+    background-color: rgba(34, 197, 94, 0.2);
+    color: #86efac;
+  }
+  
+  .status-inactive {
+    background-color: rgba(107, 114, 128, 0.2);
+    color: #d1d5db;
+  }
+  
+  .status-overdue {
+    background-color: rgba(239, 68, 68, 0.2);
+    color: #fca5a5;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .card-interactive {
+    border-width: 2px;
+  }
+  
+  .status-badge {
+    border: 1px solid currentColor;
+  }
+  
+  .notification-unread {
+    border-left-width: 6px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .card-interactive,
+  .card-image img,
+  .notification-card {
+    transition: none;
+  }
+  
+  .urgent-pulse {
+    animation: none;
+  }
+  
+  .card-loading::after {
+    animation: none;
+  }
+}
+
+/* Print styles */
+@media print {
+  .card-interactive:hover {
+    transform: none;
+    box-shadow: none;
+  }
+  
+  .card-loading::before,
+  .card-loading::after {
+    display: none;
+  }
+  
+  .notification-unread::before {
+    display: none;
+  }
+}

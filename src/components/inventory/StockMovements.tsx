@@ -11,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { VirtualizedTable } from '@/components/ui/virtualized-table';
 import {
   Dialog,
   DialogContent,
@@ -148,6 +149,7 @@ export function StockMovements() {
                 value={selectedType}
                 onChange={(e) => setSelectedType(e.target.value)}
                 className="px-3 py-2 border border-input bg-background rounded-md text-sm"
+                aria-label={isSpanish ? 'Filtrar por tipo de movimiento' : 'Filter by movement type'}
               >
                 {movementTypes.map((type) => (
                   <option key={type.value} value={type.value}>
@@ -173,84 +175,11 @@ export function StockMovements() {
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{isSpanish ? 'Fecha' : 'Date'}</TableHead>
-                  <TableHead>{isSpanish ? 'Artículo' : 'Item'}</TableHead>
-                  <TableHead>{isSpanish ? 'Ubicación' : 'Location'}</TableHead>
-                  <TableHead>{isSpanish ? 'Tipo' : 'Type'}</TableHead>
-                  <TableHead className="text-right">{isSpanish ? 'Cantidad' : 'Quantity'}</TableHead>
-                  <TableHead>{isSpanish ? 'Referencia' : 'Reference'}</TableHead>
-                  <TableHead>{isSpanish ? 'Notas' : 'Notes'}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredMovements.map((movement) => (
-                  <TableRow key={movement.id}>
-                    <TableCell>
-                      <div className="text-sm">
-                        {isSpanish ? 
-                          new Date(movement.created_at).toLocaleDateString('es-ES') :
-                          new Date(movement.created_at).toLocaleDateString()
-                        }
-                        <br />
-                        <span className="text-muted-foreground text-xs">
-                          {new Date(movement.created_at).toLocaleTimeString([], { 
-                            hour: '2-digit', 
-                            minute: '2-digit' 
-                          })}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div>
-                        <p className="font-medium">{movement.inventory_items.name}</p>
-                        <p className="text-sm text-muted-foreground">{movement.inventory_items.sku}</p>
-                      </div>
-                    </TableCell>
-                    <TableCell>{movement.locations.name}</TableCell>
-                    <TableCell>
-                      <Badge variant={getMovementBadgeVariant(movement.movement_type)}>
-                        {getMovementTypeLabel(movement.movement_type)}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <span className={`font-medium ${
-                        movement.quantity_change > 0 ? 'text-green-600' : 'text-red-600'
-                      }`}>
-                        {movement.quantity_change > 0 ? '+' : ''}{movement.quantity_change}
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      {movement.reference_type && movement.reference_id && (
-                        <div className="text-sm">
-                          <span className="capitalize">{movement.reference_type}</span>
-                          <br />
-                          <span className="text-muted-foreground text-xs">
-                            {movement.reference_id.substring(0, 8)}...
-                          </span>
-                        </div>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {movement.notes && (
-                        <p className="text-sm text-muted-foreground max-w-xs truncate">
-                          {movement.notes}
-                        </p>
-                      )}
-                      {movement.reason_code && (
-                        <Badge variant="outline" className="text-xs mt-1">
-                          {movement.reason_code}
-                        </Badge>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-            
-            {filteredMovements.length === 0 && (
+            <VirtualizedTable
+              ariaLabel={isSpanish ? 'Historial de Movimientos' : 'Movement History'}
+              rows={filteredMovements}
+              rowHeight={64}
+              empty={(
               <div className="text-center py-8">
                 <ArrowUpDown className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                 <h3 className="text-lg font-medium">
@@ -261,6 +190,49 @@ export function StockMovements() {
                 </p>
               </div>
             )}
+              columns={[
+                { id: 'date', header: isSpanish ? 'Fecha' : 'Date', width: '12rem', cell: (m: any) => (
+                  <div className="text-sm">
+                    {isSpanish ? new Date(m.created_at).toLocaleDateString('es-ES') : new Date(m.created_at).toLocaleDateString()}
+                    <br />
+                    <span className="text-muted-foreground text-xs">
+                      {new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </span>
+                  </div>
+                ) },
+                { id: 'item', header: isSpanish ? 'Artículo' : 'Item', width: '1fr', cell: (m: any) => (
+                  <div>
+                    <p className="font-medium">{m.inventory_items.name}</p>
+                    <p className="text-sm text-muted-foreground">{m.inventory_items.sku}</p>
+                  </div>
+                ) },
+                { id: 'location', header: isSpanish ? 'Ubicación' : 'Location', width: '12rem', cell: (m: any) => m.locations.name },
+                { id: 'type', header: isSpanish ? 'Tipo' : 'Type', width: '10rem', cell: (m: any) => (
+                  <Badge variant={getMovementBadgeVariant(m.movement_type)}>{getMovementTypeLabel(m.movement_type)}</Badge>
+                ) },
+                { id: 'qty', header: isSpanish ? 'Cantidad' : 'Quantity', width: '10rem', align: 'right', cell: (m: any) => (
+                  <span className={`font-medium ${m.quantity_change > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    {m.quantity_change > 0 ? '+' : ''}{m.quantity_change}
+                  </span>
+                ) },
+                { id: 'ref', header: isSpanish ? 'Referencia' : 'Reference', width: '14rem', cell: (m: any) => (
+                  m.reference_type && m.reference_id ? (
+                    <div className="text-sm">
+                      <span className="capitalize">{m.reference_type}</span>
+                      <br />
+                      <span className="text-muted-foreground text-xs">
+                        {m.reference_id.substring(0, 8)}...
+                      </span>
+                    </div>
+                  ) : null
+                ) },
+                { id: 'notes', header: isSpanish ? 'Notas' : 'Notes', width: '1fr', cell: (m: any) => (
+                  m.notes ? <p className="text-sm text-muted-foreground max-w-xs truncate">{m.notes}</p> : null
+                ) },
+              ]}
+            />
+            
+            {null}
           </div>
         </CardContent>
       </Card>

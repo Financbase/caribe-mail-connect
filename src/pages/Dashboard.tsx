@@ -3,11 +3,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ActionCard } from '@/components/ActionCard';
 import { MobileHeader } from '@/components/MobileHeader';
 import { MultiLocationDashboard } from '@/components/MultiLocationDashboard';
+import { CaribeFeaturedIcon, BusinessFeaturedIcon, StatusFeaturedIcon } from '@/components/ui/featured-icon';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { usePackages } from '@/hooks/usePackages';
 import { useNotifications } from '@/hooks/useNotifications';
 import { useLocations } from '@/hooks/useLocations';
+import QuickActionsMenu from '@/components/common/QuickActionsMenu';
 
 interface DashboardProps {
   onNavigate: (page: string) => void;
@@ -92,19 +94,23 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 gap-4">
-              <div className="text-center p-4 bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg">
-                <div className="text-2xl font-bold text-primary">{stats.packagesReceived}</div>
-                <div className="text-sm text-muted-foreground">{t('dashboard.packagesReceived')}</div>
+              <div className="flex items-center gap-4 p-4 bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg">
+                <CaribeFeaturedIcon icon={Package} size="sm" />
+                <div>
+                  <div className="text-2xl font-bold text-primary">{stats.packagesReceived}</div>
+                  <div className="text-sm text-muted-foreground">{t('dashboard.packagesReceived')}</div>
+                </div>
               </div>
-              <div className="text-center p-4 bg-gradient-to-br from-secondary/10 to-secondary/5 rounded-lg">
-                <div className="text-2xl font-bold text-secondary">{stats.pendingDeliveries}</div>
-                <div className="text-sm text-muted-foreground">{t('dashboard.pendingDeliveries')}</div>
+              <div className="flex items-center gap-4 p-4 bg-gradient-to-br from-secondary/10 to-secondary/5 rounded-lg">
+                <StatusFeaturedIcon icon={CheckCircle} status="success" size="sm" />
+                <div>
+                  <div className="text-2xl font-bold text-secondary">{stats.packagesDelivered}</div>
+                  <div className="text-sm text-muted-foreground">{t('dashboard.packagesDelivered')}</div>
+                </div>
               </div>
             </div>
           </CardContent>
-        </Card>
-
-        {/* Action Cards Grid */}
+        </Card>        {/* Action Cards Grid */}
         <div className="grid grid-cols-2 gap-4 animate-slide-up">
           {actionCards.map((card, index) => (
             <ActionCard
@@ -156,6 +162,16 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
           </CardContent>
         </Card>
       </main>
+
+      {/* Floating quick actions (thumb-friendly) */}
+      <QuickActionsMenu
+        onAction={(a) => {
+          if (a === 'scan') onNavigate('intake');
+          if (a === 'notify') onNavigate('notifications');
+          if (a === 'customer') onNavigate('customers');
+          if (a === 'search') onNavigate('search');
+        }}
+      />
     </div>
   );
 }

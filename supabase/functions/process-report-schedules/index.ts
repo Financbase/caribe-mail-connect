@@ -111,7 +111,7 @@ serve(async (req) => {
   }
 });
 
-function shouldRunSchedule(schedule: any): boolean {
+function shouldRunSchedule(schedule: unknown): boolean {
   const now = new Date();
   const { schedule_type, schedule_config, last_run_at } = schedule;
   
@@ -130,10 +130,11 @@ function shouldRunSchedule(schedule: any): boolean {
       return timeSinceLastRun >= 24 * 60 * 60 * 1000; // 24 hours
     case 'weekly':
       return timeSinceLastRun >= 7 * 24 * 60 * 60 * 1000; // 7 days
-    case 'monthly':
+    case 'monthly': {
       // Check if it's been at least a month and we're on the right day
       const dayOfMonth = schedule_config?.day_of_month || lastRun.getDate();
       return now.getDate() === dayOfMonth && timeSinceLastRun >= 28 * 24 * 60 * 60 * 1000;
+    }
     case 'quarterly':
       // Check if it's been at least 3 months
       return timeSinceLastRun >= 90 * 24 * 60 * 60 * 1000;

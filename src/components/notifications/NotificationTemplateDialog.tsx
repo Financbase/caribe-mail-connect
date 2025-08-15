@@ -13,11 +13,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useNotificationSystem } from '@/hooks/useNotificationSystem';
 import { Eye, Code, Palette } from 'lucide-react';
 import DOMPurify from 'dompurify';
+import { AriaInput } from '@/components/ui/aria-components';
 
 interface NotificationTemplateDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  template?: any;
+  template?: unknown;
   onSuccess: () => void;
 }
 
@@ -206,15 +207,12 @@ export function NotificationTemplateDialog({
                     </CardHeader>
                     <CardContent className="space-y-4">
                       {formData.type === 'email' && (
-                        <div>
-                          <Label htmlFor="subject">Asunto del Email</Label>
-                          <Input
-                            id="subject"
-                            value={formData.subject}
-                            onChange={(e) => setFormData(prev => ({ ...prev, subject: e.target.value }))}
-                            placeholder="Ej: Su paquete ha llegado - {{customer_name}}"
-                          />
-                        </div>
+                        <AriaInput
+                          label="Asunto del Email"
+                          value={formData.subject}
+                          onChange={(e) => setFormData(prev => ({ ...prev, subject: (e.target as HTMLInputElement).value }))}
+                          placeholder="Ej: Su paquete ha llegado - {{customer_name}}"
+                        />
                       )}
                       
                       <div>
@@ -318,16 +316,13 @@ export function NotificationTemplateDialog({
                     <CardTitle className="text-lg">Información Básica</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <div>
-                      <Label htmlFor="name">Nombre de la plantilla *</Label>
-                      <Input
-                        id="name"
-                        value={formData.name}
-                        onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                        placeholder="Ej: Notificación de llegada de paquete"
-                        required
-                      />
-                    </div>
+                    <AriaInput
+                      label="Nombre de la plantilla *"
+                      value={formData.name}
+                      onChange={(e) => setFormData(prev => ({ ...prev, name: (e.target as HTMLInputElement).value }))}
+                      placeholder="Ej: Notificación de llegada de paquete"
+                      required
+                    />
                     
                     <div>
                       <Label htmlFor="description">Descripción</Label>
@@ -369,7 +364,7 @@ export function NotificationTemplateDialog({
                       <Label htmlFor="type">Tipo de mensaje *</Label>
                       <Select 
                         value={formData.type}
-                        onValueChange={(value: any) => setFormData(prev => ({ ...prev, type: value }))}
+                        onValueChange={(value: unknown) => setFormData(prev => ({ ...prev, type: value }))}
                         required
                       >
                         <SelectTrigger>
@@ -388,7 +383,7 @@ export function NotificationTemplateDialog({
                       <Label htmlFor="language">Idioma</Label>
                       <Select 
                         value={formData.language}
-                        onValueChange={(value: any) => setFormData(prev => ({ ...prev, language: value }))}
+                        onValueChange={(value: unknown) => setFormData(prev => ({ ...prev, language: value }))}
                       >
                         <SelectTrigger>
                           <SelectValue />

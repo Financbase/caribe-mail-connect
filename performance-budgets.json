@@ -1,0 +1,53 @@
+{
+  "performance": {
+    "budgets": [
+      {
+        "type": "initial",
+        "maximumWarning": "500kb",
+        "maximumError": "1mb"
+      },
+      {
+        "type": "anyScript",
+        "maximumWarning": "250kb",
+        "maximumError": "400kb"
+      },
+      {
+        "type": "bundle",
+        "name": "vendor",
+        "maximumWarning": "350kb",
+        "maximumError": "500kb"
+      },
+      {
+        "type": "bundle",
+        "name": "main",
+        "maximumWarning": "200kb",
+        "maximumError": "300kb"
+      }
+    ],
+    "targets": {
+      "firstContentfulPaint": "1.5s",
+      "largestContentfulPaint": "2.5s",
+      "firstInputDelay": "100ms",
+      "cumulativeLayoutShift": "0.1",
+      "timeToInteractive": "3s"
+    },
+    "monitoring": {
+      "enableWebVitals": true,
+      "enableBundleAnalysis": true,
+      "enableLighthouse": true,
+      "thresholds": {
+        "performance": 90,
+        "accessibility": 95,
+        "bestPractices": 90,
+        "seo": 90
+      }
+    }
+  },
+  "scripts": {
+    "analyze:bundle": "npm run build:analyze && bundlesize",
+    "analyze:performance": "lighthouse --chrome-flags='--headless' --output-path=./reports/lighthouse.html --output=html http://localhost:8080",
+    "test:performance": "npm run analyze:bundle && npm run analyze:performance",
+    "audit:size": "bundlesize",
+    "precommit:performance": "npm run audit:size"
+  }
+}

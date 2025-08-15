@@ -28,7 +28,10 @@ export default {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))',
 					light: 'hsl(var(--primary-light))',
-					dark: 'hsl(var(--primary-dark))'
+					dark: 'hsl(var(--primary-dark))',
+					ocean: 'hsl(var(--primary-ocean))',
+					sunrise: 'hsl(var(--primary-sunrise))',
+					palm: 'hsl(var(--primary-palm))'
 				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
@@ -126,5 +129,5 @@ export default {
 			}
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [import("tailwindcss-animate")],
 } satisfies Config;

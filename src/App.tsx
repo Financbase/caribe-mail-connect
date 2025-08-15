@@ -4,7 +4,10 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
 import AppRouter from "./pages/AppRouter";
+import { SkipLinks } from "@/components/a11y/SkipLinks";
+import { ErrorBoundary } from "@/components/error-handling/ErrorBoundary";
 
 const queryClient = new QueryClient();
 
@@ -12,11 +15,18 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <LanguageProvider>
       <AuthProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <AppRouter />
-        </TooltipProvider>
+        <SubscriptionProvider>
+          <TooltipProvider>
+            <SkipLinks />
+            <Toaster />
+            <Sonner />
+            <ErrorBoundary name="AppRoot">
+              <div id="app-root" className="min-h-screen">
+                <AppRouter />
+              </div>
+            </ErrorBoundary>
+          </TooltipProvider>
+        </SubscriptionProvider>
       </AuthProvider>
     </LanguageProvider>
   </QueryClientProvider>

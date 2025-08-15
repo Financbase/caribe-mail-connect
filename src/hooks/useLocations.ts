@@ -79,7 +79,7 @@ export function useLocations() {
     }
   }, [currentLocation]);
 
-  const fetchLocations = async () => {
+  const fetchLocations = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -93,7 +93,7 @@ export function useLocations() {
       if (fetchError) throw fetchError;
 
       setLocations(data || []);
-      
+
       // Set current location to primary if not set
       if (!currentLocation && data && data.length > 0) {
         const primary = data.find(loc => loc.is_primary) || data[0];
@@ -107,7 +107,7 @@ export function useLocations() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentLocation]);
 
   const createLocation = async (locationData: LocationFormData) => {
     try {

@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { AriaInput } from '@/components/ui/aria-components';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
@@ -25,11 +26,11 @@ interface CompliancePolicy {
   id: string;
   policy_name: string;
   policy_type: string;
-  policy_rules: any;
+  policy_rules: unknown;
   retention_period_days?: number;
-  geographic_restrictions: any;
-  encryption_requirements: any;
-  audit_requirements: any;
+  geographic_restrictions: unknown;
+  encryption_requirements: unknown;
+  audit_requirements: unknown;
   is_mandatory: boolean;
   compliance_framework?: string;
   effective_date: string;
@@ -66,7 +67,7 @@ export const ComplianceSettings: React.FC = () => {
 
   useEffect(() => {
     fetchPolicies();
-  }, []);
+  }, [fetchPolicies]);
 
   const fetchPolicies = async () => {
     try {
@@ -352,10 +353,10 @@ export const ComplianceSettings: React.FC = () => {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="policy_name">Policy Name</Label>
-                <Input
-                  id="policy_name"
+                <AriaInput
+                  label="Policy Name"
                   value={formData.policy_name}
-                  onChange={(e) => setFormData(prev => ({ ...prev, policy_name: e.target.value }))}
+                  onChange={(e) => setFormData(prev => ({ ...prev, policy_name: (e.target as HTMLInputElement).value }))}
                   placeholder="e.g., GDPR Data Retention Policy"
                   required
                 />
@@ -365,7 +366,7 @@ export const ComplianceSettings: React.FC = () => {
                 <Label htmlFor="policy_type">Policy Type</Label>
                 <Select 
                   value={formData.policy_type} 
-                  onValueChange={(value: any) => setFormData(prev => ({ ...prev, policy_type: value }))}
+                  onValueChange={(value: unknown) => setFormData(prev => ({ ...prev, policy_type: value }))}
                 >
                   <SelectTrigger>
                     <SelectValue />

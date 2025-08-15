@@ -126,7 +126,7 @@ export const BackupConfigurationDialog: React.FC<BackupConfigurationDialogProps>
                   <Label htmlFor="backup_type">Backup Type</Label>
                   <Select 
                     value={formData.backup_type} 
-                    onValueChange={(value: any) => setFormData(prev => ({ ...prev, backup_type: value }))}
+                    onValueChange={(value: unknown) => setFormData(prev => ({ ...prev, backup_type: value }))}
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -164,7 +164,7 @@ export const BackupConfigurationDialog: React.FC<BackupConfigurationDialogProps>
                   <Label htmlFor="frequency">Frequency</Label>
                   <Select 
                     value={formData.frequency} 
-                    onValueChange={(value: any) => setFormData(prev => ({ ...prev, frequency: value }))}
+                    onValueChange={(value: unknown) => setFormData(prev => ({ ...prev, frequency: value }))}
                   >
                     <SelectTrigger>
                       <SelectValue />

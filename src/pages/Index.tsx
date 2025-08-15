@@ -1,31 +1,40 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense, lazy } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
-import AuthSelection from './auth/AuthSelection';
-import StaffAuth from './auth/StaffAuth';
-import CustomerAuth from './auth/CustomerAuth';
-import Dashboard from './Dashboard';
-import PackageIntake from './PackageIntake';
-import Customers from './Customers';
-import Notifications from './Notifications';
-import { NotificationSettings } from './NotificationSettings';
-import Mailboxes from './Mailboxes';
-import Analytics from './Analytics';
-import Routes from './Routes';
-import DriverRoute from './DriverRoute';
-import Act60Dashboard from './Act60Dashboard';
-import LocationManagement from './LocationManagement';
-import ProfileSettings from './profile/Settings';
-import Billing from './Billing';
-import Admin from './Admin';
-import Reports from './Reports';
-import CustomerPortal from './CustomerPortal';
-import Integrations from './Integrations';
-import Inventory from './Inventory';
-import Documents from './Documents';
-import { VirtualMail } from './VirtualMail';
+import { 
+  Dashboard, 
+  VirtualMail, 
+  Documents, 
+  preloadCriticalComponents,
+  preloadRouteComponents 
+} from '@/lib/lazy-imports';
+
+const AuthSelection = lazy(() => import('./auth/AuthSelection'));
+const StaffAuth = lazy(() => import('./auth/StaffAuth'));
+const CustomerAuth = lazy(() => import('./auth/CustomerAuth'));
+const PackageIntake = lazy(() => import('./PackageIntake'));
+const Customers = lazy(() => import('./Customers'));
+const Notifications = lazy(() => import('./Notifications'));
+const NotificationSettingsLazy = lazy(() => import('./NotificationSettings').then(m => ({ default: m.NotificationSettings })));
+const Mailboxes = lazy(() => import('./Mailboxes'));
+const Analytics = lazy(() => import('./Analytics'));
+const Reports = lazy(() => import('./Reports'));
+const Routes = lazy(() => import('./Routes'));
+const DriverRoute = lazy(() => import('./DriverRoute'));
+const Act60Dashboard = lazy(() => import('./Act60Dashboard'));
+const LocationManagement = lazy(() => import('./LocationManagement'));
+const ProfileSettings = lazy(() => import('./profile/Settings'));
+const Billing = lazy(() => import('./Billing'));
+const Admin = lazy(() => import('./Admin'));
+const CustomerPortal = lazy(() => import('./CustomerPortal'));
+const Integrations = lazy(() => import('./Integrations'));
+const Inventory = lazy(() => import('./Inventory'));
+const FeaturedIconShowcase = lazy(() => import('@/components/examples/FeaturedIconShowcase'));
 import { MobileLayout } from '@/components/mobile/MobileLayout';
 import { UserFeedbackWidget } from '@/components/qa/UserFeedbackSystem';
+import { Skeleton } from '@/components/ui/skeleton';
+import { ErrorProvider } from '@/contexts/ErrorContext';
+import { PageSkeleton, MobileSkeleton, AuthSkeleton } from '@/components/loading/PageSkeleton';
 
 // Main application component with navigation logic
 const PRMCMS = () => {
@@ -39,7 +48,27 @@ const PRMCMS = () => {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js').catch(console.error);
     }
+    
+    // Preload critical components on app start
+    preloadCriticalComponents();
   }, []);
+
+  // Route preloading based on navigation
+  useEffect(() => {
+    if (currentPage && user) {
+      const routeMap: Record<string, string> = {
+        'virtual-mail': '/virtual-mail',
+        'documents': '/documents',
+        'package-intake': '/packages',
+        'customers': '/customers'
+      };
+      
+      const route = routeMap[currentPage];
+      if (route) {
+        preloadRouteComponents(route);
+      }
+    }
+  }, [currentPage, user]);
 
   // Auth state management
   useEffect(() => {
@@ -86,66 +115,155 @@ const PRMCMS = () => {
 
   // Show loading while checking authentication
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <p>Loading...</p>
-        </div>
-      </div>
-    );
+    return <PageSkeleton />;
   }
 
   // Show auth pages if not authenticated
   if (!user) {
+    const isMobile = window.innerWidth < 768;
+    const fallback = isMobile ? <MobileSkeleton /> : <AuthSkeleton />;
+    
     switch (currentPage) {
       case 'staff-auth':
-        return <StaffAuth onNavigate={handleNavigation} />;
+        return (
+          <Suspense fallback={fallback}>
+            <StaffAuth onNavigate={handleNavigation} />
+          </Suspense>
+        );
       case 'customer-auth':
-        return <CustomerAuth onNavigate={handleNavigation} />;
+        return (
+          <Suspense fallback={fallback}>
+            <CustomerAuth onNavigate={handleNavigation} />
+          </Suspense>
+        );
       case 'customer-portal':
-        return <CustomerPortal onNavigate={handleNavigation} />;
+        return (
+          <Suspense fallback={fallback}>
+            <CustomerPortal onNavigate={handleNavigation} />
+          </Suspense>
+        );
       default:
-        return <AuthSelection onNavigate={handleNavigation} />;
+        return (
+          <Suspense fallback={fallback}>
+            <AuthSelection onNavigate={handleNavigation} />
+          </Suspense>
+        );
     }
   }
 
+  const isMobile = window.innerWidth < 768;
+  const pageFallback = isMobile ? <MobileSkeleton /> : <PageSkeleton />;
+
   const renderPage = () => {
     switch (currentPage) {
-      case 'intake':
-        return <PackageIntake onNavigate={handleNavigation} />;
-      case 'customers':
-        return <Customers onNavigate={handleNavigation} />;
-      case 'mailboxes':
-        return <Mailboxes onNavigate={handleNavigation} />;
-      case 'analytics':
-        return <Analytics onNavigate={handleNavigation} />;
-      case 'routes':
-        return <Routes onNavigate={handleNavigation} />;
-      case 'driver-route':
-        return <DriverRoute onNavigate={handleNavigation} />;
-      case 'act60-dashboard':
-        return <Act60Dashboard onNavigate={handleNavigation} />;
-      case 'location-management':
-        return <LocationManagement onNavigate={handleNavigation} />;
-      case 'notifications':
-        return <Notifications onNavigate={handleNavigation} />;
-      case 'notification-settings':
-        return <NotificationSettings />;
-      case 'billing':
-        return <Billing onNavigate={handleNavigation} />;
-      case 'reports':
-        return <Reports onNavigate={handleNavigation} />;
-      case 'admin':
-        return <Admin onNavigate={handleNavigation} />;
-      case 'integrations':
-        return <Integrations onNavigate={handleNavigation} />;
-      case 'inventory':
-        return <Inventory onNavigate={handleNavigation} />;
-      case 'documents':
-        return <Documents onNavigate={handleNavigation} />;
+      case 'dashboard':
+        return (
+          <Suspense fallback={pageFallback}>
+            <Dashboard onNavigate={handleNavigation} />
+          </Suspense>
+        );
       case 'virtual-mail':
-        return <VirtualMail />;
+        return (
+          <Suspense fallback={pageFallback}>
+            <VirtualMail />
+          </Suspense>
+        );
+      case 'documents':
+        return (
+          <Suspense fallback={pageFallback}>
+            <Documents onNavigate={handleNavigation} />
+          </Suspense>
+        );
+      case 'intake':
+        return (
+          <Suspense fallback={pageFallback}>
+            <PackageIntake onNavigate={handleNavigation} />
+          </Suspense>
+        );
+      case 'customers':
+        return (
+          <Suspense fallback={pageFallback}>
+            <Customers onNavigate={handleNavigation} />
+          </Suspense>
+        );
+      case 'mailboxes':
+        return (
+          <Suspense fallback={pageFallback}>
+            <Mailboxes onNavigate={handleNavigation} />
+          </Suspense>
+        );
+      case 'analytics':
+        return (
+          <Suspense fallback={pageFallback}>
+            <Analytics onNavigate={handleNavigation} />
+          </Suspense>
+        );
+      case 'routes':
+        return (
+          <Suspense fallback={pageFallback}>
+            <Routes onNavigate={handleNavigation} />
+          </Suspense>
+        );
+      case 'driver-route':
+        return (
+          <Suspense fallback={pageFallback}>
+            <DriverRoute onNavigate={handleNavigation} />
+          </Suspense>
+        );
+      case 'act60-dashboard':
+        return (
+          <Suspense fallback={pageFallback}>
+            <Act60Dashboard onNavigate={handleNavigation} />
+          </Suspense>
+        );
+      case 'location-management':
+        return (
+          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+            <LocationManagement onNavigate={handleNavigation} />
+          </Suspense>
+        );
+      case 'notifications':
+        return (
+          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+            <Notifications onNavigate={handleNavigation} />
+          </Suspense>
+        );
+      case 'notification-settings':
+        return (
+          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+            <NotificationSettingsLazy />
+          </Suspense>
+        );
+      case 'billing':
+        return (
+          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+            <Billing onNavigate={handleNavigation} />
+          </Suspense>
+        );
+      case 'reports':
+        return (
+          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+            <Reports onNavigate={handleNavigation} />
+          </Suspense>
+        );
+      case 'admin':
+        return (
+          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+            <Admin onNavigate={handleNavigation} />
+          </Suspense>
+        );
+      case 'integrations':
+        return (
+          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+            <Integrations onNavigate={handleNavigation} />
+          </Suspense>
+        );
+      case 'inventory':
+        return (
+          <Suspense fallback={pageFallback}>
+            <Inventory onNavigate={handleNavigation} />
+          </Suspense>
+        );
       case 'qa':
         // QA page handled by AppRouter
         return null;
@@ -169,6 +287,12 @@ const PRMCMS = () => {
             </div>
           </div>
         );
+      case 'featured-icons':
+        return (
+          <Suspense fallback={pageFallback}>
+            <FeaturedIconShowcase />
+          </Suspense>
+        );
       case 'deliver':
         // Placeholder for delivery page
         return (
@@ -186,7 +310,11 @@ const PRMCMS = () => {
           </div>
         );
       default:
-        return <Dashboard onNavigate={handleNavigation} />;
+        return (
+          <Suspense fallback={<div className="p-4">Cargando…</div>}>
+            <Dashboard onNavigate={handleNavigation} />
+          </Suspense>
+        );
     }
   };
 

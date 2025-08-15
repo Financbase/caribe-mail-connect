@@ -92,7 +92,7 @@ serve(async (req) => {
   }
 });
 
-async function exportAccountingData(integration: any, dateRange: any, supabaseClient: any) {
+async function exportAccountingData(integration: unknown, dateRange: unknown, supabaseClient: unknown) {
   const { service_name, credentials } = integration;
   
   try {
@@ -179,7 +179,7 @@ async function exportAccountingData(integration: any, dateRange: any, supabaseCl
   }
 }
 
-async function importAccountingData(integration: any, supabaseClient: any) {
+async function importAccountingData(integration: unknown, supabaseClient: unknown) {
   const { service_name, credentials } = integration;
   
   try {
@@ -207,7 +207,7 @@ async function importAccountingData(integration: any, supabaseClient: any) {
   }
 }
 
-async function syncCustomers(integration: any, supabaseClient: any) {
+async function syncCustomers(integration: unknown, supabaseClient: unknown) {
   const { service_name, credentials } = integration;
   
   try {
@@ -283,13 +283,13 @@ async function syncCustomers(integration: any, supabaseClient: any) {
   }
 }
 
-async function syncInvoices(integration: any, dateRange: any, supabaseClient: any) {
+async function syncInvoices(integration: unknown, dateRange: unknown, supabaseClient: unknown) {
   // Similar to exportAccountingData but specifically for invoice sync
   return await exportAccountingData(integration, dateRange, supabaseClient);
 }
 
 // QuickBooks integration functions
-async function exportToQuickBooks(invoice: any, credentials: any) {
+async function exportToQuickBooks(invoice: unknown, credentials: unknown) {
   try {
     // Ensure customer exists in QuickBooks first
     let customerId = invoice.customers?.external_id;
@@ -304,7 +304,7 @@ async function exportToQuickBooks(invoice: any, credentials: any) {
 
     // Create QuickBooks invoice
     const qbInvoice = {
-      Line: invoice.invoice_items?.map((item: any) => ({
+      Line: invoice.invoice_items?.map((item: unknown) => ({
         Amount: item.line_total,
         DetailType: "SalesItemLineDetail",
         SalesItemLineDetail: {
@@ -344,7 +344,7 @@ async function exportToQuickBooks(invoice: any, credentials: any) {
   }
 }
 
-async function syncCustomerToQuickBooks(customer: any, credentials: any) {
+async function syncCustomerToQuickBooks(customer: unknown, credentials: unknown) {
   try {
     const qbCustomer = {
       Name: `${customer.first_name} ${customer.last_name}`,
@@ -390,7 +390,7 @@ async function syncCustomerToQuickBooks(customer: any, credentials: any) {
   }
 }
 
-async function importFromQuickBooks(credentials: any, supabaseClient: any) {
+async function importFromQuickBooks(credentials: unknown, supabaseClient: unknown) {
   try {
     // Import customers from QuickBooks
     const customersResponse = await fetch(`https://sandbox-quickbooks.api.intuit.com/v3/company/${credentials.company_id}/query?query=SELECT * FROM Customer`, {
@@ -471,7 +471,7 @@ async function importFromQuickBooks(credentials: any, supabaseClient: any) {
 }
 
 // Xero integration functions
-async function exportToXero(invoice: any, credentials: any) {
+async function exportToXero(invoice: unknown, credentials: unknown) {
   try {
     // Ensure customer exists in Xero first
     let contactId = invoice.customers?.external_id;
@@ -491,7 +491,7 @@ async function exportToXero(invoice: any, credentials: any) {
       Date: invoice.issue_date,
       DueDate: invoice.due_date,
       InvoiceNumber: invoice.invoice_number,
-      LineItems: invoice.invoice_items?.map((item: any) => ({
+      LineItems: invoice.invoice_items?.map((item: unknown) => ({
         Description: item.description,
         Quantity: item.quantity,
         UnitAmount: item.unit_price,
@@ -525,7 +525,7 @@ async function exportToXero(invoice: any, credentials: any) {
   }
 }
 
-async function syncCustomerToXero(customer: any, credentials: any) {
+async function syncCustomerToXero(customer: unknown, credentials: unknown) {
   try {
     const xeroContact = {
       Name: customer.business_name || `${customer.first_name} ${customer.last_name}`,
@@ -572,7 +572,7 @@ async function syncCustomerToXero(customer: any, credentials: any) {
   }
 }
 
-async function importFromXero(credentials: any, supabaseClient: any) {
+async function importFromXero(credentials: unknown, supabaseClient: unknown) {
   try {
     // Import contacts from Xero
     const contactsResponse = await fetch('https://api.xero.com/api.xro/2.0/Contacts', {
@@ -606,8 +606,8 @@ async function importFromXero(credentials: any, supabaseClient: any) {
         }
 
         // Import new contact
-        const streetAddress = xeroContact.Addresses?.find((addr: any) => addr.AddressType === 'STREET');
-        const defaultPhone = xeroContact.Phones?.find((phone: any) => phone.PhoneType === 'DEFAULT');
+        const streetAddress = xeroContact.Addresses?.find((addr: unknown) => addr.AddressType === 'STREET');
+        const defaultPhone = xeroContact.Phones?.find((phone: unknown) => phone.PhoneType === 'DEFAULT');
 
         const { error } = await supabaseClient
           .from('customers')

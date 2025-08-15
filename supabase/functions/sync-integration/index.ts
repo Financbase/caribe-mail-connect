@@ -32,7 +32,7 @@ serve(async (req) => {
       throw new Error(`Failed to fetch integration: ${fetchError.message}`);
     }
 
-    let syncResult = { success: false, message: '', recordsProcessed: 0, errors: [] };
+    const syncResult = { success: false, message: '', recordsProcessed: 0, errors: [] };
     const startTime = Date.now();
 
     try {
@@ -94,7 +94,7 @@ serve(async (req) => {
   }
 });
 
-async function syncCarrierData(integration: any, supabaseClient: any) {
+async function syncCarrierData(integration: unknown, supabaseClient: unknown) {
   const { service_name, credentials } = integration;
   
   // Get packages that need tracking updates
@@ -157,7 +157,7 @@ async function syncCarrierData(integration: any, supabaseClient: any) {
   };
 }
 
-async function syncPaymentData(integration: any, supabaseClient: any) {
+async function syncPaymentData(integration: unknown, supabaseClient: unknown) {
   const { service_name, credentials } = integration;
   
   // Sync recent payment transactions
@@ -210,7 +210,7 @@ async function syncPaymentData(integration: any, supabaseClient: any) {
   };
 }
 
-async function syncAccountingData(integration: any, supabaseClient: any) {
+async function syncAccountingData(integration: unknown, supabaseClient: unknown) {
   const { service_name, credentials } = integration;
   
   // Get recent invoices to sync
@@ -268,7 +268,7 @@ async function syncAccountingData(integration: any, supabaseClient: any) {
   };
 }
 
-async function syncCommunicationData(integration: any, supabaseClient: any) {
+async function syncCommunicationData(integration: unknown, supabaseClient: unknown) {
   const { service_name, credentials } = integration;
   
   // Sync delivery status for sent notifications
@@ -326,7 +326,7 @@ async function syncCommunicationData(integration: any, supabaseClient: any) {
 }
 
 // Carrier tracking functions
-async function fetchUPSTracking(trackingNumber: string, credentials: any) {
+async function fetchUPSTracking(trackingNumber: string, credentials: unknown) {
   const response = await fetch(`https://onlinetools.ups.com/api/track/v1/details/${trackingNumber}`, {
     headers: {
       'Authorization': `Bearer ${credentials.access_token}`,
@@ -343,7 +343,7 @@ async function fetchUPSTracking(trackingNumber: string, credentials: any) {
   };
 }
 
-async function fetchFedExTracking(trackingNumber: string, credentials: any) {
+async function fetchFedExTracking(trackingNumber: string, credentials: unknown) {
   const response = await fetch('https://apis.fedex.com/track/v1/trackingnumbers', {
     method: 'POST',
     headers: {
@@ -366,7 +366,7 @@ async function fetchFedExTracking(trackingNumber: string, credentials: any) {
   };
 }
 
-async function fetchUSPSTracking(trackingNumber: string, credentials: any) {
+async function fetchUSPSTracking(trackingNumber: string, credentials: unknown) {
   const response = await fetch(`https://secure.shippingapis.com/ShippingAPI.dll?API=TrackV2&XML=<TrackRequest USERID="${credentials.user_id}"><TrackID ID="${trackingNumber}"></TrackID></TrackRequest>`);
   
   if (!response.ok) return null;
@@ -376,7 +376,7 @@ async function fetchUSPSTracking(trackingNumber: string, credentials: any) {
   return parseUSPSTrackingXML(text);
 }
 
-async function fetchDHLTracking(trackingNumber: string, credentials: any) {
+async function fetchDHLTracking(trackingNumber: string, credentials: unknown) {
   const response = await fetch(`https://api-eu.dhl.com/track/shipments?trackingNumber=${trackingNumber}`, {
     headers: {
       'DHL-API-Key': credentials.api_key,
@@ -396,7 +396,7 @@ async function fetchDHLTracking(trackingNumber: string, credentials: any) {
 }
 
 // Payment data fetching
-async function fetchStripePayments(credentials: any) {
+async function fetchStripePayments(credentials: unknown) {
   const response = await fetch('https://api.stripe.com/v1/payment_intents?limit=50', {
     headers: {
       'Authorization': `Bearer ${credentials.secret_key}`,
@@ -407,7 +407,7 @@ async function fetchStripePayments(credentials: any) {
   if (!response.ok) return [];
   
   const data = await response.json();
-  return data.data.map((payment: any) => ({
+  return data.data.map((payment: unknown) => ({
     id: payment.id,
     amount: payment.amount / 100, // Convert from cents
     status: payment.status,
@@ -417,7 +417,7 @@ async function fetchStripePayments(credentials: any) {
   }));
 }
 
-async function fetchPayPalPayments(credentials: any) {
+async function fetchPayPalPayments(credentials: unknown) {
   // Get access token first
   const authResponse = await fetch('https://api.paypal.com/v1/oauth2/token', {
     method: 'POST',
@@ -440,7 +440,7 @@ async function fetchPayPalPayments(credentials: any) {
   if (!response.ok) return [];
   
   const data = await response.json();
-  return data.payments?.map((payment: any) => ({
+  return data.payments?.map((payment: unknown) => ({
     id: payment.id,
     amount: parseFloat(payment.transactions?.[0]?.amount?.total || '0'),
     status: payment.state,
@@ -451,10 +451,10 @@ async function fetchPayPalPayments(credentials: any) {
 }
 
 // Accounting sync functions
-async function syncToQuickBooks(invoice: any, credentials: any) {
+async function syncToQuickBooks(invoice: unknown, credentials: unknown) {
   try {
     const qbInvoice = {
-      Line: invoice.items?.map((item: any) => ({
+      Line: invoice.items?.map((item: unknown) => ({
         Amount: item.line_total,
         DetailType: "SalesItemLineDetail",
         SalesItemLineDetail: {
@@ -487,14 +487,14 @@ async function syncToQuickBooks(invoice: any, credentials: any) {
   }
 }
 
-async function syncToXero(invoice: any, credentials: any) {
+async function syncToXero(invoice: unknown, credentials: unknown) {
   try {
     const xeroInvoice = {
       Type: "ACCREC",
       Contact: { ContactID: invoice.customer_id },
       Date: invoice.issue_date,
       DueDate: invoice.due_date,
-      LineItems: invoice.items?.map((item: any) => ({
+      LineItems: invoice.items?.map((item: unknown) => ({
         Description: item.description,
         Quantity: item.quantity,
         UnitAmount: item.unit_price,
@@ -523,7 +523,7 @@ async function syncToXero(invoice: any, credentials: any) {
 }
 
 // Communication delivery status functions
-async function fetchTwilioDeliveryStatus(messageId: string, credentials: any) {
+async function fetchTwilioDeliveryStatus(messageId: string, credentials: unknown) {
   const response = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${credentials.account_sid}/Messages/${messageId}.json`, {
     headers: {
       'Authorization': `Basic ${btoa(`${credentials.account_sid}:${credentials.auth_token}`)}`
@@ -536,7 +536,7 @@ async function fetchTwilioDeliveryStatus(messageId: string, credentials: any) {
   return { status: data.status };
 }
 
-async function fetchSendGridDeliveryStatus(messageId: string, credentials: any) {
+async function fetchSendGridDeliveryStatus(messageId: string, credentials: unknown) {
   const response = await fetch(`https://api.sendgrid.com/v3/messages/${messageId}`, {
     headers: {
       'Authorization': `Bearer ${credentials.api_key}`

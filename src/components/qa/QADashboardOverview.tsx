@@ -50,9 +50,9 @@ export const QADashboardOverview = () => {
     : 0;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" aria-label="QA overview cards">
       {/* System Health Score */}
-      <Card>
+      <Card tabIndex={0} aria-label={`System Health ${currentHealthScore.toFixed(1)} percent`}>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">System Health</CardTitle>
           <Activity className="h-4 w-4 text-muted-foreground" />
@@ -71,7 +71,7 @@ export const QADashboardOverview = () => {
       </Card>
 
       {/* Critical Issues */}
-      <Card>
+      <Card tabIndex={0} aria-label={`Critical issues ${criticalHealthMetrics + openFailedProcesses}`}>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Critical Issues</CardTitle>
           <AlertTriangle className="h-4 w-4 text-destructive" />
@@ -92,7 +92,7 @@ export const QADashboardOverview = () => {
       </Card>
 
       {/* Test Success Rate */}
-      <Card>
+      <Card tabIndex={0} aria-label={`Test success rate ${testPassRate.toFixed(1)} percent`}>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Test Success Rate</CardTitle>
           <TestTube className="h-4 w-4 text-muted-foreground" />
@@ -109,7 +109,7 @@ export const QADashboardOverview = () => {
       </Card>
 
       {/* Response Time */}
-      <Card>
+      <Card tabIndex={0} aria-label={`Average response time ${avgResponseTime.toFixed(0)} milliseconds`}>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Avg Response Time</CardTitle>
           <Clock className="h-4 w-4 text-muted-foreground" />
@@ -133,7 +133,7 @@ export const QADashboardOverview = () => {
       </Card>
 
       {/* Open Error Reports */}
-      <Card>
+      <Card tabIndex={0} aria-label={`Open error reports ${openErrorReports}`}>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Open Error Reports</CardTitle>
           <Bug className="h-4 w-4 text-muted-foreground" />
@@ -147,7 +147,7 @@ export const QADashboardOverview = () => {
       </Card>
 
       {/* Warning Issues */}
-      <Card>
+      <Card tabIndex={0} aria-label={`Warning issues ${warningHealthMetrics}`}>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Warning Issues</CardTitle>
           <AlertTriangle className="h-4 w-4 text-warning" />
@@ -163,7 +163,7 @@ export const QADashboardOverview = () => {
       </Card>
 
       {/* User Feedback */}
-      <Card>
+      <Card tabIndex={0} aria-label={`Pending feedback ${pendingFeedback}`}>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Pending Feedback</CardTitle>
           <Users className="h-4 w-4 text-muted-foreground" />
@@ -177,7 +177,7 @@ export const QADashboardOverview = () => {
       </Card>
 
       {/* System Status */}
-      <Card>
+      <Card tabIndex={0} aria-label={`System status ${criticalHealthMetrics > 0 ? 'Critical' : warningHealthMetrics > 0 ? 'Warning' : 'Healthy'}`}>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">System Status</CardTitle>
           {criticalHealthMetrics > 0 ? (

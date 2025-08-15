@@ -91,7 +91,7 @@ export default function LocationManagement({ onNavigate }: LocationManagementPro
     });
   };
 
-  const handleEdit = (location: any) => {
+  const handleEdit = (location: unknown) => {
     setFormData({
       name: location.name,
       code: location.code,
@@ -146,11 +146,11 @@ export default function LocationManagement({ onNavigate }: LocationManagementPro
     }
   };
 
-  const updateFormData = (field: string, value: any) => {
+  const updateFormData = (field: string, value: unknown) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const formatOperatingHours = (hours: any) => {
+  const formatOperatingHours = (hours: unknown) => {
     if (!hours) return 'Not set';
     
     const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];

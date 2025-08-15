@@ -1,0 +1,302 @@
+/* Global Focus-Visible Styles for Caribbean UI */
+
+/* Reset default focus styles */
+*:focus {
+  outline: none;
+}
+
+/* High-contrast focus rings for accessibility */
+*:focus-visible {
+  outline: 2px solid #0B5394;
+  outline-offset: 2px;
+  border-radius: 0.125rem;
+  transition: outline 0.2s ease;
+}
+
+/* Interactive elements - enhanced focus */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid #0B5394;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px rgba(11, 83, 148, 0.1);
+}
+
+/* Card and interactive container focus */
+[role="button"]:focus-visible,
+[role="tab"]:focus-visible,
+[role="menuitem"]:focus-visible,
+[role="option"]:focus-visible,
+.interactive-card:focus-visible,
+.clickable:focus-visible {
+  outline: 2px solid #0B5394;
+  outline-offset: 1px;
+  background-color: rgba(11, 83, 148, 0.02);
+}
+
+/* Table and grid focus */
+[role="row"]:focus-visible,
+[role="gridcell"]:focus-visible,
+[role="columnheader"]:focus-visible {
+  outline: 2px solid #0B5394;
+  outline-offset: -2px;
+  background-color: rgba(11, 83, 148, 0.05);
+}
+
+/* Form element specific focus styles */
+input[type="text"]:focus-visible,
+input[type="email"]:focus-visible,
+input[type="password"]:focus-visible,
+input[type="tel"]:focus-visible,
+input[type="url"]:focus-visible,
+input[type="search"]:focus-visible,
+input[type="number"]:focus-visible,
+input[type="date"]:focus-visible,
+input[type="time"]:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #0B5394;
+  outline-offset: 0;
+  border-color: #0B5394;
+  box-shadow: 0 0 0 3px rgba(11, 83, 148, 0.1);
+}
+
+/* Checkbox and radio focus */
+input[type="checkbox"]:focus-visible,
+input[type="radio"]:focus-visible {
+  outline: 2px solid #0B5394;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(11, 83, 148, 0.15);
+}
+
+/* Select dropdown focus */
+select:focus-visible {
+  outline: 2px solid #0B5394;
+  outline-offset: 0;
+  border-color: #0B5394;
+  box-shadow: 0 0 0 3px rgba(11, 83, 148, 0.1);
+}
+
+/* Button focus variations */
+.caribbean-button:focus-visible {
+  outline: 3px solid #0B5394;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px rgba(11, 83, 148, 0.15);
+}
+
+/* Primary button focus */
+.caribbean-button--primary:focus-visible {
+  outline: 3px solid #FF6B35;
+  box-shadow: 0 0 0 5px rgba(255, 107, 53, 0.2);
+}
+
+/* Ghost/tertiary button focus */
+.caribbean-button--ghost:focus-visible,
+.caribbean-button--tertiary:focus-visible {
+  outline: 2px solid #0B5394;
+  outline-offset: 1px;
+  background-color: rgba(11, 83, 148, 0.05);
+}
+
+/* Floating Action Button focus */
+.fab:focus-visible {
+  outline: 3px solid #FF6B35;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px rgba(255, 107, 53, 0.2);
+}
+
+/* Navigation focus */
+nav a:focus-visible,
+.nav-link:focus-visible {
+  outline: 2px solid #0B5394;
+  outline-offset: 1px;
+  background-color: rgba(11, 83, 148, 0.05);
+  border-radius: 0.375rem;
+}
+
+/* Skip link focus */
+.skip-link:focus-visible {
+  outline: 3px solid #FF6B35;
+  outline-offset: 2px;
+  background-color: #FF6B35;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+}
+
+/* Modal and dialog focus */
+[role="dialog"]:focus-visible,
+.modal:focus-visible {
+  outline: 3px solid #0B5394;
+  outline-offset: -3px;
+}
+
+/* Tab focus */
+[role="tab"]:focus-visible {
+  outline: 2px solid #0B5394;
+  outline-offset: 1px;
+  background-color: rgba(11, 83, 148, 0.05);
+  border-radius: 0.375rem 0.375rem 0 0;
+}
+
+/* Active tab focus */
+[role="tab"][aria-selected="true"]:focus-visible {
+  outline-color: #FF6B35;
+  background-color: rgba(255, 107, 53, 0.05);
+}
+
+/* Error state focus */
+input:invalid:focus-visible,
+.error:focus-visible {
+  outline-color: #E74C3C;
+  border-color: #E74C3C;
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+}
+
+/* Success state focus */
+.success:focus-visible {
+  outline-color: #2ECC71;
+  border-color: #2ECC71;
+  box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.1);
+}
+
+/* Warning state focus */
+.warning:focus-visible {
+  outline-color: #F39C12;
+  border-color: #F39C12;
+  box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.1);
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  *:focus-visible {
+    outline: 3px solid currentColor;
+    outline-offset: 2px;
+  }
+  
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: 4px solid currentColor;
+    outline-offset: 2px;
+    box-shadow: none;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *:focus-visible {
+    transition: none;
+  }
+}
+
+/* Focus management for specific components */
+
+/* Table focus management */
+.caribbean-table tbody tr:focus-visible {
+  outline: 2px solid #0B5394;
+  outline-offset: -2px;
+  background-color: rgba(11, 83, 148, 0.05);
+}
+
+.caribbean-table th:focus-visible {
+  outline: 2px solid #0B5394;
+  outline-offset: -1px;
+  background-color: rgba(11, 83, 148, 0.1);
+}
+
+/* Card focus management */
+.enhanced-card.interactive:focus-visible {
+  outline: 2px solid #0B5394;
+  outline-offset: 2px;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Search result focus */
+.search-result:focus-visible {
+  outline: 2px solid #0B5394;
+  outline-offset: 1px;
+  background-color: rgba(11, 83, 148, 0.02);
+  border-color: #0B5394;
+}
+
+/* Dashboard metric focus */
+.dashboard-metric:focus-visible {
+  outline: 2px solid #0B5394;
+  outline-offset: 2px;
+  transform: scale(1.02);
+  box-shadow: 0 4px 16px rgba(11, 83, 148, 0.15);
+}
+
+/* Form wizard step focus */
+.wizard-step:focus-visible {
+  outline: 2px solid #0B5394;
+  outline-offset: 1px;
+  background-color: rgba(11, 83, 148, 0.05);
+}
+
+/* Mobile touch target improvements */
+@media (max-width: 768px) {
+  /* Increase focus ring size for touch interfaces */
+  button:focus-visible,
+  a:focus-visible,
+  [role="button"]:focus-visible {
+    outline-width: 4px;
+    outline-offset: 3px;
+  }
+  
+  /* Larger focus area for small interactive elements */
+  input[type="checkbox"]:focus-visible,
+  input[type="radio"]:focus-visible {
+    outline-width: 3px;
+    outline-offset: 3px;
+  }
+}
+
+/* Focus trap styles for modals and dialogs */
+.focus-trap:focus-visible {
+  outline: none;
+}
+
+.focus-trap-active {
+  isolation: isolate;
+}
+
+/* Custom focus indicators for specific Caribbean components */
+.caribbean-focus-ring {
+  position: relative;
+}
+
+.caribbean-focus-ring:focus-visible::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border: 2px solid #0B5394;
+  border-radius: inherit;
+  pointer-events: none;
+  animation: focus-pulse 2s infinite;
+}
+
+@keyframes focus-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.02);
+  }
+}
+
+/* Disable animation for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .caribbean-focus-ring:focus-visible::before {
+    animation: none;
+  }
+}

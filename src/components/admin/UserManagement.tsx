@@ -51,7 +51,7 @@ export function UserManagement() {
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [fetchUsers]);
 
   const fetchUsers = async () => {
     try {
@@ -64,7 +64,7 @@ export function UserManagement() {
       if (error) throw error;
 
       // Transform data to match User interface
-      const transformedUsers = usersData?.map((userData: any) => ({
+      const transformedUsers = usersData?.map((userData: unknown) => ({
         id: userData.user_id,
         email: userData.email || '',
         first_name: userData.first_name || '',
@@ -120,7 +120,7 @@ export function UserManagement() {
       setNewUser({ email: '', first_name: '', last_name: '', role: 'staff', password: '' });
       setShowCreateUser(false);
       fetchUsers();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error creating user:', error);
       toast({
         title: 'Error',
@@ -143,7 +143,7 @@ export function UserManagement() {
         title: 'Enlace enviado',
         description: `Enlace de restablecimiento enviado a ${email}`,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error resetting password:', error);
       toast({
         title: 'Error',
@@ -167,7 +167,7 @@ export function UserManagement() {
       });
 
       fetchUsers();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error deactivating user:', error);
       toast({
         title: 'Error',
@@ -353,7 +353,18 @@ export function UserManagement() {
                   </TableRow>
                 ) : (
                   filteredUsers.map((user) => (
-                    <TableRow key={user.id}>
+                    <TableRow
+                      key={user.id}
+                      tabIndex={0}
+                      aria-label={`Usuario ${user.first_name} ${user.last_name}`} 
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          const btn = (e.currentTarget as HTMLElement).querySelector<HTMLElement>('button')
+                          btn?.focus();
+                          e.preventDefault();
+                        }
+                      }}
+                    >
                       <TableCell>
                         <div>
                           <p className="font-medium">{user.first_name} {user.last_name}</p>

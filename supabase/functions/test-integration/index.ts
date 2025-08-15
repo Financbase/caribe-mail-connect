@@ -32,7 +32,7 @@ serve(async (req) => {
       throw new Error(`Failed to fetch integration: ${fetchError.message}`);
     }
 
-    let testResult = { success: false, message: '', responseTime: 0 };
+    const testResult = { success: false, message: '', responseTime: 0 };
     const startTime = Date.now();
 
     try {
@@ -94,7 +94,7 @@ serve(async (req) => {
   }
 });
 
-async function testCarrierIntegration(integration: any) {
+async function testCarrierIntegration(integration: unknown) {
   const { service_name, credentials } = integration;
   
   switch (service_name) {
@@ -111,7 +111,7 @@ async function testCarrierIntegration(integration: any) {
   }
 }
 
-async function testPaymentIntegration(integration: any) {
+async function testPaymentIntegration(integration: unknown) {
   const { service_name, credentials } = integration;
   
   switch (service_name) {
@@ -126,7 +126,7 @@ async function testPaymentIntegration(integration: any) {
   }
 }
 
-async function testAccountingIntegration(integration: any) {
+async function testAccountingIntegration(integration: unknown) {
   const { service_name, credentials } = integration;
   
   switch (service_name) {
@@ -139,7 +139,7 @@ async function testAccountingIntegration(integration: any) {
   }
 }
 
-async function testCommunicationIntegration(integration: any) {
+async function testCommunicationIntegration(integration: unknown) {
   const { service_name, credentials } = integration;
   
   switch (service_name) {
@@ -155,7 +155,7 @@ async function testCommunicationIntegration(integration: any) {
 }
 
 // Individual service test functions
-async function testUPSConnection(credentials: any) {
+async function testUPSConnection(credentials: unknown) {
   try {
     const response = await fetch('https://onlinetools.ups.com/api/track/v1/details', {
       method: 'GET',
@@ -170,7 +170,7 @@ async function testUPSConnection(credentials: any) {
   }
 }
 
-async function testFedExConnection(credentials: any) {
+async function testFedExConnection(credentials: unknown) {
   try {
     // FedEx Web Services test endpoint
     const response = await fetch('https://apis.fedex.com/track/v1/trackingnumbers', {
@@ -187,7 +187,7 @@ async function testFedExConnection(credentials: any) {
   }
 }
 
-async function testUSPSConnection(credentials: any) {
+async function testUSPSConnection(credentials: unknown) {
   try {
     const response = await fetch(`https://secure.shippingapis.com/ShippingAPI.dll?API=TrackV2&XML=<TrackRequest USERID="${credentials.user_id}"><TrackID ID="TEST"></TrackID></TrackRequest>`);
     return { success: response.ok, message: response.ok ? 'USPS connection successful' : 'USPS connection failed' };
@@ -196,7 +196,7 @@ async function testUSPSConnection(credentials: any) {
   }
 }
 
-async function testDHLConnection(credentials: any) {
+async function testDHLConnection(credentials: unknown) {
   try {
     const response = await fetch('https://api-eu.dhl.com/track/shipments', {
       method: 'GET',
@@ -211,7 +211,7 @@ async function testDHLConnection(credentials: any) {
   }
 }
 
-async function testStripeConnection(credentials: any) {
+async function testStripeConnection(credentials: unknown) {
   try {
     const response = await fetch('https://api.stripe.com/v1/account', {
       headers: {
@@ -225,7 +225,7 @@ async function testStripeConnection(credentials: any) {
   }
 }
 
-async function testPayPalConnection(credentials: any) {
+async function testPayPalConnection(credentials: unknown) {
   try {
     const authResponse = await fetch('https://api.paypal.com/v1/oauth2/token', {
       method: 'POST',
@@ -241,7 +241,7 @@ async function testPayPalConnection(credentials: any) {
   }
 }
 
-async function testATHMovilConnection(credentials: any) {
+async function testATHMovilConnection(credentials: unknown) {
   try {
     // ATH Móvil test endpoint
     const response = await fetch('https://www.athmovil.com/api/business-account/ecommerce/status', {
@@ -256,7 +256,7 @@ async function testATHMovilConnection(credentials: any) {
   }
 }
 
-async function testQuickBooksConnection(credentials: any) {
+async function testQuickBooksConnection(credentials: unknown) {
   try {
     const response = await fetch(`https://sandbox-quickbooks.api.intuit.com/v3/company/${credentials.company_id}/companyinfo/${credentials.company_id}`, {
       headers: {
@@ -270,7 +270,7 @@ async function testQuickBooksConnection(credentials: any) {
   }
 }
 
-async function testXeroConnection(credentials: any) {
+async function testXeroConnection(credentials: unknown) {
   try {
     const response = await fetch('https://api.xero.com/api.xro/2.0/Organisation', {
       headers: {
@@ -284,7 +284,7 @@ async function testXeroConnection(credentials: any) {
   }
 }
 
-async function testTwilioConnection(credentials: any) {
+async function testTwilioConnection(credentials: unknown) {
   try {
     const response = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${credentials.account_sid}.json`, {
       headers: {
@@ -298,7 +298,7 @@ async function testTwilioConnection(credentials: any) {
   }
 }
 
-async function testSendGridConnection(credentials: any) {
+async function testSendGridConnection(credentials: unknown) {
   try {
     const response = await fetch('https://api.sendgrid.com/v3/user/profile', {
       headers: {
@@ -312,7 +312,7 @@ async function testSendGridConnection(credentials: any) {
   }
 }
 
-async function testWhatsAppConnection(credentials: any) {
+async function testWhatsAppConnection(credentials: unknown) {
   try {
     const response = await fetch(`https://graph.facebook.com/v18.0/${credentials.phone_number_id}`, {
       headers: {

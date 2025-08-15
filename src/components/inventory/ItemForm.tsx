@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/select';
 import { useInventory, type InventoryItem } from '@/hooks/useInventory';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { AriaInput } from '@/components/ui/aria-components';
 
 interface ItemFormProps {
   item?: InventoryItem;
@@ -80,36 +81,26 @@ export function ItemForm({ item, onClose }: ItemFormProps) {
   const isLoading = isCreatingItem || isUpdatingItem;
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <form onSubmit={handleSubmit} className="space-y-6 cq-form">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 form-grid-2">
         {/* Basic Information */}
         <div className="space-y-4">
-          <div>
-            <Label htmlFor="sku">
-              {isSpanish ? 'SKU' : 'SKU'} *
-            </Label>
-            <Input
-              id="sku"
-              value={formData.sku}
-              onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
-              placeholder={isSpanish ? 'Ej: BOX-SM-001' : 'e.g., BOX-SM-001'}
-              required
-              disabled={isEditing} // SKU shouldn't be changed after creation
-            />
-          </div>
+          <AriaInput
+            label={`${isSpanish ? 'SKU' : 'SKU'} *`}
+            value={formData.sku}
+            onChange={(e) => setFormData({ ...formData, sku: (e.target as HTMLInputElement).value })}
+            placeholder={isSpanish ? 'Ej: BOX-SM-001' : 'e.g., BOX-SM-001'}
+            required
+            disabled={isEditing}
+          />
 
-          <div>
-            <Label htmlFor="name">
-              {isSpanish ? 'Nombre' : 'Name'} *
-            </Label>
-            <Input
-              id="name"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              placeholder={isSpanish ? 'Nombre del artículo' : 'Item name'}
-              required
-            />
-          </div>
+          <AriaInput
+            label={`${isSpanish ? 'Nombre' : 'Name'} *`}
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: (e.target as HTMLInputElement).value })}
+            placeholder={isSpanish ? 'Nombre del artículo' : 'Item name'}
+            required
+          />
 
           <div>
             <Label htmlFor="description">
@@ -160,79 +151,55 @@ export function ItemForm({ item, onClose }: ItemFormProps) {
             </Select>
           </div>
 
-          <div>
-            <Label htmlFor="barcode">
-              {isSpanish ? 'Código de Barras' : 'Barcode'}
-            </Label>
-            <Input
-              id="barcode"
-              value={formData.barcode}
-              onChange={(e) => setFormData({ ...formData, barcode: e.target.value })}
-              placeholder={isSpanish ? 'Código de barras opcional' : 'Optional barcode'}
-            />
-          </div>
+          <AriaInput
+            label={isSpanish ? 'Código de Barras' : 'Barcode'}
+            value={formData.barcode}
+            onChange={(e) => setFormData({ ...formData, barcode: (e.target as HTMLInputElement).value })}
+            placeholder={isSpanish ? 'Código de barras opcional' : 'Optional barcode'}
+          />
         </div>
 
         {/* Inventory Settings */}
         <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="min_stock_level">
-                {isSpanish ? 'Stock Mínimo' : 'Min Stock Level'}
-              </Label>
-              <Input
-                id="min_stock_level"
-                type="number"
-                min="0"
-                value={formData.min_stock_level}
-                onChange={(e) => setFormData({ ...formData, min_stock_level: parseInt(e.target.value) || 0 })}
-              />
-            </div>
+          <div className="grid grid-cols-2 gap-4 form-grid-2">
+            <AriaInput
+              label={isSpanish ? 'Stock Mínimo' : 'Min Stock Level'}
+              type="number"
+              min={0}
+              value={formData.min_stock_level as unknown as string}
+              onChange={(e) => setFormData({ ...formData, min_stock_level: parseInt((e.target as HTMLInputElement).value) || 0 })}
+            />
 
-            <div>
-              <Label htmlFor="max_stock_level">
-                {isSpanish ? 'Stock Máximo' : 'Max Stock Level'}
-              </Label>
-              <Input
-                id="max_stock_level"
-                type="number"
-                min="0"
-                value={formData.max_stock_level || ''}
-                onChange={(e) => setFormData({ ...formData, max_stock_level: parseInt(e.target.value) || null })}
-                placeholder={isSpanish ? 'Opcional' : 'Optional'}
-              />
-            </div>
+            <AriaInput
+              label={isSpanish ? 'Stock Máximo' : 'Max Stock Level'}
+              type="number"
+              min={0}
+              value={(formData.max_stock_level ?? '').toString()}
+              onChange={(e) => setFormData({ ...formData, max_stock_level: parseInt((e.target as HTMLInputElement).value) || null })}
+              placeholder={isSpanish ? 'Opcional' : 'Optional'}
+            />
           </div>
 
-          <div>
-            <Label htmlFor="reorder_point">
-              {isSpanish ? 'Punto de Reorden' : 'Reorder Point'}
-            </Label>
-            <Input
-              id="reorder_point"
-              type="number"
-              min="0"
-              value={formData.reorder_point}
-              onChange={(e) => setFormData({ ...formData, reorder_point: parseInt(e.target.value) || 0 })}
-            />
-            <p className="text-xs text-muted-foreground mt-1">
+          <AriaInput
+            label={isSpanish ? 'Punto de Reorden' : 'Reorder Point'}
+            type="number"
+            min={0}
+            value={formData.reorder_point as unknown as string}
+            onChange={(e) => setFormData({ ...formData, reorder_point: parseInt((e.target as HTMLInputElement).value) || 0 })}
+          />
+          <p className="text-xs text-muted-foreground mt-1">
               {isSpanish ? 'Nivel en el que se genera alerta de stock bajo' : 'Level at which low stock alert is triggered'}
-            </p>
+          </p>
           </div>
 
-          <div>
-            <Label htmlFor="standard_cost">
-              {isSpanish ? 'Costo Estándar' : 'Standard Cost'} ($)
-            </Label>
-            <Input
-              id="standard_cost"
-              type="number"
-              min="0"
-              step="0.01"
-              value={formData.standard_cost}
-              onChange={(e) => setFormData({ ...formData, standard_cost: parseFloat(e.target.value) || 0 })}
-            />
-          </div>
+          <AriaInput
+            label={`${isSpanish ? 'Costo Estándar' : 'Standard Cost'} ($)`}
+            type="number"
+            min={0}
+            step={0.01 as unknown as number}
+            value={formData.standard_cost as unknown as string}
+            onChange={(e) => setFormData({ ...formData, standard_cost: parseFloat((e.target as HTMLInputElement).value) || 0 })}
+          />
 
           <div>
             <Label htmlFor="preferred_vendor_id">
@@ -290,7 +257,6 @@ export function ItemForm({ item, onClose }: ItemFormProps) {
             </div>
           </div>
         </div>
-      </div>
 
       {/* Form Actions */}
       <div className="flex items-center justify-end gap-3 pt-6 border-t">

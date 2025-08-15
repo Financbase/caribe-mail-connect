@@ -1,3 +1,15 @@
+/* Custom Stylesheets - Import before Tailwind */
+@import './styles/fonts.css';
+@import './styles/safe-areas.css';
+@import './styles/low-bandwidth.css';
+@import './styles/forms.css';
+@import './styles/modals.css';
+@import './styles/cards.css';
+@import './styles/buttons.css';
+@import './styles/tables.css';
+@import './styles/focus-visible.css';
+@import './styles/animations.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -23,6 +35,9 @@ All colors MUST be HSL.
     --primary-foreground: 0 0% 100%;
     --primary-light: 210 79% 45%;
     --primary-dark: 210 79% 25%;
+    --primary-ocean: 210 79% 31%;
+    --primary-sunrise: 12 100% 60%;
+    --primary-palm: 142 71% 45%;
 
     /* Sunrise orange secondary */
     --secondary: 12 100% 60%;
@@ -126,6 +141,14 @@ All colors MUST be HSL.
 }
 
 @layer utilities {
+  /* Virtualized table grid columns via CSS var */
+  [data-vt-header], [data-vt-row] {
+    grid-template-columns: var(--vt-columns, 1fr);
+  }
+
+  /* Windowed mailbox grid cell padding wrapper */
+  .vt-mailbox-cell { padding: 6px; }
+  
   /* Animation delay utilities */
   .animation-delay-0 { animation-delay: 0ms; }
   .animation-delay-100 { animation-delay: 100ms; }
@@ -147,5 +170,43 @@ All colors MUST be HSL.
   /* Smooth scrolling */
   .scroll-smooth {
     scroll-behavior: smooth;
+  }
+  
+  /* Shimmer animation for skeleton loaders */
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+  
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
+  }
+
+  /* Container query helpers for dense forms */
+  .cq-form { container-type: inline-size; }
+  .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+  @container (max-width: 380px) {
+    .form-grid-2 { grid-template-columns: 1fr; }
+    .compact-pad { padding: 0.5rem; }
+  }
+  
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-pulse,
+    .animate-shimmer,
+    .animate-bounce {
+      animation: none;
+    }
+    
+    .transition-all,
+    .transition,
+    .transition-opacity,
+    .transition-transform {
+      transition: none;
+    }
   }
 }

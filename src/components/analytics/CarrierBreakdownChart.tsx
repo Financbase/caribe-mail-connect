@@ -22,7 +22,7 @@ const COLORS = [
 export function CarrierBreakdownChart({ data }: CarrierBreakdownChartProps) {
   const { t } = useLanguage();
 
-  const CustomTooltip = ({ active, payload }: any) => {
+  const CustomTooltip = ({ active, payload }: unknown) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
@@ -37,7 +37,7 @@ export function CarrierBreakdownChart({ data }: CarrierBreakdownChartProps) {
     return null;
   };
 
-  const CustomLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percentage }: any) => {
+  const CustomLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percentage }: unknown) => {
     if (percentage < 5) return null; // Don't show labels for small slices
     
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
@@ -86,7 +86,7 @@ export function CarrierBreakdownChart({ data }: CarrierBreakdownChartProps) {
               </Pie>
               <Tooltip content={<CustomTooltip />} />
               <Legend 
-                formatter={(value, entry: any) => (
+                formatter={(value, entry: unknown) => (
                   <span style={{ color: entry.color }}>
                     {value} ({entry.payload?.percentage?.toFixed(1) || 0}%)
                   </span>

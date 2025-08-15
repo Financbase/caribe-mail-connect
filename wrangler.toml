@@ -1,0 +1,96 @@
+# Cloudflare Pages Configuration
+# Preview Deployments - Cloudflare Pages Configuration
+
+name = "prmcms-preview"
+compatibility_date = "2024-08-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Build configuration
+[build]
+command = "pnpm build"
+cwd = "."
+destination = "dist"
+publish = "dist"
+
+[build.upload]
+format = "modules"
+
+# Environment variables for preview deployments
+[env.preview]
+VITE_APP_ENV = "preview"
+VITE_PREVIEW_MODE = "true"
+NODE_ENV = "production"
+
+[env.preview.vars]
+ENVIRONMENT = "preview"
+DEBUG_MODE = "false"
+ANALYTICS_ENABLED = "true"
+
+# Production Environment
+[env.production]
+name = "prmcms-production"
+route = "prmcms.yourdomain.com"
+VITE_APP_ENV = "production"
+VITE_PREVIEW_MODE = "false"
+NODE_ENV = "production"
+
+[env.production.vars]
+ENVIRONMENT = "production"
+DEBUG_MODE = "false"
+ANALYTICS_ENABLED = "true"
+
+# Staging Environment
+[env.staging]
+name = "prmcms-staging"
+route = "staging.prmcms.yourdomain.com"
+VITE_APP_ENV = "staging"
+VITE_PREVIEW_MODE = "false"
+NODE_ENV = "production"
+
+[env.staging.vars]
+ENVIRONMENT = "staging"
+DEBUG_MODE = "false"
+ANALYTICS_ENABLED = "true"
+
+# Environment Variables (override in Cloudflare dashboard)
+[env.production.vars]
+VITE_APP_ENV = "production"
+VITE_APP_VERSION = "1.0.0"
+VITE_ENABLE_ANALYTICS = "true"
+
+[env.staging.vars]
+VITE_APP_ENV = "staging"
+VITE_APP_VERSION = "1.0.0-staging"
+VITE_ENABLE_ANALYTICS = "false"
+
+# Headers for PWA and Security
+[[headers]]
+for = "/*"
+[headers.values]
+X-Frame-Options = "DENY"
+X-Content-Type-Options = "nosniff"
+Referrer-Policy = "strict-origin-when-cross-origin"
+Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# Service Worker and PWA files
+[[headers]]
+for = "/sw.js"
+[headers.values]
+Cache-Control = "no-cache"
+
+[[headers]]
+for = "/manifest.webmanifest"
+[headers.values]
+Cache-Control = "public, max-age=86400"
+
+# Static assets caching
+[[headers]]
+for = "/assets/*"
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
+
+# Redirects for SPA
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200

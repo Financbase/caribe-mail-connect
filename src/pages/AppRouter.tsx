@@ -1,9 +1,12 @@
 import { useState, useEffect, Suspense, lazy } from 'react';
+import { preloadCriticalComponents, preloadRouteComponents } from '@/lib/lazy-imports';
 import { useAuth } from '@/contexts/AuthContext';
-import Auth from './Auth';
-import ResetPassword from './auth/ResetPassword';
-import UpdatePassword from './auth/UpdatePassword';
+import { RouteSkeleton } from '@/components/loading/route-skeleton';
 import PRMCMS from './Index';
+
+const Auth = lazy(() => import('./Auth'));
+const ResetPassword = lazy(() => import('./auth/ResetPassword'));
+const UpdatePassword = lazy(() => import('./auth/UpdatePassword'));
 
 export default function AppRouter() {
   const { isAuthenticated, loading } = useAuth();
@@ -12,7 +15,11 @@ export default function AppRouter() {
   // Simple hash-based routing to avoid BrowserRouter conflicts
   useEffect(() => {
     const handleHashChange = () => {
-      setCurrentRoute(window.location.hash.replace('#', '') || '/');
+      const newRoute = window.location.hash.replace('#', '') || '/';
+      setCurrentRoute(newRoute);
+      try {
+        preloadRouteComponents(newRoute);
+      } catch {}
     };
 
     window.addEventListener('hashchange', handleHashChange);
@@ -21,26 +28,38 @@ export default function AppRouter() {
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
+  // Idle-time preload of critical components
+  useEffect(() => {
+    try {
+      preloadCriticalComponents();
+    } catch {}
+  }, []);
+
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <p>Loading...</p>
-        </div>
-      </div>
-    );
+    return <RouteSkeleton />
   }
 
   // Route logic
   if (!isAuthenticated) {
     if (currentRoute === '/auth/reset-password') {
-      return <ResetPassword />;
+      return (
+        <Suspense fallback={<RouteSkeleton />}>
+          <ResetPassword />
+        </Suspense>
+      );
     }
     if (currentRoute === '/auth/update-password') {
-      return <UpdatePassword />;
+      return (
+        <Suspense fallback={<RouteSkeleton />}>
+          <UpdatePassword />
+        </Suspense>
+      );
     }
-    return <Auth />;
+    return (
+      <Suspense fallback={<RouteSkeleton />}>
+        <Auth />
+      </Suspense>
+    );
   }
 
   // Authenticated user routes
@@ -50,7 +69,7 @@ export default function AppRouter() {
   if (currentRoute === '/search/advanced') {
     const AdvancedSearch = lazy(() => import('./AdvancedSearch'));
     return (
-      <Suspense fallback={<div className="p-4">Loading...</div>}>
+      <Suspense fallback={<RouteSkeleton />}>
         <AdvancedSearch />
       </Suspense>
     );
@@ -58,7 +77,7 @@ export default function AppRouter() {
   if (currentRoute === '/reports') {
     const Reports = lazy(() => import('./Reports'));
     return (
-      <Suspense fallback={<div className="p-4">Loading...</div>}>
+      <Suspense fallback={<RouteSkeleton />}>
         <Reports />
       </Suspense>
     );
@@ -66,7 +85,7 @@ export default function AppRouter() {
   if (currentRoute === '/qa') {
     const QA = lazy(() => import('./QA'));
     return (
-      <Suspense fallback={<div className="p-4">Loading...</div>}>
+      <Suspense fallback={<RouteSkeleton />}>
         <QA />
       </Suspense>
     );
@@ -74,7 +93,7 @@ export default function AppRouter() {
   if (currentRoute === '/security') {
     const Security = lazy(() => import('./Security'));
     return (
-      <Suspense fallback={<div className="p-4">Loading...</div>}>
+      <Suspense fallback={<RouteSkeleton />}>
         <Security />
       </Suspense>
     );
@@ -82,7 +101,7 @@ export default function AppRouter() {
   if (currentRoute === '/performance') {
     const PerformancePage = lazy(() => import('./Performance'));
     return (
-      <Suspense fallback={<div className="p-4">Loading...</div>}>
+      <Suspense fallback={<RouteSkeleton />}>
         <PerformancePage />
       </Suspense>
     );
@@ -90,7 +109,7 @@ export default function AppRouter() {
   if (currentRoute === '/analytics') {
     const Analytics = lazy(() => import('./Analytics'));
     return (
-      <Suspense fallback={<div className="p-4">Loading...</div>}>
+      <Suspense fallback={<RouteSkeleton />}>
         <Analytics onNavigate={(page: string) => window.location.hash = `#/${page}`} />
       </Suspense>
     );
@@ -98,7 +117,7 @@ export default function AppRouter() {
   if (currentRoute === '/customers') {
     const Customers = lazy(() => import('./Customers'));
     return (
-      <Suspense fallback={<div className="p-4">Loading...</div>}>
+      <Suspense fallback={<RouteSkeleton />}>
         <Customers onNavigate={(page: string) => window.location.hash = `#/${page}`} />
       </Suspense>
     );
@@ -106,7 +125,7 @@ export default function AppRouter() {
   if (currentRoute === '/mailboxes') {
     const Mailboxes = lazy(() => import('./Mailboxes'));
     return (
-      <Suspense fallback={<div className="p-4">Loading...</div>}>
+      <Suspense fallback={<RouteSkeleton />}>
         <Mailboxes onNavigate={(page: string) => window.location.hash = `#/${page}`} />
       </Suspense>
     );
@@ -114,7 +133,7 @@ export default function AppRouter() {
   if (currentRoute === '/integrations') {
     const Integrations = lazy(() => import('./Integrations'));
     return (
-      <Suspense fallback={<div className="p-4">Loading...</div>}>
+      <Suspense fallback={<RouteSkeleton />}>
         <Integrations />
       </Suspense>
     );
@@ -122,7 +141,7 @@ export default function AppRouter() {
   if (currentRoute === '/billing') {
     const Billing = lazy(() => import('./Billing'));
     return (
-      <Suspense fallback={<div className="p-4">Loading...</div>}>
+      <Suspense fallback={<RouteSkeleton />}>
         <Billing onNavigate={(page: string) => window.location.hash = `#/${page}`} />
       </Suspense>
     );
@@ -130,7 +149,7 @@ export default function AppRouter() {
   if (currentRoute === '/admin') {
     const Admin = lazy(() => import('./Admin'));
     return (
-      <Suspense fallback={<div className="p-4">Loading...</div>}>
+      <Suspense fallback={<RouteSkeleton />}>
         <Admin onNavigate={(page: string) => window.location.hash = `#/${page}`} />
       </Suspense>
     );
@@ -138,7 +157,7 @@ export default function AppRouter() {
   if (currentRoute === '/inventory') {
     const Inventory = lazy(() => import('./Inventory'));
     return (
-      <Suspense fallback={<div className="p-4">Loading...</div>}>
+      <Suspense fallback={<RouteSkeleton />}>
         <Inventory onNavigate={(page: string) => window.location.hash = `#/${page}`} />
       </Suspense>
     );
@@ -146,7 +165,7 @@ export default function AppRouter() {
   if (currentRoute === '/documents') {
     const Documents = lazy(() => import('./Documents'));
     return (
-      <Suspense fallback={<div className="p-4">Loading...</div>}>
+      <Suspense fallback={<RouteSkeleton />}>
         <Documents onNavigate={(page: string) => window.location.hash = `#/${page}`} />
       </Suspense>
     );
@@ -154,7 +173,7 @@ export default function AppRouter() {
   if (currentRoute === '/virtual-mail') {
     const VirtualMailComponent = lazy(() => import('./VirtualMail').then(module => ({ default: module.VirtualMail })));
     return (
-      <Suspense fallback={<div className="p-4">Loading...</div>}>
+      <Suspense fallback={<RouteSkeleton />}>
         <VirtualMailComponent />
       </Suspense>
     );
@@ -162,7 +181,7 @@ export default function AppRouter() {
   if (currentRoute === '/notifications') {
     const Notifications = lazy(() => import('./Notifications'));
     return (
-      <Suspense fallback={<div className="p-4">Loading...</div>}>
+      <Suspense fallback={<RouteSkeleton />}>
         <Notifications onNavigate={(page: string) => window.location.hash = `#/${page}`} />
       </Suspense>
     );
@@ -170,7 +189,7 @@ export default function AppRouter() {
   if (currentRoute === '/routes') {
     const Routes = lazy(() => import('./Routes'));
     return (
-      <Suspense fallback={<div className="p-4">Loading...</div>}>
+      <Suspense fallback={<RouteSkeleton />}>
         <Routes onNavigate={(page: string) => window.location.hash = `#/${page}`} />
       </Suspense>
     );
@@ -178,7 +197,7 @@ export default function AppRouter() {
   if (currentRoute === '/intake') {
     const PackageIntake = lazy(() => import('./PackageIntake'));
     return (
-      <Suspense fallback={<div className="p-4">Loading...</div>}>
+      <Suspense fallback={<RouteSkeleton />}>
         <PackageIntake onNavigate={(page: string) => window.location.hash = `#/${page}`} />
       </Suspense>
     );
@@ -186,7 +205,7 @@ export default function AppRouter() {
   if (currentRoute === '/act60-dashboard') {
     const Act60Dashboard = lazy(() => import('./Act60Dashboard'));
     return (
-      <Suspense fallback={<div className="p-4">Loading...</div>}>
+      <Suspense fallback={<RouteSkeleton />}>
         <Act60Dashboard onNavigate={(page: string) => window.location.hash = `#/${page}`} />
       </Suspense>
     );
@@ -194,7 +213,7 @@ export default function AppRouter() {
   if (currentRoute === '/driver-route') {
     const DriverRoute = lazy(() => import('./DriverRoute'));
     return (
-      <Suspense fallback={<div className="p-4">Loading...</div>}>
+      <Suspense fallback={<RouteSkeleton />}>
         <DriverRoute onNavigate={(page: string) => window.location.hash = `#/${page}`} />
       </Suspense>
     );

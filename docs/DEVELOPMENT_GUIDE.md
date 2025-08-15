@@ -7,12 +7,14 @@ This guide provides comprehensive information for developers working on the cari
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - **Node.js**: v18.0.0 or higher
 - **npm**: v9.0.0 or higher
 - **Git**: Latest version
 - **VS Code**: Recommended IDE with extensions
 
 ### Required VS Code Extensions
+
 ```json
 {
   "recommendations": [
@@ -27,24 +29,29 @@ This guide provides comprehensive information for developers working on the cari
 ```
 
 ### Environment Setup
+
 1. **Clone the repository**:
+
    ```bash
    git clone https://github.com/your-org/caribe-mail-connect.git
    cd caribe-mail-connect
    ```
 
 2. **Install dependencies**:
+
    ```bash
    npm install
    ```
 
 3. **Environment variables**:
+
    ```bash
    cp .env.example .env.local
    # Edit .env.local with your configuration
    ```
 
 4. **Start development server**:
+
    ```bash
    npm run dev
    ```
@@ -79,6 +86,7 @@ caribe-mail-connect/
 ## 🔧 Development Workflow
 
 ### Branch Strategy
+
 - **main**: Production-ready code
 - **develop**: Integration branch for features
 - **feature/***: Feature development branches
@@ -86,6 +94,7 @@ caribe-mail-connect/
 - **release/***: Release preparation branches
 
 ### Commit Convention
+
 Follow [Conventional Commits](https://www.conventionalcommits.org/):
 
 ```
@@ -97,6 +106,7 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 ```
 
 **Types**:
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation changes
@@ -107,6 +117,7 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 - `chore`: Maintenance tasks
 
 **Examples**:
+
 ```
 feat(auth): add OAuth login support
 fix(api): resolve user data fetching issue
@@ -114,14 +125,17 @@ docs(readme): update installation instructions
 ```
 
 ### Pull Request Process
+
 1. **Create feature branch** from `develop`
 2. **Implement changes** following coding standards
 3. **Write/update tests** for new functionality
 4. **Run quality checks**:
+
    ```bash
    npm run code-quality
    npm run test
    ```
+
 5. **Create pull request** with descriptive title and description
 6. **Request review** from team members
 7. **Address feedback** and update PR
@@ -130,17 +144,20 @@ docs(readme): update installation instructions
 ## 🧪 Testing Strategy
 
 ### Testing Pyramid
+
 1. **Unit Tests** (70%): Individual functions and components
 2. **Integration Tests** (20%): Component interactions and API calls
 3. **E2E Tests** (10%): Full user workflows
 
 ### Testing Tools
+
 - **Vitest**: Unit and integration testing
 - **React Testing Library**: Component testing
 - **Playwright**: End-to-end testing
 - **MSW**: API mocking
 
 ### Running Tests
+
 ```bash
 # Run all tests
 npm run test
@@ -158,6 +175,7 @@ npm run test:e2e
 ### Writing Tests
 
 #### Unit Tests
+
 ```typescript
 // src/lib/utils/formatDate.test.ts
 import { describe, it, expect } from 'vitest';
@@ -172,6 +190,7 @@ describe('formatDate', () => {
 ```
 
 #### Component Tests
+
 ```typescript
 // src/components/ui/Button.test.tsx
 import { render, screen, fireEvent } from '@testing-library/react';
@@ -196,6 +215,7 @@ describe('Button', () => {
 ## 📝 Coding Standards
 
 ### TypeScript Guidelines
+
 1. **Strict Mode**: Always use TypeScript strict mode
 2. **Type Definitions**: Define interfaces for all data structures
 3. **No Any**: Avoid `any` type, use `unknown` or specific types
@@ -228,6 +248,7 @@ const getUser = async (id: any): Promise<any> => {
 ```
 
 ### React Guidelines
+
 1. **Functional Components**: Use function components with hooks
 2. **Custom Hooks**: Extract reusable logic into custom hooks
 3. **Props Interface**: Always define TypeScript interfaces for props
@@ -261,6 +282,7 @@ UserCard.displayName = 'UserCard';
 ```
 
 ### CSS/Styling Guidelines
+
 1. **Tailwind CSS**: Use utility classes for styling
 2. **Component Variants**: Use `cva` for component variants
 3. **Responsive Design**: Mobile-first approach
@@ -294,6 +316,7 @@ const buttonVariants = cva(
 ## 🔍 Code Quality Tools
 
 ### ESLint Configuration
+
 ```json
 {
   "extends": [
@@ -312,6 +335,7 @@ const buttonVariants = cva(
 ```
 
 ### Prettier Configuration
+
 ```json
 {
   "semi": true,
@@ -324,6 +348,7 @@ const buttonVariants = cva(
 ```
 
 ### Quality Scripts
+
 ```bash
 # Lint code
 npm run lint
@@ -344,12 +369,14 @@ npm run code-quality
 ## 🚀 Performance Guidelines
 
 ### React Performance
+
 1. **React.memo**: Memoize components that receive stable props
 2. **useCallback**: Wrap event handlers and functions passed as props
 3. **useMemo**: Memoize expensive calculations
 4. **Code Splitting**: Use React.lazy for route-based splitting
 
 ### Bundle Optimization
+
 1. **Tree Shaking**: Import only what you need
 2. **Dynamic Imports**: Use dynamic imports for large dependencies
 3. **Image Optimization**: Use optimized image formats (WebP, AVIF)
@@ -358,16 +385,19 @@ npm run code-quality
 ## 🔐 Security Guidelines
 
 ### Input Validation
+
 1. **Client-side Validation**: Use Zod for schema validation
 2. **Server-side Validation**: Always validate on the server
 3. **Sanitization**: Sanitize user inputs to prevent XSS
 
 ### Authentication
+
 1. **JWT Tokens**: Use secure JWT tokens for authentication
 2. **Token Storage**: Store tokens securely (httpOnly cookies)
 3. **Session Management**: Implement proper session timeout
 
 ### API Security
+
 1. **HTTPS**: Always use HTTPS in production
 2. **CORS**: Configure CORS properly
 3. **Rate Limiting**: Implement rate limiting for API endpoints
@@ -375,12 +405,14 @@ npm run code-quality
 ## 📊 Monitoring and Debugging
 
 ### Development Tools
+
 1. **React DevTools**: Browser extension for React debugging
 2. **Redux DevTools**: For state management debugging
 3. **Network Tab**: Monitor API calls and performance
 4. **Lighthouse**: Performance and accessibility auditing
 
 ### Logging
+
 ```typescript
 import { logger } from '@/lib/logging/Logger';
 
@@ -392,6 +424,7 @@ logger.error('API call failed', error, { endpoint: '/api/users' });
 ```
 
 ### Error Handling
+
 ```typescript
 import { errorHandler } from '@/lib/error-handling/ErrorHandler';
 
@@ -411,6 +444,7 @@ try {
 ## 🔄 Deployment
 
 ### Build Process
+
 ```bash
 # Production build
 npm run build
@@ -423,11 +457,13 @@ npm run build:analyze
 ```
 
 ### Environment Configuration
+
 - **Development**: `.env.local`
 - **Staging**: `.env.staging`
 - **Production**: `.env.production`
 
 ### CI/CD Pipeline
+
 1. **Code Quality**: ESLint, Prettier, TypeScript checks
 2. **Testing**: Unit, integration, and E2E tests
 3. **Security**: Dependency vulnerability scanning

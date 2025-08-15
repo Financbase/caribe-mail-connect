@@ -2,7 +2,7 @@
 
 ## Project info
 
-**URL**: https://lovable.dev/projects/ac8297d1-7da1-4672-b42f-263b1dc5dd96
+**URL**: <https://lovable.dev/projects/ac8297d1-7da1-4672-b42f-263b1dc5dd96>
 
 ## How can I edit this code?
 
@@ -72,6 +72,17 @@ To connect a domain, navigate to Project > Settings > Domains and click Connect 
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
 
-## Additional Documentation
+## Environment variables
 
-- [Tenancy, Pricing, and Compliance Overview](docs/product/tenancy-pricing-compliance.md)
+To enable monitoring and error tracking with Sentry, create a `.env.local` file in `caribe-mail-connect/` with:
+
+```env
+VITE_SENTRY_DSN=
+VITE_SENTRY_TRACES_SAMPLE_RATE=0.1
+```
+
+Notes:
+
+- Do not commit real secrets.
+- Initialization is handled in `src/main.tsx` via `initSentry()`; see `src/integrations/monitoring/sentry.ts`.
+- See `docs/architecture/monitoring.md` for a full enable/validate checklist.

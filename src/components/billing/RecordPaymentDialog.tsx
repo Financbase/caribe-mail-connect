@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { AriaInput } from '@/components/ui/aria-components';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
@@ -170,7 +171,7 @@ export function RecordPaymentDialog({ open, onOpenChange, invoiceId }: RecordPay
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-2xl cq-form">
         <DialogHeader>
           <DialogTitle>Registrar Pago</DialogTitle>
         </DialogHeader>
@@ -216,7 +217,7 @@ export function RecordPaymentDialog({ open, onOpenChange, invoiceId }: RecordPay
           {/* Payment Method */}
           <div>
             <Label>Método de Pago *</Label>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-2">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-2 form-grid-2">
               <Card 
                 className={`cursor-pointer transition-all ${paymentMethod === 'cash' ? 'ring-2 ring-primary' : ''}`}
                 onClick={() => setPaymentMethod('cash')}
@@ -256,32 +257,27 @@ export function RecordPaymentDialog({ open, onOpenChange, invoiceId }: RecordPay
           </div>
 
           {/* Payment Details */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="amount">Monto *</Label>
-              <Input
-                type="number"
-                step="0.01"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                placeholder="0.00"
-              />
-            </div>
-            <div>
-              <Label htmlFor="reference">
-                Número de Referencia 
-                {paymentMethod !== 'cash' && ' *'}
-              </Label>
-              <Input
-                value={referenceNumber}
-                onChange={(e) => setReferenceNumber(e.target.value)}
-                placeholder={
-                  paymentMethod === 'ath_movil' ? 'ATH ref #' :
-                  paymentMethod === 'card' ? 'Últimos 4 dígitos' :
-                  'Opcional'
-                }
-              />
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 form-grid-2">
+            <AriaInput
+              label="Monto *"
+              type="number"
+              step="0.01"
+              value={amount}
+              onChange={(e) => setAmount((e.target as HTMLInputElement).value)}
+              placeholder="0.00"
+              required
+            />
+            <AriaInput
+              label={`Número de Referencia${paymentMethod !== 'cash' ? ' *' : ''}`}
+              value={referenceNumber}
+              onChange={(e) => setReferenceNumber((e.target as HTMLInputElement).value)}
+              placeholder={
+                paymentMethod === 'ath_movil' ? 'ATH ref #' :
+                paymentMethod === 'card' ? 'Últimos 4 dígitos' :
+                'Opcional'
+              }
+              required={paymentMethod !== 'cash'}
+            />
           </div>
 
           {/* Notes */}

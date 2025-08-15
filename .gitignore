@@ -28,3 +28,18 @@ test-screenshots/
 *.njsproj
 *.sln
 *.sw?
+
+# Storybook build artifacts
+storybook-static/
+
+# Additional build artifacts
+build/
+.next/
+.cache/
+.tmp/
+
+# Environment files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local

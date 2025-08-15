@@ -2,8 +2,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 interface RouteMapProps {
-  routes: any[];
-  deliveries: any[];
+  routes: unknown[];
+  deliveries: unknown[];
 }
 
 export function RouteMap({ routes, deliveries }: RouteMapProps) {

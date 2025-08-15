@@ -12,6 +12,7 @@ import { useVirtualMailbox } from '@/hooks/useVirtualMailbox';
 import { useCamera } from '@/hooks/useCamera';
 import { useToast } from '@/components/ui/use-toast';
 import { formatCurrency, formatDate } from '@/lib/utils';
+import { CachedImage } from '@/components/offline/CachedImage';
 
 export function CheckDepositCapture() {
   const { language } = useLanguage();
@@ -180,7 +181,18 @@ export function CheckDepositCapture() {
               </TableHeader>
               <TableBody>
                 {checkDeposits.map((deposit) => (
-                  <TableRow key={deposit.id}>
+                  <TableRow
+                    key={deposit.id}
+                    tabIndex={0}
+                    aria-label={`${isSpanish ? 'Depósito' : 'Deposit'} ${deposit.check_number || ''} ${formatDate(deposit.created_at)}`}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        const btn = (e.currentTarget as HTMLElement).querySelector<HTMLButtonElement>('button[data-action="view"]');
+                        btn?.click();
+                        e.preventDefault();
+                      }
+                    }}
+                  >
                     <TableCell>
                       {formatDate(deposit.created_at)}
                     </TableCell>
@@ -202,7 +214,7 @@ export function CheckDepositCapture() {
                     </TableCell>
                     
                     <TableCell>
-                      <Button size="sm" variant="outline">
+                      <Button size="sm" variant="outline" data-action="view" aria-label={isSpanish ? 'Ver depósito' : 'View deposit'}>
                         <Eye className="h-3 w-3 mr-1" />
                         {isSpanish ? 'Ver' : 'View'}
                       </Button>
@@ -300,7 +312,7 @@ export function CheckDepositCapture() {
                 <CardContent className="space-y-4">
                   {frontImage ? (
                     <div className="space-y-2">
-                      <img
+                      <CachedImage
                         src={frontImage}
                         alt="Front of check"
                         className="w-full h-32 object-cover rounded border"
@@ -346,6 +358,7 @@ export function CheckDepositCapture() {
                           accept="image/*"
                           onChange={(e) => handleFileUpload(e, 'front')}
                           className="hidden"
+                          aria-label={isSpanish ? 'Subir imagen frontal del cheque' : 'Upload front of check image'}
                         />
                       </div>
                     </div>
@@ -364,7 +377,7 @@ export function CheckDepositCapture() {
                 <CardContent className="space-y-4">
                   {backImage ? (
                     <div className="space-y-2">
-                      <img
+                      <CachedImage
                         src={backImage}
                         alt="Back of check"
                         className="w-full h-32 object-cover rounded border"
@@ -410,6 +423,7 @@ export function CheckDepositCapture() {
                           accept="image/*"
                           onChange={(e) => handleFileUpload(e, 'back')}
                           className="hidden"
+                          aria-label={isSpanish ? 'Subir imagen trasera del cheque' : 'Upload back of check image'}
                         />
                       </div>
                     </div>

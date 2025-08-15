@@ -41,18 +41,24 @@ serve(async (req) => {
     let linkId;
 
     switch (paymentMethod) {
-      case 'stripe':
+      case 'stripe': {
         const stripeResult = await generateStripePaymentLink(amount, currency, description, metadata, expiresIn);
+        break;
+      }
         paymentLink = stripeResult.url;
         linkId = stripeResult.id;
         break;
-      case 'paypal':
+      case 'paypal': {
         const paypalResult = await generatePayPalPaymentLink(amount, currency, description, metadata);
+        break;
+      }
         paymentLink = paypalResult.url;
         linkId = paypalResult.id;
         break;
-      case 'ath_movil':
+      case 'ath_movil': {
         const athResult = await generateATHMovilPaymentLink(amount, description, metadata);
+        break;
+      }
         paymentLink = athResult.url;
         linkId = athResult.id;
         break;
@@ -112,7 +118,7 @@ serve(async (req) => {
   }
 });
 
-async function generateStripePaymentLink(amount: number, currency: string, description: string, metadata: any, expiresIn: number) {
+async function generateStripePaymentLink(amount: number, currency: string, description: string, metadata: unknown, expiresIn: number) {
   const stripeSecretKey = Deno.env.get('STRIPE_SECRET_KEY');
   
   if (!stripeSecretKey) {
@@ -150,7 +156,7 @@ async function generateStripePaymentLink(amount: number, currency: string, descr
   };
 }
 
-async function generatePayPalPaymentLink(amount: number, currency: string, description: string, metadata: any) {
+async function generatePayPalPaymentLink(amount: number, currency: string, description: string, metadata: unknown) {
   const clientId = Deno.env.get('PAYPAL_CLIENT_ID');
   const clientSecret = Deno.env.get('PAYPAL_CLIENT_SECRET');
   
@@ -204,7 +210,7 @@ async function generatePayPalPaymentLink(amount: number, currency: string, descr
   }
 
   const payment = await paymentResponse.json();
-  const approvalUrl = payment.links.find((link: any) => link.rel === 'approval_url')?.href;
+  const approvalUrl = payment.links.find((link: unknown) => link.rel === 'approval_url')?.href;
 
   return {
     id: payment.id,
@@ -212,7 +218,7 @@ async function generatePayPalPaymentLink(amount: number, currency: string, descr
   };
 }
 
-async function generateATHMovilPaymentLink(amount: number, description: string, metadata: any) {
+async function generateATHMovilPaymentLink(amount: number, description: string, metadata: unknown) {
   const apiKey = Deno.env.get('ATH_MOVIL_API_KEY');
   const merchantId = Deno.env.get('ATH_MOVIL_MERCHANT_ID');
   

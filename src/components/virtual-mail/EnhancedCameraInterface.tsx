@@ -13,7 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 interface EnhancedCameraInterfaceProps {
   isOpen: boolean;
   onClose: () => void;
-  onCapture: (photos: any[]) => void;
+  onCapture: (photos: unknown[]) => void;
   title?: string;
   description?: string;
 }
@@ -103,7 +103,7 @@ export function EnhancedCameraInterface({
     }
   }, [takePhoto, toast]);
 
-  const enhanceImage = useCallback((photo: any) => {
+  const enhanceImage = useCallback((photo: unknown) => {
     if (!canvasRef.current) return photo;
 
     const canvas = canvasRef.current;

@@ -240,7 +240,7 @@ export function PerformanceDashboard() {
                     <XAxis dataKey="name" />
                     <YAxis />
                     <Tooltip 
-                      formatter={(value: any, name: any, props: any) => [
+                      formatter={(value: unknown, name: unknown, props: unknown) => [
                         `${value}ms`,
                         props.payload.endpoint
                       ]}

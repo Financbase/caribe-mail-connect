@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { AriaInput } from '@/components/ui/aria-components';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -116,7 +117,7 @@ export function DataManagement() {
             <div>
               <Label>Seleccionar Tabla</Label>
               <Select value={selectedTable} onValueChange={setSelectedTable}>
-                <SelectTrigger>
+                <SelectTrigger aria-label="Seleccionar tabla a exportar">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -174,10 +175,9 @@ export function DataManagement() {
             </AlertDescription>
           </Alert>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label>Archivo CSV</Label>
-              <Input type="file" accept=".csv" />
+              <AriaInput label="Archivo CSV" type="file" accept=".csv" />
             </div>
             <div className="flex items-end">
               <Button variant="outline" className="w-full">

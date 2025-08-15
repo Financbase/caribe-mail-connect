@@ -66,7 +66,7 @@ export default function PortalLogin({ onNavigate }: PortalLoginProps) {
         title: 'Acceso exitoso',
         description: 'Bienvenido a su portal de cliente',
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       setError('Error de conexión. Intente nuevamente.');
       console.error('Login error:', error);
     } finally {
@@ -133,7 +133,7 @@ export default function PortalLogin({ onNavigate }: PortalLoginProps) {
         password: '',
         confirmPassword: ''
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       setError('Error de conexión. Intente nuevamente.');
       console.error('Signup error:', error);
     } finally {

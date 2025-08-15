@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { VirtualizedList } from '@/components/lists/VirtualizedList';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Plus, Trash2 } from 'lucide-react';
@@ -94,7 +95,7 @@ export function CreateInvoiceDialog({ open, onOpenChange }: CreateInvoiceDialogP
     setItems(items.filter((_, i) => i !== index));
   };
 
-  const updateItem = (index: number, field: keyof InvoiceItem, value: any) => {
+  const updateItem = (index: number, field: keyof InvoiceItem, value: unknown) => {
     const updatedItems = [...items];
     updatedItems[index] = { ...updatedItems[index], [field]: value };
     
@@ -200,26 +201,31 @@ export function CreateInvoiceDialog({ open, onOpenChange }: CreateInvoiceDialogP
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto cq-form">
         <DialogHeader>
           <DialogTitle>Crear Nueva Factura</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-6">
           {/* Customer Selection */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 form-grid-2">
             <div>
               <Label htmlFor="customer">Cliente *</Label>
               <Select value={selectedCustomer} onValueChange={setSelectedCustomer}>
                 <SelectTrigger>
                   <SelectValue placeholder="Seleccionar cliente" />
                 </SelectTrigger>
-                <SelectContent>
-                  {customers.map((customer) => (
-                    <SelectItem key={customer.id} value={customer.id}>
-                      {customer.first_name} {customer.last_name} - #{customer.mailbox_number}
-                    </SelectItem>
-                  ))}
+                <SelectContent className="max-h-64 p-0">
+                  <VirtualizedList
+                    items={customers}
+                    itemHeight={40}
+                    ariaLabel="Clientes"
+                    renderItem={(customer) => (
+                      <SelectItem key={customer.id} value={customer.id}>
+                        {customer.first_name} {customer.last_name} - #{customer.mailbox_number}
+                      </SelectItem>
+                    )}
+                  />
                 </SelectContent>
               </Select>
             </div>
@@ -234,7 +240,7 @@ export function CreateInvoiceDialog({ open, onOpenChange }: CreateInvoiceDialogP
           </div>
 
           {/* Billing Period */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 form-grid-2">
             <div>
               <Label htmlFor="period_start">Período - Inicio *</Label>
               <Input
@@ -267,7 +273,7 @@ export function CreateInvoiceDialog({ open, onOpenChange }: CreateInvoiceDialogP
             <CardContent>
               <div className="space-y-4">
                 {items.map((item, index) => (
-                  <div key={index} className="grid grid-cols-12 gap-2 items-end">
+                  <div key={index} className="grid grid-cols-12 gap-2 items-end cq-form">
                     <div className="col-span-3">
                       <Label>Tipo</Label>
                       <Select

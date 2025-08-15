@@ -57,7 +57,7 @@ serve(async (req) => {
     }
 
     const startTime = Date.now();
-    let resultData: any[] = [];
+    let resultData: unknown[] = [];
     let rowCount = 0;
 
     try {
@@ -114,7 +114,7 @@ serve(async (req) => {
   }
 });
 
-async function executeReportQuery(supabase: any, report: any, parameters: any): Promise<any[]> {
+async function executeReportQuery(supabase: unknown, report: unknown, parameters: unknown): Promise<any[]> {
   const { query_config } = report;
   
   switch (report.type) {
@@ -131,7 +131,7 @@ async function executeReportQuery(supabase: any, report: any, parameters: any): 
   }
 }
 
-async function executeOperationalReport(supabase: any, config: any, params: any): Promise<any[]> {
+async function executeOperationalReport(supabase: unknown, config: Record<string, unknown>, params: Record<string, unknown>): Promise<any[]> {
   const { report_name } = config;
   
   switch (report_name) {
@@ -150,7 +150,7 @@ async function executeOperationalReport(supabase: any, config: any, params: any)
   }
 }
 
-async function executeFinancialReport(supabase: any, config: any, params: any): Promise<any[]> {
+async function executeFinancialReport(supabase: unknown, config: Record<string, unknown>, params: Record<string, unknown>): Promise<any[]> {
   const { report_name } = config;
   
   switch (report_name) {
@@ -169,7 +169,7 @@ async function executeFinancialReport(supabase: any, config: any, params: any): 
   }
 }
 
-async function executeComplianceReport(supabase: any, config: any, params: any): Promise<any[]> {
+async function executeComplianceReport(supabase: unknown, config: Record<string, unknown>, params: Record<string, unknown>): Promise<any[]> {
   const { report_name } = config;
   
   switch (report_name) {
@@ -188,7 +188,7 @@ async function executeComplianceReport(supabase: any, config: any, params: any):
   }
 }
 
-async function executeCustomReport(supabase: any, config: any, params: any): Promise<any[]> {
+async function executeCustomReport(supabase: unknown, config: Record<string, unknown>, params: Record<string, unknown>): Promise<any[]> {
   // Execute custom query based on configuration
   const { tables, fields, filters } = config;
   
@@ -230,7 +230,7 @@ async function executeCustomReport(supabase: any, config: any, params: any): Pro
 }
 
 // Operational report implementations
-async function getDailyOperationsSummary(supabase: any, params: any) {
+async function getDailyOperationsSummary(supabase: unknown, params: Record<string, unknown>) {
   const date = params.date || new Date().toISOString().split('T')[0];
   
   const { data, error } = await supabase
@@ -251,7 +251,7 @@ async function getDailyOperationsSummary(supabase: any, params: any) {
   return data || [];
 }
 
-async function getPackageAgingReport(supabase: any, params: any) {
+async function getPackageAgingReport(supabase: unknown, params: Record<string, unknown>) {
   const { data, error } = await supabase
     .from('packages')
     .select(`
@@ -269,7 +269,7 @@ async function getPackageAgingReport(supabase: any, params: any) {
   return data || [];
 }
 
-async function getCarrierPerformance(supabase: any, params: any) {
+async function getCarrierPerformance(supabase: unknown, params: Record<string, unknown>) {
   const startDate = params.start_date || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
   const endDate = params.end_date || new Date().toISOString();
   
@@ -288,7 +288,7 @@ async function getCarrierPerformance(supabase: any, params: any) {
   return data || [];
 }
 
-async function getStaffProductivity(supabase: any, params: any) {
+async function getStaffProductivity(supabase: unknown, params: Record<string, unknown>) {
   const startDate = params.start_date || new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
   const endDate = params.end_date || new Date().toISOString();
   
@@ -308,7 +308,7 @@ async function getStaffProductivity(supabase: any, params: any) {
   return data || [];
 }
 
-async function getDeliveryRouteEfficiency(supabase: any, params: any) {
+async function getDeliveryRouteEfficiency(supabase: unknown, params: Record<string, unknown>) {
   const { data, error } = await supabase
     .from('delivery_routes')
     .select(`
@@ -321,7 +321,7 @@ async function getDeliveryRouteEfficiency(supabase: any, params: any) {
 }
 
 // Financial report implementations
-async function getRevenueByService(supabase: any, params: any) {
+async function getRevenueByService(supabase: unknown, params: Record<string, unknown>) {
   const { data, error } = await supabase
     .from('invoice_items')
     .select(`
@@ -336,7 +336,7 @@ async function getRevenueByService(supabase: any, params: any) {
   return data || [];
 }
 
-async function getAccountsReceivableAging(supabase: any, params: any) {
+async function getAccountsReceivableAging(supabase: unknown, params: Record<string, unknown>) {
   const { data, error } = await supabase
     .from('invoices')
     .select(`
@@ -349,7 +349,7 @@ async function getAccountsReceivableAging(supabase: any, params: any) {
   return data || [];
 }
 
-async function getCashFlowAnalysis(supabase: any, params: any) {
+async function getCashFlowAnalysis(supabase: unknown, params: Record<string, unknown>) {
   const { data, error } = await supabase
     .from('mailbox_payments')
     .select(`
@@ -362,7 +362,7 @@ async function getCashFlowAnalysis(supabase: any, params: any) {
   return data || [];
 }
 
-async function getCustomerProfitability(supabase: any, params: any) {
+async function getCustomerProfitability(supabase: unknown, params: Record<string, unknown>) {
   const { data, error } = await supabase
     .from('customers')
     .select(`
@@ -375,7 +375,7 @@ async function getCustomerProfitability(supabase: any, params: any) {
   return data || [];
 }
 
-async function getTaxLiability(supabase: any, params: any) {
+async function getTaxLiability(supabase: unknown, params: Record<string, unknown>) {
   const { data, error } = await supabase
     .from('invoices')
     .select(`
@@ -391,7 +391,7 @@ async function getTaxLiability(supabase: any, params: any) {
 }
 
 // Compliance report implementations
-async function getCMRAQuarterly(supabase: any, params: any) {
+async function getCMRAQuarterly(supabase: unknown, params: Record<string, unknown>) {
   const { data, error } = await supabase
     .from('customer_compliance')
     .select(`
@@ -403,7 +403,7 @@ async function getCMRAQuarterly(supabase: any, params: any) {
   return data || [];
 }
 
-async function getForm1583Status(supabase: any, params: any) {
+async function getForm1583Status(supabase: unknown, params: Record<string, unknown>) {
   const { data, error } = await supabase
     .from('customer_compliance')
     .select(`
@@ -415,7 +415,7 @@ async function getForm1583Status(supabase: any, params: any) {
   return data || [];
 }
 
-async function getIdVerificationAudit(supabase: any, params: any) {
+async function getIdVerificationAudit(supabase: unknown, params: Record<string, unknown>) {
   const { data, error } = await supabase
     .from('compliance_audit_log')
     .select('*')
@@ -425,7 +425,7 @@ async function getIdVerificationAudit(supabase: any, params: any) {
   return data || [];
 }
 
-async function getComplianceScores(supabase: any, params: any) {
+async function getComplianceScores(supabase: unknown, params: Record<string, unknown>) {
   const { data, error } = await supabase
     .from('customer_compliance')
     .select(`
@@ -437,7 +437,7 @@ async function getComplianceScores(supabase: any, params: any) {
   return data || [];
 }
 
-async function getRegulatoryChecklist(supabase: any, params: any) {
+async function getRegulatoryChecklist(supabase: unknown, params: Record<string, unknown>) {
   const { data, error } = await supabase
     .from('act_60_compliance')
     .select(`

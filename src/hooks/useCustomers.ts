@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { withRetry } from '@/lib/retry';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLocations } from '@/hooks/useLocations';
@@ -80,7 +81,19 @@ export function useCustomers() {
         query = query.eq('location_id', currentLocation.id);
       }
 
-      const { data, error } = await query.order('created_at', { ascending: false });
+      const { data, error } = await withRetry(
+        () => query.order('created_at', { ascending: false }),
+        {
+          retries: 3,
+          minDelayMs: 250,
+          maxDelayMs: 1500,
+          jitter: true,
+          shouldRetry: (err) => {
+            const message = (err as { message?: string })?.message ?? '';
+            return message.includes('fetch') || message.includes('network') || message.includes('timeout');
+          },
+        }
+      );
 
       if (error) throw error;
 
@@ -88,7 +101,7 @@ export function useCustomers() {
       const customersWithCounts = data?.map(customer => ({
         ...customer,
         activePackages: customer.packages?.filter(
-          (pkg: any) => pkg.status === 'Received' || pkg.status === 'Ready'
+          (pkg: unknown) => pkg.status === 'Received' || pkg.status === 'Ready'
         ).length || 0,
         totalPackages: customer.packages?.length || 0
       })) || [];
@@ -102,7 +115,7 @@ export function useCustomers() {
       setError(err instanceof Error ? err.message : 'Failed to fetch customers');
       
       // If offline, use cached data
-      if (err instanceof Error && err.message.includes('fetch')) {
+      if (err instanceof Error && err.message.toLowerCase().includes('fetch')) {
         console.log('Using cached customers due to network error');
       }
     } finally {

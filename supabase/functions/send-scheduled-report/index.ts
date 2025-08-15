@@ -129,7 +129,7 @@ serve(async (req) => {
   }
 });
 
-function generateEmailContent(schedule: any, executionData: any): string {
+function generateEmailContent(schedule: unknown, executionData: unknown): string {
   const reportName = schedule.reports.name;
   const runDate = new Date().toLocaleDateString();
   const recordCount = executionData.row_count || 0;
@@ -178,7 +178,7 @@ function generateEmailContent(schedule: any, executionData: any): string {
   `;
 }
 
-function generateInlineDataTable(data: any[]): string {
+function generateInlineDataTable(data: Record<string, unknown>[]): string {
   if (!data || data.length === 0) {
     return '<p>No data found for this report.</p>';
   }
@@ -211,7 +211,7 @@ function generateInlineDataTable(data: any[]): string {
   `;
 }
 
-function calculateNextRun(scheduleType: string, config: any): string {
+function calculateNextRun(scheduleType: string, config: unknown): string {
   const now = new Date();
   
   switch (scheduleType) {

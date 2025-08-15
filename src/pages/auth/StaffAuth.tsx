@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { AriaInput } from '@/components/ui/aria-components';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { 
@@ -18,6 +19,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { getFriendlyAuthError } from '@/lib/errorCopy';
 
 interface StaffAuthProps {
   onNavigate: (page: string) => void;
@@ -56,9 +58,8 @@ export default function StaffAuth({ onNavigate }: StaffAuthProps) {
       });
 
       if (error) {
-        setError(error.message === 'Invalid login credentials' 
-          ? 'Credenciales inválidas. Verifique su email y contraseña.'
-          : error.message);
+        const friendly = getFriendlyAuthError(error.message, 'login', 'es');
+        setError(`${friendly.title}: ${friendly.description}`);
         return;
       }
 
@@ -84,7 +85,7 @@ export default function StaffAuth({ onNavigate }: StaffAuthProps) {
       });
 
       onNavigate('dashboard');
-    } catch (error: any) {
+    } catch (error: unknown) {
       setError('Error de conexión. Intente nuevamente.');
       console.error('Login error:', error);
     } finally {
@@ -127,11 +128,8 @@ export default function StaffAuth({ onNavigate }: StaffAuthProps) {
       });
 
       if (error) {
-        if (error.message.includes('User already registered')) {
-          setError('Este email ya está registrado. Use la opción de iniciar sesión.');
-        } else {
-          setError(error.message);
-        }
+        const friendly = getFriendlyAuthError(error.message, 'signup', 'es');
+        setError(`${friendly.title}: ${friendly.description}`);
         return;
       }
 
@@ -149,7 +147,7 @@ export default function StaffAuth({ onNavigate }: StaffAuthProps) {
         confirmPassword: '',
         employeeId: ''
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       setError('Error de conexión. Intente nuevamente.');
       console.error('Signup error:', error);
     } finally {
@@ -190,7 +188,7 @@ export default function StaffAuth({ onNavigate }: StaffAuthProps) {
               Para propietarios, administradores y personal
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="cq-form compact-pad">
             <Tabs value={activeTab} onValueChange={setActiveTab}>
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="login">Iniciar Sesión</TabsTrigger>
@@ -241,6 +239,7 @@ export default function StaffAuth({ onNavigate }: StaffAuthProps) {
                         size="sm"
                         className="absolute right-0 top-0 h-full px-3"
                         onClick={() => setShowPassword(!showPassword)}
+                        aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
                       >
                         {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </Button>
@@ -255,7 +254,7 @@ export default function StaffAuth({ onNavigate }: StaffAuthProps) {
 
               <TabsContent value="signup">
                 <form onSubmit={handleSignup} className="space-y-4">
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="form-grid-2">
                     <div>
                       <Label htmlFor="firstName">Nombre</Label>
                       <div className="relative">
@@ -270,28 +269,22 @@ export default function StaffAuth({ onNavigate }: StaffAuthProps) {
                         />
                       </div>
                     </div>
-                    <div>
-                      <Label htmlFor="lastName">Apellido</Label>
-                      <Input
-                        id="lastName"
-                        placeholder="Pérez"
-                        value={signupForm.lastName}
-                        onChange={(e) => setSignupForm({...signupForm, lastName: e.target.value})}
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="employeeId">ID de Empleado</Label>
-                    <Input
-                      id="employeeId"
-                      placeholder="EMP-001"
-                      value={signupForm.employeeId}
-                      onChange={(e) => setSignupForm({...signupForm, employeeId: e.target.value})}
+                    <AriaInput
+                      label="Apellido"
+                      placeholder="Pérez"
+                      value={signupForm.lastName}
+                      onChange={(e) => setSignupForm({ ...signupForm, lastName: e.target.value })}
                       required
                     />
                   </div>
+
+                  <AriaInput
+                    label="ID de Empleado"
+                    placeholder="EMP-001"
+                    value={signupForm.employeeId}
+                    onChange={(e) => setSignupForm({ ...signupForm, employeeId: e.target.value })}
+                    required
+                  />
 
                   <div>
                     <Label htmlFor="signupEmail">Email Corporativo</Label>

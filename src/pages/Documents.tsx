@@ -1,14 +1,18 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, Upload, Search, Filter, FolderPlus, Grid, List, Download } from 'lucide-react';
+import { getThumb, setThumb, getPlaceholder } from '@/lib/thumbCache';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Skeleton, CardSkeleton } from '@/components/ui/skeleton';
+import { PullToRefresh } from '@/components/ui/pull-to-refresh';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useDocuments } from '@/hooks/useDocuments';
 import { DocumentGrid } from '@/components/documents/DocumentGrid';
 import { DocumentList } from '@/components/documents/DocumentList';
+import { VirtualizedDocumentList } from '@/components/documents/VirtualizedDocumentList';
 import { FolderTree } from '@/components/documents/FolderTree';
 import { UploadDocumentDialog } from '@/components/documents/UploadDocumentDialog';
 import { CreateFolderDialog } from '@/components/documents/CreateFolderDialog';
@@ -32,7 +36,8 @@ export default function Documents({ onNavigate }: DocumentsProps) {
     searchDocuments,
     fullTextSearch,
     getExpiringDocuments,
-    getDocumentsByCategory
+    getDocumentsByCategory,
+    getDocumentUrl
   } = useDocuments();
 
   const [activeTab, setActiveTab] = useState('browse');
@@ -43,8 +48,22 @@ export default function Documents({ onNavigate }: DocumentsProps) {
   const [showCreateFolderDialog, setShowCreateFolderDialog] = useState(false);
   const [selectedDocument, setSelectedDocument] = useState<string | null>(null);
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
+  const [thumbUrls, setThumbUrls] = useState<Record<string, string>>({});
+  const [placeholders, setPlaceholders] = useState<Record<string, string>>({});
+  const [refreshing, setRefreshing] = useState(false);
+  const thumbCacheRef = useRef<Map<string, { url: string; ts: number; filePath: string }>>(new Map());
+  const runIdRef = useRef(0);
 
   const isSpanish = language === 'es';
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    try {
+      await fetchDocuments();
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   const categories = [
     { id: 'customer_docs', label: isSpanish ? 'Documentos de Cliente' : 'Customer Documents' },
@@ -75,6 +94,70 @@ export default function Documents({ onNavigate }: DocumentsProps) {
                            categoryFilter ? documents.filter(d => d.category === categoryFilter) : 
                            documents;
 
+  // Concurrency-limited async map
+  const mapLimit = async <T, R>(items: T[], limit: number, fn: (item: T) => Promise<R>): Promise<R[]> => {
+    const results: R[] = new Array(items.length);
+    let i = 0;
+    const workers = new Array(Math.min(limit, items.length)).fill(0).map(async () => {
+      while (i < items.length) {
+        const idx = i++;
+        try {
+          results[idx] = await fn(items[idx]);
+        } catch (e) {
+          // ignore individual failures
+          // @ts-ignore
+          results[idx] = undefined as any;
+        }
+      }
+    });
+    await Promise.all(workers);
+    return results;
+  };
+
+  // Prefetch signed URLs for image documents with IndexedDB memoization and 55m TTL
+  useEffect(() => {
+    let cancelled = false;
+    const runId = ++runIdRef.current;
+    const run = async () => {
+      const now = Date.now();
+      const imageDocs = currentDocuments.filter(d => d.content_type?.includes('image'));
+      
+      // Load placeholders from IndexedDB for current documents
+      const placeholderPromises = imageDocs.map(async d => {
+        const ph = await getPlaceholder(d.id);
+        return ph ? [d.id, ph] as const : null;
+      });
+      const placeholderResults = await Promise.all(placeholderPromises);
+      const placeholderMap: Record<string, string> = {};
+      placeholderResults.forEach(r => { if (r) placeholderMap[r[0]] = r[1]; });
+      if (!cancelled && runId === runIdRef.current) setPlaceholders(placeholderMap);
+
+      // Load cached URLs from IndexedDB
+      const cachedResults = await Promise.all(imageDocs.map(async d => {
+        const cached = await getThumb(d.id);
+        return cached && cached.filePath === d.file_path && cached.url ? [d.id, cached.url] as const : null;
+      }));
+      const cachedMap: Record<string, string> = {};
+      cachedResults.forEach(r => { if (r) cachedMap[r[0]] = r[1]; });
+      
+      // Find docs that need fresh URLs
+      const needsFetch = imageDocs.filter(d => !cachedMap[d.id]);
+
+      await mapLimit(needsFetch, 4, async (doc) => {
+        const url = await getDocumentUrl(doc.file_path, false);
+        if (url) {
+          await setThumb(doc.id, { url, ts: Date.now(), filePath: doc.file_path });
+          cachedMap[doc.id] = url;
+        }
+        return undefined;
+      });
+
+      if (!cancelled && runId === runIdRef.current) setThumbUrls(cachedMap);
+    };
+    run();
+    return () => { cancelled = true; };
+  }, [currentDocuments, getDocumentUrl]);
+
   const stats = {
     total: documents.length,
     recent: documents.filter(d => {
@@ -87,7 +170,11 @@ export default function Documents({ onNavigate }: DocumentsProps) {
   };
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <PullToRefresh
+      onRefresh={handleRefresh}
+      disabled={loading}
+    >
+      <div className="container mx-auto p-6 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
@@ -132,7 +219,14 @@ export default function Documents({ onNavigate }: DocumentsProps) {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <CardSkeleton key={i} />
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">
@@ -176,7 +270,8 @@ export default function Documents({ onNavigate }: DocumentsProps) {
             <div className="text-2xl font-bold text-red-600">{stats.sensitive}</div>
           </CardContent>
         </Card>
-      </div>
+        </div>
+      )}
 
       {/* Main Content */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
@@ -282,9 +377,11 @@ export default function Documents({ onNavigate }: DocumentsProps) {
                   documents={currentDocuments}
                   loading={loading}
                   onDocumentSelect={setSelectedDocument}
+                  thumbUrls={thumbUrls}
+                  placeholderMap={placeholders}
                 />
               ) : (
-                <DocumentList
+                <VirtualizedDocumentList
                   documents={currentDocuments}
                   loading={loading}
                   onDocumentSelect={setSelectedDocument}
@@ -332,6 +429,7 @@ export default function Documents({ onNavigate }: DocumentsProps) {
           onOpenChange={() => setSelectedDocument(null)}
         />
       )}
-    </div>
+      </div>
+    </PullToRefresh>
   );
 }

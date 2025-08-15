@@ -87,7 +87,7 @@ serve(async (req) => {
   }
 });
 
-function convertToCSV(data: any[]): string {
+function convertToCSV(data: Record<string, unknown>[]): string {
   if (data.length === 0) return '';
   
   const headers = Object.keys(data[0]);
@@ -107,13 +107,13 @@ function convertToCSV(data: any[]): string {
   return [csvHeaders, ...csvRows].join('\n');
 }
 
-function convertToExcel(data: any[]): string {
+function convertToExcel(data: Record<string, unknown>[]): string {
   // For simplicity, return CSV format with Excel MIME type
   // In production, you'd use a proper Excel library
   return convertToCSV(data);
 }
 
-async function convertToPDF(data: any[], reportName: string): Promise<string> {
+async function convertToPDF(data: Record<string, unknown>[], reportName: string): Promise<string> {
   // Simple HTML to PDF conversion
   // In production, you'd use a proper PDF library like Puppeteer
   const html = generateHTMLReport(data, reportName);
@@ -123,7 +123,7 @@ async function convertToPDF(data: any[], reportName: string): Promise<string> {
   return html;
 }
 
-function generateHTMLReport(data: any[], reportName: string): string {
+function generateHTMLReport(data: Record<string, unknown>[], reportName: string): string {
   if (data.length === 0) {
     return `
       <html>

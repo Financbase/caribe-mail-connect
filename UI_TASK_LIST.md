@@ -66,7 +66,7 @@
 - [x] Test layouts with Spanish text (25% longer) ✅ (Mobile-responsive design)
 - [x] Add language-specific formatting (dates, numbers) ✅ (useLanguage context)
 - [x] Ensure ICU/pluralization support for dynamic messages ✅ (t() function with interpolation)
-- [ ] Add lint rule/utility to prevent hardcoded strings; enforce translation keys
+- [x] Add lint rule/utility to prevent hardcoded strings; enforce translation keys ✅ (ESLint rule with Caribbean-specific config)
 
 ### Component Enhancement
 

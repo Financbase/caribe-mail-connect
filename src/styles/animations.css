@@ -1,0 +1,575 @@
+/* Caribbean Feedback Animations */
+
+/* Keyframe Animations */
+@keyframes slide-in-from-top {
+  from {
+    transform: translateX(-50%) translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-out-to-top {
+  from {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-50%) translateY(-100%);
+    opacity: 0;
+  }
+}
+
+@keyframes slide-in-from-bottom {
+  from {
+    transform: translateX(-50%) translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-out-to-bottom {
+  from {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-50%) translateY(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes expand-down {
+  from {
+    max-height: 0;
+    opacity: 0;
+    transform: scaleY(0);
+  }
+  to {
+    max-height: 200px;
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+@keyframes collapse-up {
+  from {
+    max-height: 200px;
+    opacity: 1;
+    transform: scaleY(1);
+  }
+  to {
+    max-height: 0;
+    opacity: 0;
+    transform: scaleY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes scale-out {
+  from {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes bounce-in {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-3px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(3px);
+  }
+}
+
+@keyframes pulse-success {
+  0% {
+    box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(46, 204, 113, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(46, 204, 113, 0);
+  }
+}
+
+@keyframes pulse-error {
+  0% {
+    box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(231, 76, 60, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(231, 76, 60, 0);
+  }
+}
+
+@keyframes pulse-warning {
+  0% {
+    box-shadow: 0 0 0 0 rgba(243, 156, 18, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(243, 156, 18, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(243, 156, 18, 0);
+  }
+}
+
+@keyframes caribbean-wave {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Animation Classes */
+.animate-slide-in-from-top {
+  animation: slide-in-from-top 0.3s ease-out forwards;
+}
+
+.animate-slide-out-to-top {
+  animation: slide-out-to-top 0.3s ease-in forwards;
+}
+
+.animate-slide-in-from-bottom {
+  animation: slide-in-from-bottom 0.3s ease-out forwards;
+}
+
+.animate-slide-out-to-bottom {
+  animation: slide-out-to-bottom 0.3s ease-in forwards;
+}
+
+.animate-expand-down {
+  animation: expand-down 0.3s ease-out forwards;
+  transform-origin: top;
+}
+
+.animate-collapse-up {
+  animation: collapse-up 0.3s ease-in forwards;
+  transform-origin: top;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.3s ease-out forwards;
+}
+
+.animate-scale-out {
+  animation: scale-out 0.3s ease-in forwards;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out forwards;
+}
+
+.animate-fade-out {
+  animation: fade-out 0.3s ease-in forwards;
+}
+
+.animate-bounce-in {
+  animation: bounce-in 0.5s ease-out forwards;
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out forwards;
+}
+
+.animate-pulse-success {
+  animation: pulse-success 2s infinite;
+}
+
+.animate-pulse-error {
+  animation: pulse-error 2s infinite;
+}
+
+.animate-pulse-warning {
+  animation: pulse-warning 2s infinite;
+}
+
+/* Feedback Container Styles */
+.feedback-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.feedback-animation {
+  pointer-events: auto;
+  will-change: transform, opacity;
+}
+
+/* Success Feedback Styles */
+.feedback-success {
+  background: linear-gradient(135deg, rgba(46, 204, 113, 0.1) 0%, rgba(46, 204, 113, 0.05) 100%);
+  border-left: 4px solid #2ECC71;
+  position: relative;
+  overflow: hidden;
+}
+
+.feedback-success::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(46, 204, 113, 0.2), transparent);
+  animation: caribbean-wave 2s ease-in-out;
+}
+
+/* Error Feedback Styles */
+.feedback-error {
+  background: linear-gradient(135deg, rgba(231, 76, 60, 0.1) 0%, rgba(231, 76, 60, 0.05) 100%);
+  border-left: 4px solid #E74C3C;
+  position: relative;
+  overflow: hidden;
+}
+
+.feedback-error::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(231, 76, 60, 0.2), transparent);
+  animation: caribbean-wave 2s ease-in-out;
+}
+
+/* Warning Feedback Styles */
+.feedback-warning {
+  background: linear-gradient(135deg, rgba(243, 156, 18, 0.1) 0%, rgba(243, 156, 18, 0.05) 100%);
+  border-left: 4px solid #F39C12;
+  position: relative;
+  overflow: hidden;
+}
+
+.feedback-warning::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(243, 156, 18, 0.2), transparent);
+  animation: caribbean-wave 2s ease-in-out;
+}
+
+/* Info Feedback Styles */
+.feedback-info {
+  background: linear-gradient(135deg, rgba(52, 152, 219, 0.1) 0%, rgba(52, 152, 219, 0.05) 100%);
+  border-left: 4px solid #3498DB;
+  position: relative;
+  overflow: hidden;
+}
+
+.feedback-info::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(52, 152, 219, 0.2), transparent);
+  animation: caribbean-wave 2s ease-in-out;
+}
+
+/* Toast Feedback Positioning */
+.feedback-toast {
+  min-width: 300px;
+  max-width: 500px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+/* Banner Feedback Styles */
+.feedback-banner {
+  width: 100%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Inline Feedback Styles */
+.feedback-inline {
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Overlay Feedback Styles */
+.feedback-overlay {
+  backdrop-filter: blur(4px);
+}
+
+.feedback-overlay .feedback-content {
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+}
+
+/* Loading Spinner Caribbean Style */
+.caribbean-spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid #E5E7EB;
+  border-top: 3px solid #0B5394;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.caribbean-spinner-large {
+  width: 40px;
+  height: 40px;
+  border-width: 4px;
+}
+
+.caribbean-spinner-small {
+  width: 16px;
+  height: 16px;
+  border-width: 2px;
+}
+
+/* Progress Bar Animation */
+.caribbean-progress {
+  position: relative;
+  background-color: rgba(229, 231, 235, 0.3);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.caribbean-progress::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #0B5394 0%, #FF6B35 100%);
+  animation: caribbean-wave 2s ease-in-out infinite;
+}
+
+/* Haptic Feedback Visual Indicators */
+.haptic-feedback {
+  position: relative;
+}
+
+.haptic-feedback::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border: 2px solid transparent;
+  border-radius: inherit;
+  animation: pulse-ring 0.6s ease-out;
+}
+
+@keyframes pulse-ring {
+  0% {
+    border-color: rgba(11, 83, 148, 0.8);
+    transform: scale(0.95);
+  }
+  50% {
+    border-color: rgba(11, 83, 148, 0.4);
+    transform: scale(1.02);
+  }
+  100% {
+    border-color: transparent;
+    transform: scale(1);
+  }
+}
+
+/* Micro-interactions */
+.feedback-icon {
+  transition: transform 0.2s ease;
+}
+
+.feedback-animation:hover .feedback-icon {
+  transform: scale(1.1);
+}
+
+.feedback-dismiss-btn {
+  transition: all 0.2s ease;
+  opacity: 0.7;
+}
+
+.feedback-dismiss-btn:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  .feedback-toast {
+    min-width: 280px;
+    max-width: 90vw;
+    margin: 0 1rem;
+  }
+  
+  .feedback-animation {
+    font-size: 0.9rem;
+  }
+  
+  .feedback-icon {
+    font-size: 1.25rem;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .feedback-animation,
+  .feedback-animation::before,
+  .caribbean-spinner,
+  .haptic-feedback::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .animate-slide-in-from-top,
+  .animate-slide-out-to-top,
+  .animate-slide-in-from-bottom,
+  .animate-slide-out-to-bottom,
+  .animate-expand-down,
+  .animate-collapse-up,
+  .animate-scale-in,
+  .animate-scale-out,
+  .animate-bounce-in,
+  .animate-shake {
+    animation: none !important;
+  }
+  
+  .animate-fade-in {
+    opacity: 1;
+    transform: none;
+  }
+  
+  .animate-fade-out {
+    opacity: 0;
+    transform: none;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .feedback-success {
+    background: #E8F5E8;
+    border-color: #2ECC71;
+    color: #1B5E20;
+  }
+  
+  .feedback-error {
+    background: #FFEBEE;
+    border-color: #E74C3C;
+    color: #B71C1C;
+  }
+  
+  .feedback-warning {
+    background: #FFF8E1;
+    border-color: #F39C12;
+    color: #E65100;
+  }
+  
+  .feedback-info {
+    background: #E3F2FD;
+    border-color: #3498DB;
+    color: #0D47A1;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .feedback-success {
+    background: rgba(46, 204, 113, 0.2);
+    color: #A5D6A7;
+  }
+  
+  .feedback-error {
+    background: rgba(231, 76, 60, 0.2);
+    color: #FFCDD2;
+  }
+  
+  .feedback-warning {
+    background: rgba(243, 156, 18, 0.2);
+    color: #FFE082;
+  }
+  
+  .feedback-info {
+    background: rgba(52, 152, 219, 0.2);
+    color: #BBDEFB;
+  }
+  
+  .feedback-overlay {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+  
+  .feedback-overlay .feedback-content {
+    background: #1f2937;
+    color: #f9fafb;
+  }
+}

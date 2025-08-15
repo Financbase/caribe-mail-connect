@@ -259,7 +259,7 @@
 
 ## 📌 Sprint 1 Backlog (Fill Owners/Due Dates)
 
-  - [x] ARIA audit sweep (Owner: FE, Due: [Set])
+- [x] ARIA audit sweep (Owner: FE, Due: [Set])
 - [ ] Keyboard navigation patterns (Owner: [Name], Due: [Date])
 - [ ] Focus management in modals/dialogs (Owner: [Name], Due: [Date])
 - [x] Add skip links (Owner: UX, Due: [Set])

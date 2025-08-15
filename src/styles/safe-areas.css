@@ -1,0 +1,251 @@
+/* Safe Area Insets for iOS/Android devices in PWA mode */
+
+:root {
+  /* Safe area inset environment variables */
+  --safe-area-inset-top: env(safe-area-inset-top, 0px);
+  --safe-area-inset-right: env(safe-area-inset-right, 0px);
+  --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-inset-left: env(safe-area-inset-left, 0px);
+  
+  /* Caribbean theme colors for safe areas */
+  --safe-area-bg: #0B5394; /* Ocean blue */
+  --safe-area-bg-secondary: #FF6B35; /* Sunrise orange */
+}
+
+/* Base safe area utility classes */
+.safe-area-padding {
+  padding-top: var(--safe-area-inset-top);
+  padding-right: var(--safe-area-inset-right);
+  padding-bottom: var(--safe-area-inset-bottom);
+  padding-left: var(--safe-area-inset-left);
+}
+
+.safe-area-margin {
+  margin-top: var(--safe-area-inset-top);
+  margin-right: var(--safe-area-inset-right);
+  margin-bottom: var(--safe-area-inset-bottom);
+  margin-left: var(--safe-area-inset-left);
+}
+
+/* Individual safe area utilities */
+.safe-area-top {
+  padding-top: var(--safe-area-inset-top);
+}
+
+.safe-area-right {
+  padding-right: var(--safe-area-inset-right);
+}
+
+.safe-area-bottom {
+  padding-bottom: var(--safe-area-inset-bottom);
+}
+
+.safe-area-left {
+  padding-left: var(--safe-area-inset-left);
+}
+
+/* Safe area with minimum padding fallback */
+.safe-area-top-min {
+  padding-top: max(var(--safe-area-inset-top), 1rem);
+}
+
+.safe-area-bottom-min {
+  padding-bottom: max(var(--safe-area-inset-bottom), 1rem);
+}
+
+/* Main app container with safe areas */
+.app-container {
+  min-height: 100vh;
+  min-height: calc(100vh - var(--safe-area-inset-top) - var(--safe-area-inset-bottom));
+  padding-top: var(--safe-area-inset-top);
+  padding-bottom: var(--safe-area-inset-bottom);
+}
+
+/* Header with safe area top */
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: var(--safe-area-bg);
+  padding-top: var(--safe-area-inset-top);
+  padding-left: max(var(--safe-area-inset-left), 1rem);
+  padding-right: max(var(--safe-area-inset-right), 1rem);
+}
+
+/* Navigation with safe area consideration */
+.app-navigation {
+  padding-left: var(--safe-area-inset-left);
+  padding-right: var(--safe-area-inset-right);
+}
+
+/* Bottom navigation/tab bar */
+.bottom-navigation {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: white;
+  border-top: 1px solid #e5e7eb;
+  padding-bottom: max(var(--safe-area-inset-bottom), 0.75rem);
+  padding-left: var(--safe-area-inset-left);
+  padding-right: var(--safe-area-inset-right);
+}
+
+/* Floating Action Button (FAB) positioning */
+.fab-container {
+  position: fixed;
+  bottom: calc(var(--safe-area-inset-bottom) + 1rem);
+  right: calc(var(--safe-area-inset-right) + 1rem);
+  z-index: 40;
+}
+
+/* Modal/Dialog safe area adjustments */
+.modal-container {
+  padding-top: var(--safe-area-inset-top);
+  padding-bottom: var(--safe-area-inset-bottom);
+  max-height: calc(100vh - var(--safe-area-inset-top) - var(--safe-area-inset-bottom));
+}
+
+/* Fullscreen overlays */
+.fullscreen-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+}
+
+.fullscreen-content {
+  position: absolute;
+  top: var(--safe-area-inset-top);
+  left: var(--safe-area-inset-left);
+  right: var(--safe-area-inset-right);
+  bottom: var(--safe-area-inset-bottom);
+  background: white;
+  border-radius: 1rem 1rem 0 0;
+}
+
+/* Camera/Scanner fullscreen mode */
+.scanner-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 200;
+  background: black;
+}
+
+.scanner-content {
+  position: absolute;
+  top: var(--safe-area-inset-top);
+  left: var(--safe-area-inset-left);
+  right: var(--safe-area-inset-right);
+  bottom: var(--safe-area-inset-bottom);
+}
+
+/* iOS specific adjustments */
+@supports (-webkit-touch-callout: none) {
+  /* iPhone X+ safe area enhancements */
+  .ios-safe-area {
+    padding-top: max(var(--safe-area-inset-top), 44px); /* Status bar height */
+  }
+  
+  .ios-bottom-safe {
+    padding-bottom: max(var(--safe-area-inset-bottom), 34px); /* Home indicator */
+  }
+}
+
+/* Android specific adjustments */
+@media screen and (max-width: 768px) {
+  .android-safe-area {
+    /* Android typically has smaller safe areas */
+    padding-top: max(var(--safe-area-inset-top), 24px);
+    padding-bottom: max(var(--safe-area-inset-bottom), 16px);
+  }
+}
+
+/* Landscape mode adjustments */
+@media screen and (orientation: landscape) {
+  .landscape-safe-area {
+    padding-left: max(var(--safe-area-inset-left), 1rem);
+    padding-right: max(var(--safe-area-inset-right), 1rem);
+  }
+  
+  .landscape-header {
+    padding-top: max(var(--safe-area-inset-top), 0.5rem);
+  }
+  
+  .landscape-bottom {
+    padding-bottom: max(var(--safe-area-inset-bottom), 0.5rem);
+  }
+}
+
+/* PWA display mode specific styles */
+@media (display-mode: standalone) {
+  /* When running as PWA, ensure proper safe area handling */
+  body {
+    padding-top: var(--safe-area-inset-top);
+    background: var(--safe-area-bg);
+  }
+  
+  .pwa-content {
+    background: white;
+    min-height: calc(100vh - var(--safe-area-inset-top));
+  }
+}
+
+/* Notch/Dynamic Island specific adjustments */
+@media screen and (min-width: 375px) and (max-width: 428px) and (-webkit-device-pixel-ratio: 3) {
+  /* iPhone with notch/Dynamic Island */
+  .notch-safe-area {
+    padding-top: max(var(--safe-area-inset-top), 47px);
+  }
+}
+
+/* Utility classes for Tailwind CSS integration */
+.pt-safe {
+  padding-top: var(--safe-area-inset-top);
+}
+
+.pb-safe {
+  padding-bottom: var(--safe-area-inset-bottom);
+}
+
+.pl-safe {
+  padding-left: var(--safe-area-inset-left);
+}
+
+.pr-safe {
+  padding-right: var(--safe-area-inset-right);
+}
+
+.mt-safe {
+  margin-top: var(--safe-area-inset-top);
+}
+
+.mb-safe {
+  margin-bottom: var(--safe-area-inset-bottom);
+}
+
+.ml-safe {
+  margin-left: var(--safe-area-inset-left);
+}
+
+.mr-safe {
+  margin-right: var(--safe-area-inset-right);
+}
+
+/* Height calculations with safe areas */
+.h-screen-safe {
+  height: calc(100vh - var(--safe-area-inset-top) - var(--safe-area-inset-bottom));
+}
+
+.min-h-screen-safe {
+  min-height: calc(100vh - var(--safe-area-inset-top) - var(--safe-area-inset-bottom));
+}

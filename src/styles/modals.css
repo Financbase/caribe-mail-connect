@@ -1,0 +1,386 @@
+/* Modal System Styles */
+/* Caribbean-themed modal components for PRMCMS */
+
+/* Base modal animations */
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes modal-out {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+}
+
+@keyframes overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-overlay {
+  animation: overlay-in 0.2s ease-out;
+}
+
+.modal-content {
+  animation: modal-in 0.2s ease-out;
+}
+
+.modal-content.closing {
+  animation: modal-out 0.15s ease-in;
+}
+
+/* Mobile-first modal sizing */
+.modal-xs { max-width: 320px; }
+.modal-sm { max-width: 384px; }
+.modal-md { max-width: 448px; }
+.modal-lg { max-width: 512px; }
+.modal-xl { max-width: 576px; }
+
+@media (max-width: 640px) {
+  .modal-xs,
+  .modal-sm,
+  .modal-md,
+  .modal-lg,
+  .modal-xl {
+    max-width: calc(100vw - 32px);
+    max-height: calc(100vh - 32px);
+    margin: 16px;
+  }
+  
+  .modal-full {
+    max-width: 100vw;
+    max-height: 100vh;
+    margin: 0;
+    border-radius: 0;
+  }
+}
+
+/* Safe area support for mobile devices */
+.modal-overlay {
+  padding-top: env(safe-area-inset-top, 0);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  padding-left: env(safe-area-inset-left, 0);
+  padding-right: env(safe-area-inset-right, 0);
+}
+
+/* Modal variants */
+.modal-default {
+  border-color: #e5e7eb;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.modal-destructive {
+  border-color: #fca5a5;
+  box-shadow: 0 20px 25px -5px rgba(239, 68, 68, 0.2), 0 10px 10px -5px rgba(239, 68, 68, 0.1);
+}
+
+.modal-success {
+  border-color: #86efac;
+  box-shadow: 0 20px 25px -5px rgba(34, 197, 94, 0.2), 0 10px 10px -5px rgba(34, 197, 94, 0.1);
+}
+
+.modal-warning {
+  border-color: #fde047;
+  box-shadow: 0 20px 25px -5px rgba(245, 158, 11, 0.2), 0 10px 10px -5px rgba(245, 158, 11, 0.1);
+}
+
+/* Modal header styling */
+.modal-header {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-bottom: 1px solid #e2e8f0;
+  border-radius: 8px 8px 0 0;
+}
+
+.modal-header-destructive {
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  border-bottom-color: #fca5a5;
+}
+
+.modal-header-success {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border-bottom-color: #86efac;
+}
+
+.modal-header-warning {
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  border-bottom-color: #fde047;
+}
+
+/* Close button styling */
+.modal-close-button {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+}
+
+.modal-close-button:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+  transform: scale(1.05);
+}
+
+.modal-close-button:active {
+  transform: scale(0.95);
+}
+
+/* Modal body styling */
+.modal-body {
+  max-height: calc(80vh - 200px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+.modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Modal footer styling */
+.modal-footer {
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  border-radius: 0 0 8px 8px;
+}
+
+/* Loading overlay for modals */
+.modal-loading {
+  position: relative;
+}
+
+.modal-loading::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.9);
+  z-index: 1000;
+  border-radius: inherit;
+  backdrop-filter: blur(2px);
+}
+
+.modal-loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 24px;
+  height: 24px;
+  margin: -12px 0 0 -12px;
+  border: 3px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 3px solid #0B5394;
+  animation: modal-spin 1s linear infinite;
+  z-index: 1001;
+}
+
+@keyframes modal-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Backdrop blur for modern browsers */
+.modal-backdrop {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Fallback for browsers without backdrop-filter */
+@supports not (backdrop-filter: blur(8px)) {
+  .modal-backdrop {
+    background: rgba(0, 0, 0, 0.6);
+  }
+}
+
+/* Focus management */
+.modal-content:focus {
+  outline: none;
+}
+
+.modal-trap-focus {
+  /* Ensure focus stays within modal */
+  position: relative;
+}
+
+/* Modal stack management (multiple modals) */
+.modal-stack-1 { z-index: 1000; }
+.modal-stack-2 { z-index: 1010; }
+.modal-stack-3 { z-index: 1020; }
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .modal-content,
+  .modal-overlay,
+  .modal-close-button {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .modal-content {
+    border-width: 3px;
+    border-color: ButtonText;
+  }
+  
+  .modal-close-button {
+    border: 2px solid ButtonText;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .modal-content {
+    background: #1f2937;
+    border-color: #374151;
+    color: #f9fafb;
+  }
+  
+  .modal-header {
+    background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+    border-bottom-color: #374151;
+  }
+  
+  .modal-footer {
+    background: #111827;
+    border-top-color: #374151;
+  }
+  
+  .modal-backdrop {
+    background: rgba(0, 0, 0, 0.8);
+  }
+  
+  .modal-close-button {
+    background: rgba(0, 0, 0, 0.8);
+    color: #f9fafb;
+  }
+  
+  .modal-close-button:hover {
+    background: rgba(239, 68, 68, 0.2);
+  }
+}
+
+/* Touch optimization for mobile */
+@media (pointer: coarse) {
+  .modal-close-button {
+    width: 44px;
+    height: 44px;
+  }
+  
+  .modal-footer button {
+    min-height: 44px;
+    font-size: 16px;
+  }
+}
+
+/* Landscape orientation adjustments */
+@media (orientation: landscape) and (max-height: 600px) {
+  .modal-content {
+    max-height: 90vh;
+  }
+  
+  .modal-body {
+    max-height: calc(90vh - 160px);
+  }
+}
+
+/* Modal positioning for different screen sizes */
+@media (min-width: 640px) {
+  .modal-overlay {
+    align-items: center;
+    padding: 40px;
+  }
+}
+
+@media (max-width: 639px) {
+  .modal-overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+  
+  .modal-content {
+    width: 100%;
+    border-radius: 16px 16px 0 0;
+    margin: 0;
+    max-height: 90vh;
+  }
+  
+  /* Bottom sheet style on mobile */
+  .modal-content {
+    animation: modal-slide-up 0.3s ease-out;
+  }
+}
+
+@keyframes modal-slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* Caribbean theme integration */
+.caribbean-modal .modal-header {
+  background: linear-gradient(135deg, 
+    rgba(11, 83, 148, 0.05) 0%, 
+    rgba(255, 107, 53, 0.05) 100%);
+  border-bottom-color: rgba(11, 83, 148, 0.1);
+}
+
+.caribbean-modal .modal-footer {
+  background: rgba(248, 250, 252, 0.95);
+  backdrop-filter: blur(10px);
+}
+
+/* Loading spinner color variants */
+.modal-loading.destructive::after {
+  border-top-color: #dc2626;
+}
+
+.modal-loading.success::after {
+  border-top-color: #059669;
+}
+
+.modal-loading.warning::after {
+  border-top-color: #d97706;
+}

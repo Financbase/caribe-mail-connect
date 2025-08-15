@@ -1,0 +1,385 @@
+/* Caribbean Table Styles */
+.caribbean-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.caribbean-table thead th {
+  background: linear-gradient(135deg, 
+    rgba(11, 83, 148, 0.05) 0%, 
+    rgba(255, 107, 53, 0.05) 100%);
+  border-bottom: 2px solid rgba(11, 83, 148, 0.2);
+  position: relative;
+  font-weight: 600;
+  color: #1f2937;
+  transition: all 0.2s ease;
+}
+
+.caribbean-table thead th:hover {
+  background: linear-gradient(135deg, 
+    rgba(11, 83, 148, 0.1) 0%, 
+    rgba(255, 107, 53, 0.08) 100%);
+}
+
+.caribbean-table thead th:first-child {
+  border-top-left-radius: 0.75rem;
+}
+
+.caribbean-table thead th:last-child {
+  border-top-right-radius: 0.75rem;
+}
+
+.caribbean-table tbody tr {
+  transition: all 0.15s ease;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.caribbean-table tbody tr:hover {
+  background-color: rgba(11, 83, 148, 0.02);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.caribbean-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.caribbean-table tbody tr:last-child td:first-child {
+  border-bottom-left-radius: 0.75rem;
+}
+
+.caribbean-table tbody tr:last-child td:last-child {
+  border-bottom-right-radius: 0.75rem;
+}
+
+.caribbean-table tbody tr.selected {
+  background-color: rgba(11, 83, 148, 0.05);
+}
+
+.caribbean-table tbody tr.selected:hover {
+  background-color: rgba(11, 83, 148, 0.08);
+}
+
+.caribbean-table td, .caribbean-table th {
+  border-right: 1px solid #f3f4f6;
+  vertical-align: middle;
+}
+
+.caribbean-table td:last-child, .caribbean-table th:last-child {
+  border-right: none;
+}
+
+/* Sortable columns */
+.caribbean-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.caribbean-table th.sortable:hover {
+  background-color: rgba(11, 83, 148, 0.08);
+}
+
+.caribbean-table th.sortable .sort-indicator {
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+}
+
+.caribbean-table th.sortable:hover .sort-indicator {
+  opacity: 1;
+}
+
+.caribbean-table th.sortable.sorted .sort-indicator {
+  opacity: 1;
+  color: #0B5394;
+}
+
+/* Filter inputs */
+.caribbean-table th input[type="text"] {
+  background-color: white;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  transition: all 0.2s ease;
+}
+
+.caribbean-table th input[type="text"]:focus {
+  border-color: #0B5394;
+  box-shadow: 0 0 0 3px rgba(11, 83, 148, 0.1);
+  outline: none;
+}
+
+/* Selection checkboxes */
+.caribbean-table input[type="checkbox"],
+.caribbean-table input[type="radio"] {
+  transition: all 0.2s ease;
+}
+
+.caribbean-table input[type="checkbox"]:checked,
+.caribbean-table input[type="radio"]:checked {
+  background-color: #0B5394;
+  border-color: #0B5394;
+}
+
+.caribbean-table input[type="checkbox"]:focus,
+.caribbean-table input[type="radio"]:focus {
+  box-shadow: 0 0 0 3px rgba(11, 83, 148, 0.1);
+}
+
+/* Expandable rows */
+.caribbean-table .expand-trigger {
+  cursor: pointer;
+  color: #6b7280;
+  transition: all 0.2s ease;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+}
+
+.caribbean-table .expand-trigger:hover {
+  color: #0B5394;
+  background-color: rgba(11, 83, 148, 0.1);
+}
+
+.caribbean-table .expanded-content {
+  background-color: #f9fafb;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* Empty state */
+.caribbean-table .empty-state {
+  padding: 3rem 1rem;
+  text-align: center;
+  color: #6b7280;
+}
+
+.caribbean-table .empty-state .empty-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+/* Loading state */
+.caribbean-table .loading-overlay {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(4px);
+}
+
+.caribbean-table .loading-spinner {
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid #0B5394;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .caribbean-table {
+    font-size: 0.875rem;
+  }
+  
+  .caribbean-table th,
+  .caribbean-table td {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .caribbean-table th input[type="text"] {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .caribbean-table {
+    font-size: 0.75rem;
+  }
+  
+  .caribbean-table th,
+  .caribbean-table td {
+    padding: 0.375rem 0.5rem;
+  }
+}
+
+/* Sticky header */
+.caribbean-table thead th.sticky {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: linear-gradient(135deg, 
+    rgba(11, 83, 148, 0.05) 0%, 
+    rgba(255, 107, 53, 0.05) 100%);
+}
+
+/* Fixed columns */
+.caribbean-table th.fixed-left,
+.caribbean-table td.fixed-left {
+  position: sticky;
+  left: 0;
+  z-index: 5;
+  background-color: white;
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+}
+
+.caribbean-table th.fixed-right,
+.caribbean-table td.fixed-right {
+  position: sticky;
+  right: 0;
+  z-index: 5;
+  background-color: white;
+  box-shadow: -2px 0 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Pagination */
+.caribbean-table-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  background-color: #f9fafb;
+  border-top: 1px solid #e5e7eb;
+  border-bottom-left-radius: 0.75rem;
+  border-bottom-right-radius: 0.75rem;
+}
+
+.caribbean-table-pagination .pagination-info {
+  font-size: 0.875rem;
+  color: #374151;
+}
+
+.caribbean-table-pagination .pagination-controls {
+  display: flex;
+  gap: 0.25rem;
+}
+
+/* Mobile pagination */
+@media (max-width: 640px) {
+  .caribbean-table-pagination {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+  
+  .caribbean-table-pagination .pagination-controls {
+    justify-content: center;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .caribbean-table thead th {
+    background: linear-gradient(135deg, 
+      rgba(11, 83, 148, 0.2) 0%, 
+      rgba(255, 107, 53, 0.15) 100%);
+    color: #f9fafb;
+    border-bottom-color: rgba(11, 83, 148, 0.3);
+  }
+  
+  .caribbean-table tbody tr {
+    border-bottom-color: #374151;
+  }
+  
+  .caribbean-table tbody tr:hover {
+    background-color: rgba(11, 83, 148, 0.1);
+  }
+  
+  .caribbean-table td, .caribbean-table th {
+    border-right-color: #374151;
+  }
+  
+  .caribbean-table .expanded-content {
+    background-color: #1f2937;
+  }
+  
+  .caribbean-table-pagination {
+    background-color: #1f2937;
+    border-top-color: #374151;
+  }
+}
+
+/* Print styles */
+@media print {
+  .caribbean-table {
+    box-shadow: none;
+    border: 1px solid #000;
+  }
+  
+  .caribbean-table thead th {
+    background: #f5f5f5 !important;
+    color: #000 !important;
+  }
+  
+  .caribbean-table tbody tr:hover {
+    background-color: transparent !important;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+  
+  .caribbean-table-pagination {
+    display: none;
+  }
+  
+  .caribbean-table .loading-overlay {
+    display: none;
+  }
+}
+
+/* Accessibility enhancements */
+.caribbean-table:focus-within {
+  box-shadow: 0 0 0 3px rgba(11, 83, 148, 0.1);
+}
+
+.caribbean-table th[role="columnheader"] {
+  outline: none;
+}
+
+.caribbean-table th[role="columnheader"]:focus {
+  background-color: rgba(11, 83, 148, 0.1);
+  box-shadow: inset 0 0 0 2px #0B5394;
+}
+
+.caribbean-table tbody tr[role="row"]:focus {
+  outline: 2px solid #0B5394;
+  outline-offset: -2px;
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .caribbean-table {
+    border: 2px solid #000;
+  }
+  
+  .caribbean-table thead th {
+    background: #000;
+    color: #fff;
+    border-bottom: 2px solid #000;
+  }
+  
+  .caribbean-table tbody tr {
+    border-bottom: 1px solid #000;
+  }
+  
+  .caribbean-table td, .caribbean-table th {
+    border-right: 1px solid #000;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .caribbean-table * {
+    transition: none !important;
+    animation: none !important;
+  }
+  
+  .caribbean-table tbody tr:hover {
+    transform: none;
+  }
+}

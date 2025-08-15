@@ -1,0 +1,140 @@
+# CODEOWNERS
+# GitHub Branch Protection - Code Owners Configuration
+# 
+# This file defines who owns specific parts of the codebase
+# and who should be automatically requested for reviews
+
+# Global owners - these users are requested for all changes
+* @admin @lead-developer
+
+# Frontend Components and UI
+src/components/** @frontend-team @ui-team
+src/pages/** @frontend-team
+src/styles/** @frontend-team @ui-team
+src/hooks/** @frontend-team
+*.tsx @frontend-team
+*.jsx @frontend-team
+*.css @frontend-team @ui-team
+*.scss @frontend-team @ui-team
+
+# Backend Services and API
+src/services/** @backend-team @api-team
+src/lib/** @backend-team
+src/utils/** @backend-team @frontend-team
+src/types/** @backend-team @frontend-team
+*.ts @backend-team @frontend-team
+
+# Database and Supabase
+supabase/** @database-admin @backend-team
+supabase/migrations/** @database-admin @senior-backend
+supabase/seed.sql @database-admin
+*.sql @database-admin
+
+# Authentication and Security
+src/lib/auth/** @security-team @lead-developer @backend-team
+src/lib/security/** @security-team @lead-developer
+src/middleware/** @security-team @backend-team
+src/lib/encryption/** @security-team @lead-developer
+
+# Infrastructure and DevOps
+.github/** @devops-team @lead-developer
+.github/workflows/** @devops-team @ci-team
+docker/** @devops-team
+Dockerfile* @devops-team
+docker-compose* @devops-team
+*.yml @devops-team
+*.yaml @devops-team
+
+# Configuration Files
+package.json @lead-developer @devops-team
+package-lock.json @lead-developer @devops-team
+tsconfig.json @lead-developer @frontend-team @backend-team
+tailwind.config.js @frontend-team @ui-team
+vite.config.ts @frontend-team @devops-team
+next.config.js @frontend-team @devops-team
+
+# Testing
+src/**/*.test.* @qa-team @backend-team @frontend-team
+src/**/*.spec.* @qa-team @backend-team @frontend-team
+tests/** @qa-team
+e2e/** @qa-team @frontend-team
+playwright.config.ts @qa-team @devops-team
+vitest.config.ts @qa-team @devops-team
+
+# Documentation
+*.md @documentation-team @lead-developer
+docs/** @documentation-team
+README.md @lead-developer @documentation-team
+CONTRIBUTING.md @lead-developer @documentation-team
+CHANGELOG.md @lead-developer @devops-team
+
+# Environment and Secrets
+.env* @security-team @devops-team @lead-developer
+*.env @security-team @devops-team @lead-developer
+
+# Build and Deployment
+dist/** @devops-team
+build/** @devops-team
+public/** @frontend-team @devops-team
+
+# Specific Critical Files
+src/lib/database.ts @database-admin @security-team @lead-developer
+src/lib/stripe.ts @backend-team @security-team @lead-developer
+src/lib/supabase.ts @database-admin @backend-team @lead-developer
+
+# Mobile and PWA
+src/lib/mobile/** @mobile-team @frontend-team
+public/manifest.json @mobile-team @frontend-team
+src/service-worker.ts @mobile-team @devops-team
+
+# Analytics and Monitoring
+src/lib/analytics/** @analytics-team @backend-team
+src/lib/monitoring/** @devops-team @backend-team
+src/lib/sentry.ts @devops-team @backend-team
+
+# Integrations
+src/integrations/** @integration-team @backend-team
+src/lib/webhooks/** @integration-team @backend-team
+src/lib/api/** @api-team @backend-team
+
+# Billing and Payments
+src/lib/billing/** @billing-team @security-team @backend-team
+src/lib/payments/** @billing-team @security-team @backend-team
+src/components/billing/** @billing-team @frontend-team
+
+# Customer Management
+src/lib/customers/** @customer-team @backend-team
+src/components/customers/** @customer-team @frontend-team
+
+# Notifications and Communications
+src/lib/notifications/** @communications-team @backend-team
+src/lib/email/** @communications-team @backend-team
+src/lib/sms/** @communications-team @backend-team
+src/components/notifications/** @communications-team @frontend-team
+
+# Reporting and Analytics
+src/lib/reports/** @analytics-team @backend-team
+src/components/reports/** @analytics-team @frontend-team
+src/components/analytics/** @analytics-team @frontend-team
+
+# Admin and Management
+src/components/admin/** @admin-team @security-team @frontend-team
+src/lib/admin/** @admin-team @security-team @backend-team
+
+# Performance and Optimization
+src/lib/performance/** @performance-team @backend-team
+src/lib/cache/** @performance-team @backend-team
+
+# Localization and Internationalization
+src/locales/** @i18n-team @frontend-team
+src/lib/i18n/** @i18n-team @frontend-team
+
+# Legal and Compliance
+src/lib/compliance/** @legal-team @security-team @backend-team
+src/components/legal/** @legal-team @frontend-team
+
+# Emergency Contacts for Critical Issues
+# These users should be contacted for urgent security or production issues
+src/lib/auth/security.ts @security-emergency @lead-developer
+src/lib/database/critical.ts @database-emergency @lead-developer
+src/lib/payments/critical.ts @billing-emergency @security-emergency @lead-developer

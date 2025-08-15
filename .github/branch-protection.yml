@@ -1,0 +1,256 @@
+# GitHub Branch Protection Configuration
+# Source Control + CI/CD - GitHub Branch Protection
+# 
+# Configuration for protected main branch with required PR reviews and status checks
+
+name: Branch Protection Setup
+description: Configure branch protection rules for main branch
+
+# Branch Protection Rules Configuration
+branch_protection:
+  main:
+    # Require pull request reviews before merging
+    required_pull_request_reviews:
+      required_approving_review_count: 2
+      dismiss_stale_reviews: true
+      require_code_owner_reviews: true
+      require_last_push_approval: true
+      bypass_pull_request_allowances:
+        users: []
+        teams: ["admin"]
+        apps: []
+
+    # Require status checks to pass before merging
+    required_status_checks:
+      strict: true
+      checks:
+        - "build"
+        - "test"
+        - "lint"
+        - "type-check"
+        - "security-scan"
+        - "dependency-check"
+
+    # Enforce restrictions for administrators
+    enforce_admins: true
+
+    # Require branches to be up to date before merging
+    required_linear_history: true
+
+    # Allow force pushes
+    allow_force_pushes: false
+
+    # Allow deletions
+    allow_deletions: false
+
+    # Block creations
+    block_creations: false
+
+    # Required conversation resolution
+    required_conversation_resolution: true
+
+    # Lock branch
+    lock_branch: false
+
+    # Allow fork syncing
+    allow_fork_syncing: true
+
+  develop:
+    # Less strict rules for develop branch
+    required_pull_request_reviews:
+      required_approving_review_count: 1
+      dismiss_stale_reviews: true
+      require_code_owner_reviews: false
+      require_last_push_approval: false
+
+    required_status_checks:
+      strict: true
+      checks:
+        - "build"
+        - "test"
+        - "lint"
+
+    enforce_admins: false
+    required_linear_history: false
+    allow_force_pushes: true
+    allow_deletions: false
+    required_conversation_resolution: true
+
+# Repository Settings
+repository_settings:
+  # General settings
+  has_issues: true
+  has_projects: true
+  has_wiki: false
+  has_downloads: true
+  
+  # Security settings
+  security_and_analysis:
+    secret_scanning:
+      status: enabled
+    secret_scanning_push_protection:
+      status: enabled
+    dependency_graph:
+      status: enabled
+    dependabot_security_updates:
+      status: enabled
+
+  # Merge settings
+  allow_merge_commit: true
+  allow_squash_merge: true
+  allow_rebase_merge: false
+  allow_auto_merge: true
+  delete_branch_on_merge: true
+  allow_update_branch: true
+
+  # Default branch
+  default_branch: main
+
+# Code Owners Configuration
+codeowners:
+  # Global owners
+  "*": ["@admin", "@lead-developer"]
+  
+  # Frontend specific
+  "src/components/**": ["@frontend-team"]
+  "src/pages/**": ["@frontend-team"]
+  "src/styles/**": ["@frontend-team"]
+  
+  # Backend specific
+  "src/services/**": ["@backend-team"]
+  "src/lib/**": ["@backend-team"]
+  "supabase/**": ["@backend-team", "@database-admin"]
+  
+  # Infrastructure
+  ".github/**": ["@devops-team"]
+  "docker/**": ["@devops-team"]
+  "*.yml": ["@devops-team"]
+  "*.yaml": ["@devops-team"]
+  
+  # Documentation
+  "*.md": ["@documentation-team"]
+  "docs/**": ["@documentation-team"]
+  
+  # Security sensitive
+  "src/lib/auth/**": ["@security-team", "@lead-developer"]
+  "src/lib/security/**": ["@security-team", "@lead-developer"]
+  
+  # Database
+  "supabase/migrations/**": ["@database-admin", "@backend-team"]
+  "supabase/seed.sql": ["@database-admin"]
+
+# Required Checks Configuration
+required_checks:
+  build:
+    description: "Build application successfully"
+    timeout_minutes: 10
+    
+  test:
+    description: "Run all tests with minimum 80% coverage"
+    timeout_minutes: 15
+    coverage_threshold: 80
+    
+  lint:
+    description: "Code linting and formatting checks"
+    timeout_minutes: 5
+    
+  type-check:
+    description: "TypeScript type checking"
+    timeout_minutes: 5
+    
+  security-scan:
+    description: "Security vulnerability scanning"
+    timeout_minutes: 10
+    
+  dependency-check:
+    description: "Check for vulnerable dependencies"
+    timeout_minutes: 5
+
+# Auto-merge Configuration
+auto_merge:
+  enabled: true
+  conditions:
+    - all_required_checks_pass: true
+    - required_reviews_met: true
+    - no_requested_changes: true
+    - branch_up_to_date: true
+    - no_conflicts: true
+  
+  # Auto-merge for specific types
+  dependabot:
+    enabled: true
+    auto_approve: true
+    conditions:
+      - patch_updates: true
+      - minor_updates: false
+      - major_updates: false
+  
+  renovate:
+    enabled: true
+    auto_approve: false
+
+# Notification Settings
+notifications:
+  pull_request:
+    - event: opened
+      notify: ["@code-reviewers"]
+    - event: ready_for_review
+      notify: ["@code-reviewers"]
+    - event: review_requested
+      notify: ["@requested-reviewer"]
+  
+  status_checks:
+    - event: failed
+      notify: ["@author", "@code-reviewers"]
+    - event: success
+      notify: ["@author"]
+
+# Branch Naming Conventions
+branch_naming:
+  patterns:
+    feature: "feature/*"
+    bugfix: "bugfix/*"
+    hotfix: "hotfix/*"
+    release: "release/*"
+    chore: "chore/*"
+  
+  validation:
+    enforce: true
+    block_direct_push: true
+
+# Commit Message Conventions
+commit_conventions:
+  format: "conventional"
+  types:
+    - feat
+    - fix
+    - docs
+    - style
+    - refactor
+    - perf
+    - test
+    - chore
+    - ci
+    - build
+  
+  validation:
+    enforce: true
+    block_invalid: true
+
+# Release Management
+release_management:
+  automatic_releases:
+    enabled: true
+    trigger: "tag"
+    pattern: "v*"
+  
+  changelog:
+    auto_generate: true
+    include_prs: true
+    include_commits: false
+  
+  semantic_versioning:
+    enabled: true
+    major_keywords: ["BREAKING CHANGE", "breaking"]
+    minor_keywords: ["feat", "feature"]
+    patch_keywords: ["fix", "patch", "bugfix"]

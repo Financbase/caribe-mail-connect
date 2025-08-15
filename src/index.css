@@ -23,6 +23,9 @@ All colors MUST be HSL.
     --primary-foreground: 0 0% 100%;
     --primary-light: 210 79% 45%;
     --primary-dark: 210 79% 25%;
+    --primary-ocean: 210 79% 31%;
+    --primary-sunrise: 12 100% 60%;
+    --primary-palm: 142 71% 45%;
 
     /* Sunrise orange secondary */
     --secondary: 12 100% 60%;
@@ -169,6 +172,14 @@ All colors MUST be HSL.
   
   .animate-shimmer {
     animation: shimmer 2s infinite;
+  }
+
+  /* Container query helpers for dense forms */
+  .cq-form { container-type: inline-size; }
+  .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+  @container (max-width: 380px) {
+    .form-grid-2 { grid-template-columns: 1fr; }
+    .compact-pad { padding: 0.5rem; }
   }
   
   /* Reduced motion support */

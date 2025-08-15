@@ -4,7 +4,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 interface AriaSkeletonProps {
   'aria-label'?: string;
   'aria-describedby'?: string;
-  role?: string;
   children?: React.ReactNode;
 }
 
@@ -12,19 +11,17 @@ interface AriaSkeletonProps {
 export const AriaSkeleton = memo(({ 
   'aria-label': ariaLabel = 'Loading content',
   'aria-describedby': ariaDescribedBy,
-  role = 'status',
   children,
   ...props 
 }: AriaSkeletonProps & React.ComponentProps<typeof Skeleton>) => (
   <div
-    role={role}
+    role="status"
     aria-label={ariaLabel}
     aria-describedby={ariaDescribedBy}
     aria-live="polite"
   >
     <span className="sr-only">{ariaLabel}</span>
-    <Skeleton {...props} />
-    {children}
+    {children ? children : <Skeleton {...props} />}
   </div>
 ));
 
@@ -50,10 +47,7 @@ export const AriaButton = memo(({
     {...props}
     aria-label={ariaLabel}
     aria-describedby={ariaDescribedBy}
-    aria-busy={loading}
     disabled={disabled || loading}
-    role="button"
-    tabIndex={disabled ? -1 : 0}
   >
     {loading && <span className="sr-only">Loading...</span>}
     {children}
@@ -102,9 +96,8 @@ export const AriaInput = memo(({
       <input
         {...props}
         id={inputId}
-        aria-invalid={error ? 'true' : 'false'}
         aria-describedby={[descriptionId, errorId].filter(Boolean).join(' ') || undefined}
-        aria-required={required}
+        required={required}
         className={className}
       />
       
@@ -151,24 +144,20 @@ interface AriaListProps {
   }>;
   'aria-label': string;
   className?: string;
-  role?: 'list' | 'listbox' | 'menu';
 }
 
 export const AriaList = memo(({
   items,
   'aria-label': ariaLabel,
-  className,
-  role = 'list'
+  className
 }: AriaListProps) => (
   <ul
-    role={role}
     aria-label={ariaLabel}
     className={className}
   >
     {items.map((item) => (
       <li
         key={item.id}
-        role={role === 'list' ? 'listitem' : role === 'listbox' ? 'option' : 'menuitem'}
         aria-label={item['aria-label']}
       >
         {item.content}

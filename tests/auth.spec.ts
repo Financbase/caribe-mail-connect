@@ -44,9 +44,11 @@ test.describe('Authentication Test Suite', () => {
   test.beforeEach(async ({ page }) => {
     // Clear all cookies and storage to ensure clean state
     await page.context().clearCookies();
+    // Navigate first to ensure storage APIs are accessible in page context
+    await page.goto('/');
     await page.evaluate(() => {
-      localStorage.clear();
-      sessionStorage.clear();
+      try { localStorage.clear(); } catch (e) {}
+      try { sessionStorage.clear(); } catch (e) {}
     });
   });
 

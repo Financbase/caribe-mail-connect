@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 import { Resend } from "npm:resend@2.0.0";
+import { Sentry } from "../_shared/sentry.ts"; // 2025-08-13: error tracking
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -117,9 +118,10 @@ serve(async (req) => {
     });
 
   } catch (error) {
+    Sentry.captureException(error);
     console.error('Error sending scheduled report:', error);
-    return new Response(JSON.stringify({ 
-      error: error.message 
+    return new Response(JSON.stringify({
+      error: error.message
     }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

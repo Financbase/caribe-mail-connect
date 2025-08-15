@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -23,112 +23,138 @@ import {
 import { useNotificationSystem } from '@/hooks/useNotificationSystem';
 
 export function NotificationAnalyticsDashboard() {
-  const [selectedPeriod, setSelectedPeriod] = useState('7d');
-  const { analytics, analyticsLoading } = useNotificationSystem();
+  const { analytics, analyticsLoading, templates } = useNotificationSystem();
 
-  // Mock data for demonstration - in real implementation, this would come from the analytics
-  const summaryMetrics = {
-    totalSent: 2847,
-    totalDelivered: 2654,
-    totalFailed: 193,
-    totalOpened: 1823,
-    totalClicked: 456,
-    totalCost: 14235, // in cents
-    avgResponseTime: 23 // minutes
-  };
+  // 2025-08-13: derive metrics from Supabase analytics
+  const summaryMetrics = useMemo(() => {
+    const totals = analytics?.reduce(
+      (acc, item) => {
+        acc.totalSent += item.total_sent;
+        acc.totalDelivered += item.total_delivered;
+        acc.totalFailed += item.total_failed;
+        acc.totalOpened += item.total_opened;
+        acc.totalClicked += item.total_clicked;
+        acc.totalCost += item.total_cost_cents;
+        if (item.avg_response_time_minutes) {
+          acc.responseTime += item.avg_response_time_minutes;
+          acc.responseCount += 1;
+        }
+        return acc;
+      },
+      {
+        totalSent: 0,
+        totalDelivered: 0,
+        totalFailed: 0,
+        totalOpened: 0,
+        totalClicked: 0,
+        totalCost: 0,
+        responseTime: 0,
+        responseCount: 0,
+      }
+    );
 
-  const channelMetrics = [
-    {
-      channel: 'email',
-      icon: Mail,
-      color: 'text-blue-500',
-      sent: 1523,
-      delivered: 1445,
-      opened: 1234,
-      clicked: 345,
-      cost: 7615, // cents
-      deliveryRate: 94.8,
-      openRate: 85.4,
-      clickRate: 28.0
-    },
-    {
-      channel: 'sms',
-      icon: MessageSquare,
-      color: 'text-green-500',
-      sent: 856,
-      delivered: 832,
-      opened: 589,
-      clicked: 111,
-      cost: 5120,
-      deliveryRate: 97.2,
-      openRate: 70.8,
-      clickRate: 18.8
-    },
-    {
-      channel: 'whatsapp',
-      icon: Smartphone,
-      color: 'text-green-600',
-      sent: 468,
-      delivered: 377,
-      opened: 0, // WhatsApp doesn't track opens
-      clicked: 0,
-      cost: 1500,
-      deliveryRate: 80.6,
-      openRate: 0,
-      clickRate: 0
-    }
-  ];
+    return {
+      totalSent: totals?.totalSent ?? 0,
+      totalDelivered: totals?.totalDelivered ?? 0,
+      totalFailed: totals?.totalFailed ?? 0,
+      totalOpened: totals?.totalOpened ?? 0,
+      totalClicked: totals?.totalClicked ?? 0,
+      totalCost: totals?.totalCost ?? 0,
+      avgResponseTime:
+        totals && totals.responseCount > 0
+          ? Math.round(totals.responseTime / totals.responseCount)
+          : 0,
+    };
+  }, [analytics]);
 
-  const topPerformingTemplates = [
-    {
-      name: 'Package Arrival - Spanish',
-      type: 'email',
-      sent: 456,
-      openRate: 92.3,
-      clickRate: 34.2,
-      category: 'arrival'
-    },
-    {
-      name: 'Package Reminder - SMS',
-      type: 'sms',
-      sent: 234,
-      openRate: 78.9,
-      clickRate: 23.1,
-      category: 'reminder'
-    },
-    {
-      name: 'Mailbox Expiry Notice',
-      type: 'email',
-      sent: 123,
-      openRate: 88.6,
-      clickRate: 45.7,
-      category: 'payment'
-    }
-  ];
+  const channelMetrics = useMemo(() => {
+    const map = new Map<string, any>();
+    analytics?.forEach((item) => {
+      const current = map.get(item.channel) || {
+        channel: item.channel,
+        sent: 0,
+        delivered: 0,
+        opened: 0,
+        clicked: 0,
+        cost: 0,
+      };
+      current.sent += item.total_sent;
+      current.delivered += item.total_delivered;
+      current.opened += item.total_opened;
+      current.clicked += item.total_clicked;
+      current.cost += item.total_cost_cents;
+      map.set(item.channel, current);
+    });
 
-  const recentActivity = [
-    {
-      id: 1,
-      type: 'success',
-      message: 'Email batch enviado exitosamente',
-      count: 245,
-      timestamp: '2 minutos atrás'
-    },
-    {
-      id: 2,
-      type: 'warning',
-      message: 'SMS batch con fallos parciales',
-      count: 23,
-      timestamp: '15 minutos atrás'
-    },
-    {
-      id: 3,
-      type: 'info',
-      message: 'WhatsApp template aprobado',
-      count: 1,
-      timestamp: '1 hora atrás'
-    }
-  ];
+    return Array.from(map.values()).map((channel) => {
+      const icon =
+        channel.channel === 'email'
+          ? Mail
+          : channel.channel === 'sms'
+          ? MessageSquare
+          : Smartphone;
+      const color =
+        channel.channel === 'email'
+          ? 'text-blue-500'
+          : channel.channel === 'sms'
+          ? 'text-green-500'
+          : 'text-green-600';
+      return {
+        ...channel,
+        icon,
+        color,
+        deliveryRate:
+          channel.sent > 0
+            ? Number(((channel.delivered / channel.sent) * 100).toFixed(1))
+            : 0,
+        openRate:
+          channel.delivered > 0
+            ? Number(((channel.opened / channel.delivered) * 100).toFixed(1))
+            : 0,
+        clickRate:
+          channel.opened > 0
+            ? Number(((channel.clicked / channel.opened) * 100).toFixed(1))
+            : 0,
+      };
+    });
+  }, [analytics]);
+
+  const topPerformingTemplates = useMemo(() => {
+    const templateMap = Object.fromEntries(
+      (templates || []).map((t) => [t.id, t])
+    );
+    return (
+      analytics
+        ?.filter((a) => a.template_id)
+        .map((a) => {
+          const tpl = templateMap[a.template_id!];
+          return {
+            name: tpl?.name || a.template_id!,
+            type: tpl?.type || 'email',
+            sent: a.total_sent,
+            openRate: a.open_rate || 0,
+            clickRate: a.click_rate || 0,
+            category: tpl?.category,
+          };
+        })
+        .sort((a, b) => b.openRate - a.openRate)
+        .slice(0, 5) || []
+    );
+  }, [analytics, templates]);
+
+  const recentActivity = useMemo(() => {
+    return (
+      analytics
+        ?.slice(0, 5)
+        .map((a, idx) => ({
+          id: idx,
+          type: a.total_failed > 0 ? 'warning' : 'success',
+          message: `${a.channel} procesó ${a.total_sent} mensajes`,
+          count: a.total_sent,
+          timestamp: new Date(a.date).toLocaleString('es-PR'),
+        })) || []
+    );
+  }, [analytics]);
 
   const calculateDeliveryRate = () => {
     return ((summaryMetrics.totalDelivered / summaryMetrics.totalSent) * 100).toFixed(1);

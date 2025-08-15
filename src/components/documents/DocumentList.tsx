@@ -148,13 +148,13 @@ export function DocumentList({ documents, loading, onDocumentSelect }: DocumentL
               
               <TableCell onClick={(e) => e.stopPropagation()}>
                 <div className="flex items-center gap-1">
-                  <Button size="sm" variant="ghost" className="h-6 w-6 p-0">
+                  <Button size="sm" variant="ghost" className="h-6 w-6 p-0" data-action="view" aria-label={isSpanish ? `Ver ${document.title}` : `View ${document.title}`}>
                     <Eye className="h-3 w-3" />
                   </Button>
-                  <Button size="sm" variant="ghost" className="h-6 w-6 p-0">
+                  <Button size="sm" variant="ghost" className="h-6 w-6 p-0" aria-label={isSpanish ? `Descargar ${document.title}` : `Download ${document.title}`}>
                     <Download className="h-3 w-3" />
                   </Button>
-                  <Button size="sm" variant="ghost" className="h-6 w-6 p-0">
+                  <Button size="sm" variant="ghost" className="h-6 w-6 p-0" aria-label={isSpanish ? `Editar ${document.title}` : `Edit ${document.title}`}>
                     <Edit className="h-3 w-3" />
                   </Button>
                 </div>

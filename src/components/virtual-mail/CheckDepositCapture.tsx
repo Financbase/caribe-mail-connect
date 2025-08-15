@@ -181,7 +181,18 @@ export function CheckDepositCapture() {
               </TableHeader>
               <TableBody>
                 {checkDeposits.map((deposit) => (
-                  <TableRow key={deposit.id}>
+                  <TableRow
+                    key={deposit.id}
+                    tabIndex={0}
+                    aria-label={`${isSpanish ? 'Depósito' : 'Deposit'} ${deposit.check_number || ''} ${formatDate(deposit.created_at)}`}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        const btn = (e.currentTarget as HTMLElement).querySelector<HTMLButtonElement>('button[data-action="view"]');
+                        btn?.click();
+                        e.preventDefault();
+                      }
+                    }}
+                  >
                     <TableCell>
                       {formatDate(deposit.created_at)}
                     </TableCell>
@@ -203,7 +214,7 @@ export function CheckDepositCapture() {
                     </TableCell>
                     
                     <TableCell>
-                      <Button size="sm" variant="outline">
+                      <Button size="sm" variant="outline" data-action="view" aria-label={isSpanish ? 'Ver depósito' : 'View deposit'}>
                         <Eye className="h-3 w-3 mr-1" />
                         {isSpanish ? 'Ver' : 'View'}
                       </Button>
@@ -347,6 +358,7 @@ export function CheckDepositCapture() {
                           accept="image/*"
                           onChange={(e) => handleFileUpload(e, 'front')}
                           className="hidden"
+                          aria-label={isSpanish ? 'Subir imagen frontal del cheque' : 'Upload front of check image'}
                         />
                       </div>
                     </div>
@@ -411,6 +423,7 @@ export function CheckDepositCapture() {
                           accept="image/*"
                           onChange={(e) => handleFileUpload(e, 'back')}
                           className="hidden"
+                          aria-label={isSpanish ? 'Subir imagen trasera del cheque' : 'Upload back of check image'}
                         />
                       </div>
                     </div>

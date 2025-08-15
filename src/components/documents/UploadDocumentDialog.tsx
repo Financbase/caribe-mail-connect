@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { AriaInput } from '@/components/ui/aria-components';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
@@ -172,7 +173,7 @@ export function UploadDocumentDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto cq-form">
         <DialogHeader>
           <DialogTitle>
             {isSpanish ? 'Subir Documentos' : 'Upload Documents'}
@@ -196,7 +197,7 @@ export function UploadDocumentDialog({
                 : 'Or click to select files'
               }
             </p>
-            <Button onClick={() => fileInputRef.current?.click()}>
+            <Button onClick={() => fileInputRef.current?.click()} aria-label={isSpanish ? 'Seleccionar archivos' : 'Select files'}>
               {isSpanish ? 'Seleccionar Archivos' : 'Select Files'}
             </Button>
             <input
@@ -206,17 +207,18 @@ export function UploadDocumentDialog({
               className="hidden"
               onChange={handleFileSelect}
               accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.jpg,.jpeg,.png,.gif"
+              aria-label={isSpanish ? 'Seleccionar archivos para subir' : 'Select files to upload'}
             />
           </div>
 
           {/* Global Settings */}
           {files.length > 0 && (
-            <div className="space-y-4 p-4 bg-muted/50 rounded-lg">
+            <div className="space-y-4 p-4 bg-muted/50 rounded-lg cq-form">
               <h4 className="font-medium">
                 {isSpanish ? 'Configuración General' : 'Global Settings'}
               </h4>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 form-grid-2">
                 <div>
                   <Label htmlFor="folder">
                     {isSpanish ? 'Carpeta de Destino' : 'Target Folder'}
@@ -269,15 +271,12 @@ export function UploadDocumentDialog({
                     </Button>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 form-grid-2">
                     <div>
-                      <Label htmlFor={`title-${index}`}>
-                        {isSpanish ? 'Título' : 'Title'}
-                      </Label>
-                      <Input
-                        id={`title-${index}`}
+                      <AriaInput
+                        label={isSpanish ? 'Título' : 'Title'}
                         value={fileData.title}
-                        onChange={(e) => updateFileMetadata(index, { title: e.target.value })}
+                        onChange={(e) => updateFileMetadata(index, { title: (e.target as HTMLInputElement).value })}
                       />
                     </div>
 
@@ -307,10 +306,10 @@ export function UploadDocumentDialog({
                         {isSpanish ? 'Etiquetas' : 'Tags'}
                       </Label>
                       <div className="flex gap-2">
-                        <Input
-                          id={`tags-${index}`}
+                        <AriaInput
+                          label={isSpanish ? 'Etiquetas' : 'Tags'}
                           value={newTag}
-                          onChange={(e) => setNewTag(e.target.value)}
+                          onChange={(e) => setNewTag((e.target as HTMLInputElement).value)}
                           placeholder={isSpanish ? 'Agregar etiqueta' : 'Add tag'}
                           onKeyPress={(e) => {
                             if (e.key === 'Enter') {
@@ -330,6 +329,7 @@ export function UploadDocumentDialog({
                             <button
                               onClick={() => removeTag(index, tagIndex)}
                               className="ml-1 hover:text-destructive"
+                              aria-label={isSpanish ? `Eliminar etiqueta ${tag}` : `Remove tag ${tag}`}
                             >
                               <X className="h-3 w-3" />
                             </button>

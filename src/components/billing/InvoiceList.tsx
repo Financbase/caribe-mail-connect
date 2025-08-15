@@ -113,7 +113,18 @@ export function InvoiceList({ limit, variant = 'full' }: InvoiceListProps) {
                 </TableRow>
               ) : (
                 filteredInvoices.map((invoice) => (
-                  <TableRow key={invoice.id}>
+                  <TableRow
+                    key={invoice.id}
+                    tabIndex={0}
+                    aria-label={`Factura ${invoice.invoice_number} ${invoice.customer_name} ${format(new Date(invoice.issue_date), 'dd/MM/yyyy', { locale: es })}`}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        const btn = (e.currentTarget as HTMLElement).querySelector<HTMLButtonElement>('button[data-action="view"]');
+                        btn?.click();
+                        e.preventDefault();
+                      }
+                    }}
+                  >
                     <TableCell className="font-medium">{invoice.invoice_number}</TableCell>
                     <TableCell>{invoice.customer_name}</TableCell>
                     <TableCell>
@@ -131,7 +142,7 @@ export function InvoiceList({ limit, variant = 'full' }: InvoiceListProps) {
                     <TableCell>{getStatusBadge(invoice.status)}</TableCell>
                     <TableCell>
                       <div className="flex space-x-2">
-                        <Button variant="ghost" size="sm">
+                        <Button variant="ghost" size="sm" data-action="view" aria-label={`Ver factura ${invoice.invoice_number}`}>
                           <Eye className="h-4 w-4" />
                         </Button>
                         <Button variant="ghost" size="sm">

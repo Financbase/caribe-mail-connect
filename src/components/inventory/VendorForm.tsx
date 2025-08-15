@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/select';
 import { useInventory, type Vendor } from '@/hooks/useInventory';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { AriaInput } from '@/components/ui/aria-components';
 
 interface VendorFormProps {
   vendor?: Vendor;
@@ -88,111 +89,71 @@ export function VendorForm({ vendor, onClose }: VendorFormProps) {
   const isLoading = isCreatingVendor;
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <form onSubmit={handleSubmit} className="space-y-6 cq-form">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 form-grid-2">
         {/* Left Column - Basic Information */}
         <div className="space-y-4">
-          <div>
-            <Label htmlFor="name">
-              {isSpanish ? 'Nombre de la Empresa' : 'Company Name'} *
-            </Label>
-            <Input
-              id="name"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              placeholder={isSpanish ? 'Nombre del proveedor' : 'Vendor name'}
-              required
-            />
-          </div>
+          <AriaInput
+            label={`${isSpanish ? 'Nombre de la Empresa' : 'Company Name'} *`}
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: (e.target as HTMLInputElement).value })}
+            placeholder={isSpanish ? 'Nombre del proveedor' : 'Vendor name'}
+            required
+          />
 
-          <div>
-            <Label htmlFor="contact_person">
-              {isSpanish ? 'Persona de Contacto' : 'Contact Person'}
-            </Label>
-            <Input
-              id="contact_person"
-              value={formData.contact_person}
-              onChange={(e) => setFormData({ ...formData, contact_person: e.target.value })}
-              placeholder={isSpanish ? 'Nombre del contacto principal' : 'Primary contact name'}
-            />
-          </div>
+          <AriaInput
+            label={isSpanish ? 'Persona de Contacto' : 'Contact Person'}
+            value={formData.contact_person}
+            onChange={(e) => setFormData({ ...formData, contact_person: (e.target as HTMLInputElement).value })}
+            placeholder={isSpanish ? 'Nombre del contacto principal' : 'Primary contact name'}
+          />
 
-          <div>
-            <Label htmlFor="email">
-              {isSpanish ? 'Correo Electrónico' : 'Email'}
-            </Label>
-            <Input
-              id="email"
-              type="email"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              placeholder={isSpanish ? 'correo@proveedor.com' : 'email@vendor.com'}
-            />
-          </div>
+          <AriaInput
+            label={isSpanish ? 'Correo Electrónico' : 'Email'}
+            type="email"
+            value={formData.email}
+            onChange={(e) => setFormData({ ...formData, email: (e.target as HTMLInputElement).value })}
+            placeholder={isSpanish ? 'correo@proveedor.com' : 'email@vendor.com'}
+          />
 
-          <div>
-            <Label htmlFor="phone">
-              {isSpanish ? 'Teléfono' : 'Phone'}
-            </Label>
-            <Input
-              id="phone"
-              value={formData.phone}
-              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-              placeholder={isSpanish ? '787-555-0123' : '787-555-0123'}
-            />
-          </div>
+          <AriaInput
+            label={isSpanish ? 'Teléfono' : 'Phone'}
+            value={formData.phone}
+            onChange={(e) => setFormData({ ...formData, phone: (e.target as HTMLInputElement).value })}
+            placeholder={isSpanish ? '787-555-0123' : '787-555-0123'}
+          />
 
-          <div>
-            <Label htmlFor="tax_id">
-              {isSpanish ? 'ID Fiscal/Tax ID' : 'Tax ID'}
-            </Label>
-            <Input
-              id="tax_id"
-              value={formData.tax_id}
-              onChange={(e) => setFormData({ ...formData, tax_id: e.target.value })}
-              placeholder={isSpanish ? 'Número de identificación fiscal' : 'Tax identification number'}
-            />
-          </div>
+          <AriaInput
+            label={isSpanish ? 'ID Fiscal/Tax ID' : 'Tax ID'}
+            value={formData.tax_id}
+            onChange={(e) => setFormData({ ...formData, tax_id: (e.target as HTMLInputElement).value })}
+            placeholder={isSpanish ? 'Número de identificación fiscal' : 'Tax identification number'}
+          />
         </div>
 
         {/* Right Column - Address & Payment */}
         <div className="space-y-4">
-          <div>
-            <Label htmlFor="address_line1">
-              {isSpanish ? 'Dirección Línea 1' : 'Address Line 1'}
-            </Label>
-            <Input
-              id="address_line1"
-              value={formData.address_line1}
-              onChange={(e) => setFormData({ ...formData, address_line1: e.target.value })}
-              placeholder={isSpanish ? 'Dirección principal' : 'Street address'}
-            />
-          </div>
+          <AriaInput
+            label={isSpanish ? 'Dirección Línea 1' : 'Address Line 1'}
+            value={formData.address_line1}
+            onChange={(e) => setFormData({ ...formData, address_line1: (e.target as HTMLInputElement).value })}
+            placeholder={isSpanish ? 'Dirección principal' : 'Street address'}
+          />
 
-          <div>
-            <Label htmlFor="address_line2">
-              {isSpanish ? 'Dirección Línea 2' : 'Address Line 2'}
-            </Label>
-            <Input
-              id="address_line2"
-              value={formData.address_line2}
-              onChange={(e) => setFormData({ ...formData, address_line2: e.target.value })}
-              placeholder={isSpanish ? 'Apartamento, suite, etc.' : 'Apartment, suite, etc.'}
-            />
-          </div>
+          <AriaInput
+            label={isSpanish ? 'Dirección Línea 2' : 'Address Line 2'}
+            value={formData.address_line2}
+            onChange={(e) => setFormData({ ...formData, address_line2: (e.target as HTMLInputElement).value })}
+            placeholder={isSpanish ? 'Apartamento, suite, etc.' : 'Apartment, suite, etc.'}
+          />
 
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <Label htmlFor="city">
-                {isSpanish ? 'Ciudad' : 'City'}
-              </Label>
-              <Input
-                id="city"
+          <div className="grid grid-cols-2 gap-3 form-grid-2">
+              <AriaInput
+                label={isSpanish ? 'Ciudad' : 'City'}
                 value={formData.city}
-                onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                onChange={(e) => setFormData({ ...formData, city: (e.target as HTMLInputElement).value })}
                 placeholder={isSpanish ? 'Ciudad' : 'City'}
               />
-            </div>
 
             <div>
               <Label htmlFor="state">
@@ -213,31 +174,21 @@ export function VendorForm({ vendor, onClose }: VendorFormProps) {
             </div>
           </div>
 
-          <div>
-            <Label htmlFor="zip_code">
-              {isSpanish ? 'Código Postal' : 'ZIP Code'}
-            </Label>
-            <Input
-              id="zip_code"
-              value={formData.zip_code}
-              onChange={(e) => setFormData({ ...formData, zip_code: e.target.value })}
-              placeholder="00918"
-            />
-          </div>
+          <AriaInput
+            label={isSpanish ? 'Código Postal' : 'ZIP Code'}
+            value={formData.zip_code}
+            onChange={(e) => setFormData({ ...formData, zip_code: (e.target as HTMLInputElement).value })}
+            placeholder="00918"
+          />
 
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <Label htmlFor="payment_terms">
-                {isSpanish ? 'Términos de Pago (días)' : 'Payment Terms (days)'}
-              </Label>
-              <Input
-                id="payment_terms"
-                type="number"
-                min="0"
-                value={formData.payment_terms}
-                onChange={(e) => setFormData({ ...formData, payment_terms: parseInt(e.target.value) || 30 })}
-              />
-            </div>
+          <div className="grid grid-cols-2 gap-3 form-grid-2">
+            <AriaInput
+              label={isSpanish ? 'Términos de Pago (días)' : 'Payment Terms (days)'}
+              type="number"
+              min={0}
+              value={formData.payment_terms as unknown as string}
+              onChange={(e) => setFormData({ ...formData, payment_terms: parseInt((e.target as HTMLInputElement).value) || 30 })}
+            />
 
             <div>
               <Label htmlFor="preferred_payment_method">

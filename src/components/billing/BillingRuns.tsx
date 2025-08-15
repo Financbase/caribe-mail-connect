@@ -145,7 +145,18 @@ export function BillingRuns({ variant = 'full' }: BillingRunsProps) {
                 </TableRow>
               ) : (
                 billingRuns.map((run) => (
-                  <TableRow key={run.id}>
+                  <TableRow
+                    key={run.id}
+                    tabIndex={0}
+                    aria-label={`Ejecución ${format(new Date(run.run_date), 'dd/MM/yyyy', { locale: es })} ${run.status}`}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        const btn = (e.currentTarget as HTMLElement).querySelector<HTMLButtonElement>('button[data-action="details"]');
+                        btn?.click();
+                        e.preventDefault();
+                      }
+                    }}
+                  >
                     <TableCell>
                       {format(new Date(run.run_date), 'dd/MM/yyyy', { locale: es })}
                     </TableCell>
@@ -159,7 +170,7 @@ export function BillingRuns({ variant = 'full' }: BillingRunsProps) {
                     <TableCell>{getStatusBadge(run.status)}</TableCell>
                     <TableCell>
                       <div className="flex space-x-2">
-                        <Button variant="ghost" size="sm">
+                        <Button variant="ghost" size="sm" data-action="details" aria-label={`Ver detalles ejecución ${format(new Date(run.run_date), 'dd/MM/yyyy', { locale: es })}`}>
                           Ver Detalles
                         </Button>
                         {run.status === 'failed' && (

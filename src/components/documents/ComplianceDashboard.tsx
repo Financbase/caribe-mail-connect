@@ -226,6 +226,14 @@ export function ComplianceDashboard({ documents, onDocumentSelect }: ComplianceD
                           key={document.id}
                           className="cursor-pointer hover:bg-muted/50"
                           onClick={() => onDocumentSelect(document.id)}
+                          tabIndex={0}
+                          aria-label={`${isSpanish ? 'Documento' : 'Document'} ${document.title} ${isSpanish ? 'vence' : 'expires'} ${formatDate(document.expiration_date!)}`}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              onDocumentSelect(document.id);
+                              e.preventDefault();
+                            }
+                          }}
                         >
                           <TableCell>
                             <div>
@@ -274,7 +282,7 @@ export function ComplianceDashboard({ documents, onDocumentSelect }: ComplianceD
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Table>
+                <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>{isSpanish ? 'Documento' : 'Document'}</TableHead>
@@ -289,6 +297,14 @@ export function ComplianceDashboard({ documents, onDocumentSelect }: ComplianceD
                       key={document.id}
                       className="cursor-pointer hover:bg-muted/50"
                       onClick={() => onDocumentSelect(document.id)}
+                      tabIndex={0}
+                      aria-label={`${isSpanish ? 'Documento' : 'Document'} ${document.title} confidencialidad ${document.confidentiality_level}`}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          onDocumentSelect(document.id);
+                          e.preventDefault();
+                        }
+                      }}
                     >
                       <TableCell>
                         <div className="flex items-center gap-2">
@@ -336,7 +352,7 @@ export function ComplianceDashboard({ documents, onDocumentSelect }: ComplianceD
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Table>
+                <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>{isSpanish ? 'Documento' : 'Document'}</TableHead>
@@ -351,6 +367,14 @@ export function ComplianceDashboard({ documents, onDocumentSelect }: ComplianceD
                       key={document.id}
                       className="cursor-pointer hover:bg-muted/50"
                       onClick={() => onDocumentSelect(document.id)}
+                      tabIndex={0}
+                      aria-label={`${isSpanish ? 'Documento' : 'Document'} ${document.title}`}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          onDocumentSelect(document.id);
+                          e.preventDefault();
+                        }
+                      }}
                     >
                       <TableCell>
                         <div>

@@ -34,6 +34,8 @@ serve(async (req) => {
     const bodyText = await req.text();
     const headers = Object.fromEntries(req.headers.entries());
     const contentType = req.headers.get('content-type') || '';
+    // Idempotency and replay protection added on 2024-08-30
+    const idempotencyKey = req.headers.get('idempotency-key');
 
     console.log(`Processing webhook for service: ${serviceName}`);
 
@@ -76,7 +78,20 @@ serve(async (req) => {
       });
     }
 
-    // Replay protection: pre-log event with unique constraints
+    // Replay protection: pre-log event with unique constraints and idempotency check
+    if (idempotencyKey) {
+      const existing = await supabaseClient
+        .from('webhook_event_log')
+        .select('id')
+        .eq('idempotency_key', idempotencyKey)
+        .maybeSingle();
+      if (existing.data) {
+        return new Response(JSON.stringify({ success: true, message: 'Duplicate webhook ignored' }), {
+          status: 409,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Idempotency-Key': idempotencyKey },
+        });
+      }
+    }
     const sigHeader = headers['stripe-signature'] || headers['x-hub-signature-256'] || headers['x-twilio-signature'] || headers['x-twilio-email-event-webhook-signature'];
     const bodyHash = createHash('sha256').update(bodyText).digest('hex');
 
@@ -106,6 +121,7 @@ serve(async (req) => {
         external_event_id: externalId,
         body_hash: bodyHash,
         signature: sigHeader,
+        idempotency_key: idempotencyKey,
         headers,
         status: 'received'
       })

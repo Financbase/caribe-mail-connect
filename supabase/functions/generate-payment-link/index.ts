@@ -391,7 +391,7 @@ async function ensureEntitlement(
      .eq('entitlement', entitlement)
      .maybeSingle();
 
-   if (error && error.code !== 'PGRST116') {
+   if (error && error.code !== SUPABASE_ROW_NOT_FOUND_ERROR_CODE) {
      throw new Error('Entitlement lookup failed');
    }
 

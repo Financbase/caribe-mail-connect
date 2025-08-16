@@ -18,7 +18,12 @@ const Onboarding = ({ onComplete }: OnboardingProps) => {
 
   const handleFinish = async () => {
     await sendLifecycleEmail('onboarding_complete', demoUser.email);
-    onComplete();
+    try {
+      await sendLifecycleEmail('onboarding_complete', demoUser.email);
+      onComplete();
+    } catch (error) {
+      alert('Failed to send onboarding completion email. Please try again.');
+    }
   };
 
   return (

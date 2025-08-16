@@ -61,7 +61,7 @@ const PRMCMS = () => {
           }
         } else {
           setCurrentPage('auth-selection');
-        }
+        determineInitialPage(session);
       }
     );
 

@@ -358,7 +358,7 @@ async function validateStripePaymentLink(linkId: string) {
 
    try {
      // 2025-02-14: Query ATH Móvil for transaction status
-     const resp = await fetch('https://www.athmovil.com/api/business-account/ecommerce/payment-status', {
+     const resp = await fetch(athMovilApiUrl, {
        method: 'POST',
        headers: {
          'Authorization': `Bearer ${apiKey}`,

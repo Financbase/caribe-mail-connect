@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { mapUPSStatusCode, mapFedExEventType } from '../../supabase/functions/webhook-handler/utils';
+import { mapUPSStatusCode, mapFedExEventType } from '@supabase/functions/webhook-handler/utils';
 
 describe('webhook handler utils', () => {
   it('maps UPS status codes', () => {

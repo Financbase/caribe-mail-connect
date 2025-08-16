@@ -322,7 +322,7 @@ async function validateStripePaymentLink(linkId: string) {
 
    try {
      // 2025-02-14: Obtain token then query PayPal for payment status
-     const authResp = await fetch('https://api.paypal.com/v1/oauth2/token', {
+     const authResp = await fetch(`${PAYPAL_API_BASE_URL}/v1/oauth2/token`, {
        method: 'POST',
        headers: {
          'Authorization': `Basic ${btoa(`${clientId}:${clientSecret}`)}`,

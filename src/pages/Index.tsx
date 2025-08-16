@@ -54,7 +54,7 @@ const PRMCMS = () => {
         // Set appropriate initial page based on auth state
         if (session?.user) {
           const completed = localStorage.getItem('onboarding-completed');
-          if (featureFlags.onboarding && !completed) {
+          if (shouldShowOnboarding(session)) {
             setCurrentPage('onboarding');
           } else {
             setCurrentPage('dashboard');
